@@ -54,9 +54,9 @@ export default class RideStep2 extends Component {
 
                 <View>
                     <Text>
-                        {this.props.navigation.state.params.ride.startLocation.address}
+                        {JSON.stringify(this.props.navigation.state.params.ride.startLocation.address)}
                         {'\n'}
-                        {this.props.navigation.state.params.ride.endLocation.address}
+                        {JSON.stringify(this.props.navigation.state.params.ride.endLocation.address)}
                         {'\n'}
                         {this.props.navigation.state.params.ride.pickupNotes}
                     </Text>

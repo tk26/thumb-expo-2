@@ -54,9 +54,9 @@ export default class DriveStep2 extends Component {
 
                 <View>
                     <Text>
-                        {this.props.navigation.state.params.drive.startLocation.address}
+                        {JSON.stringify(this.props.navigation.state.params.drive.startLocation.address)}
                         {'\n'}
-                        {this.props.navigation.state.params.drive.endLocation.address}
+                        {JSON.stringify(this.props.navigation.state.params.drive.endLocation.address)}
                         {'\n'}
                         Seats Available: {this.props.navigation.state.params.drive.availableSeats}
                     </Text>

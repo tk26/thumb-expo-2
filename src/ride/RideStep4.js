@@ -13,9 +13,9 @@ export default class RideStep4 extends Component {
             <View>
                 <View>
                     <Text>
-                        {ride.startLocation.address}
+                        {JSON.stringify(ride.startLocation.address)}
                         {'\n'}
-                        {ride.endLocation.address}
+                        {JSON.stringify(ride.endLocation.address)}
                         {'\n'}
                         {ride.travelDate}
                         {'\n'}

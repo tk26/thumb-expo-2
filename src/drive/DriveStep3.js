@@ -62,7 +62,7 @@ export default class DriveStep3 extends Component {
                 else {
                     this.setState({
                         error: "Some error occured. Please try again. If problem persists, " +
-                        "please let us know at support@thumbtravel.com"
+                            "please let us know at support@thumbtravel.com"
                     })
                 }
             })
@@ -70,7 +70,7 @@ export default class DriveStep3 extends Component {
                 // TODO log error
                 this.setState({
                     error: "Some error occured. Please try again. If problem persists, " +
-                    "please let us know at support@thumbtravel.com"
+                        "please let us know at support@thumbtravel.com"
                 })
             })
     }
@@ -81,9 +81,9 @@ export default class DriveStep3 extends Component {
             <View>
                 <View>
                     <Text>
-                        {drive.startLocation.address}
+                        {JSON.stringify(drive.startLocation.address)}
                         {'\n'}
-                        {drive.endLocation.address}
+                        {JSON.stringify(drive.endLocation.address)}
                         {'\n'}
                         Seats available: {drive.availableSeats}
                         {'\n'}
