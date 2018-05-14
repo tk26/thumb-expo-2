@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Button, Image, Picker } from 'react-native';
+import { View, Text, Button, Image, Picker, TextInput } from 'react-native';
 import { MapView, Location } from 'expo';
 
 const initialState = {
@@ -18,6 +18,8 @@ const initialState = {
         latitude: 39.184405, longitude: -86.538042
     },
     endAddress: '',
+    manualStartAddress: '',
+    manualEndAddress: '',
     availableSeats: 'none',
     error: '',
 };
@@ -50,6 +52,33 @@ export default class DriveStep1 extends Component {
 
     onValueChange(availableSeats) {
         this.setState({ availableSeats, error: '' });
+    }
+
+    locateManualAddresses = () => {
+        if (this.state.manualStartAddress.length > 3) {
+            Location.geocodeAsync(this.state.manualStartAddress)
+                .then(location => {
+                    location = location[0];
+                    this.setState({
+                        startLocation: {
+                            latitude: location.latitude,
+                            longitude: location.longitude
+                        }
+                    });
+                });
+        }
+        if (this.state.manualEndAddress.length > 3) {
+            Location.geocodeAsync(this.state.manualEndAddress)
+                .then(location => {
+                    location = location[0];
+                    this.setState({
+                        endLocation: {
+                            latitude: location.latitude,
+                            longitude: location.longitude
+                        }
+                    });
+                });
+        }
     }
 
     goNext = () => {        
@@ -109,6 +138,23 @@ export default class DriveStep1 extends Component {
                         onDragEnd={this._handleOnDragEndForEndLocation}
                     />
                 </MapView>
+
+                <Text>Not able to find on the map ? Put exact address below and we will locate that for you</Text>
+
+                <TextInput 
+                    maxLength={100}
+                    onChangeText={(manualStartAddress) => this.setState({ manualStartAddress })}
+                    value={this.state.manualStartAddress}
+                    placeholder="Start address"
+                />
+
+                <TextInput 
+                    maxLength={100}
+                    onChangeText={(manualEndAddress) => this.setState({ manualEndAddress })}
+                    value={this.state.manualEndAddress}
+                    placeholder="End address"
+                />
+                <Button title="OK" onPress={this.locateManualAddresses}/>
 
                 <Text>And available seats ?</Text>
 
