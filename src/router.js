@@ -17,13 +17,13 @@ import RideStep1 from './ride/RideStep1';
 import RideStep2 from './ride/RideStep2';
 import RideStep3 from './ride/RideStep3';
 import RideStep4 from './ride/RideStep4';
-
 import RideResults from './ride/RideResults';
 
 import DriveStep1 from './drive/DriveStep1';
 import DriveStep2 from './drive/DriveStep2';
 import DriveStep3 from './drive/DriveStep3';
 import DriveStep4 from './drive/DriveStep4';
+import DriveResults from './drive/DriveResults';
 
 import Profile from './profile/Profile';
 import EditProfile from './profile/EditProfile';
@@ -182,7 +182,13 @@ const TravelStack = createStackNavigator({
     DriveStep4: {
         screen: DriveStep4,
         navigationOptions: {
-            title: 'Drive: Step 4',
+            title: 'Drive: Zero Results',
+        }
+    },
+    DriveResults: {
+        screen: DriveResults,
+        navigationOptions: {
+            title: 'Drive: Found Results',
         }
     },
 });

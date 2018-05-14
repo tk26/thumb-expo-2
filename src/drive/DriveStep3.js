@@ -19,60 +19,108 @@ export default class DriveStep3 extends Component {
 
         this.state.drive.travelDescription = this.state.travelDescription;
         let responseStatus = 0;
-        fetch(API_URL + '/drive/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer' + ' ' + global.auth_token
+        // fetch(API_URL + '/drive/create', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'Authorization': 'Bearer' + ' ' + global.auth_token
+        //     },
+        //     body: JSON.stringify({
+        //         "startLocation": this.state.drive.startLocation,
+        //         "endLocation": this.state.drive.endLocation,
+        //         "availableSeats": this.state.drive.availableSeats,
+        //         "travelDate": this.state.drive.travelDate,
+        //         "travelTime": this.state.drive.travelTime,
+        //         "travelDescription": this.state.drive.travelDescription
+        //     })
+        // })
+        //     .then(response => {
+        //         responseStatus = response.status;
+        //         return response.json()
+        //     })
+        //     .then(response => {
+        //         if (responseStatus == 400) {
+        //             this.setState({
+        //                 error: "Missing one or more drive details"
+        //             })
+        //         }
+        //         else if (responseStatus == 200) {
+        //             // Get ride results
+        //             // then determine whether to show Zero results page or Results page
+        //             // written below
+        //         }
+        //         else {
+        //             this.setState({
+        //                 error: "Some error occured. Please try again. If problem persists, " +
+        //                     "please let us know at support@thumbtravel.com"
+        //             })
+        //         }
+        //     })
+        //     .catch(error => {
+        //         // TODO log error
+        //         this.setState({
+        //             error: "Some error occured. Please try again. If problem persists, " +
+        //                 "please let us know at support@thumbtravel.com"
+        //         })
+        //     })
+
+        // mock data
+        let rideResults = [
+            {
+                // Ride info
+                rideId: 1,
+                rideDate: '05/31/2018',
+                rideTimes: [2, 8],
+                ridePickupNotes: 'Get through the lane',
+                rideTravelDescription: 'For my cousin\'s grad ceremony',
+                // Rider Info
+                riderFirstName: 'John',
+                riderUsername: 'john_cena',
+                riderProfilePicture: 'john.jpg',
             },
-            body: JSON.stringify({
-                "startLocation": this.state.drive.startLocation,
-                "endLocation": this.state.drive.endLocation,
-                "availableSeats": this.state.drive.availableSeats,
-                "travelDate": this.state.drive.travelDate,
-                "travelTime": this.state.drive.travelTime,
-                "travelDescription": this.state.drive.travelDescription
-            })
-        })
-            .then(response => {
-                responseStatus = response.status;
-                return response.json()
-            })
-            .then(response => {
-                if (responseStatus == 400) {
-                    this.setState({
-                        error: "Missing one or more drive details"
+            {
+                // Ride info
+                rideId: 2,
+                rideDate: '06/15/2018',
+                rideTimes: [1, 9],
+                ridePickupNotes: 'Do not go through the lane',
+                rideTravelDescription: 'For my grad ceremony',
+                // Rider Info
+                riderFirstName: 'Jane',
+                riderUsername: 'just_jane',
+                riderProfilePicture: 'jane.jpg',
+            }
+        ];       
+        if (rideResults.length === 0) {
+            const resetAction = StackActions.reset({
+                index: 1,
+                actions: [
+                    NavigationActions.navigate({ routeName: 'Travel'}),
+                    NavigationActions.navigate({ 
+                        routeName: 'DriveStep4',
+                        params: {
+                            drive: this.state.drive
+                        }
                     })
-                }
-                else if (responseStatus == 200) {
-                    const resetAction = StackActions.reset({
-                        index: 1,
-                        actions: [
-                            NavigationActions.navigate({ routeName: 'Travel'}),
-                            NavigationActions.navigate({ 
-                                routeName: 'DriveStep4',
-                                params: {
-                                    drive: this.state.drive
-                                }
-                            })
-                        ],
-                    });
-                    this.props.navigation.dispatch(resetAction);
-                }
-                else {
-                    this.setState({
-                        error: "Some error occured. Please try again. If problem persists, " +
-                            "please let us know at support@thumbtravel.com"
+                ],
+            });
+            this.props.navigation.dispatch(resetAction);
+        } else {
+            const resetAction = StackActions.reset({
+                index: 1,
+                actions: [
+                    NavigationActions.navigate({ routeName: 'Travel'}),
+                    NavigationActions.navigate({ 
+                        routeName: 'DriveResults',
+                        params: {
+                            drive: this.state.drive,
+                            rideResults: rideResults
+                        }
                     })
-                }
-            })
-            .catch(error => {
-                // TODO log error
-                this.setState({
-                    error: "Some error occured. Please try again. If problem persists, " +
-                        "please let us know at support@thumbtravel.com"
-                })
-            })
+                ],
+            });
+            this.props.navigation.dispatch(resetAction);
+        }
     }
 
     render() {
