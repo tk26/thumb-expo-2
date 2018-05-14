@@ -18,6 +18,8 @@ import RideStep2 from './ride/RideStep2';
 import RideStep3 from './ride/RideStep3';
 import RideStep4 from './ride/RideStep4';
 
+import RideResults from './ride/RideResults';
+
 import DriveStep1 from './drive/DriveStep1';
 import DriveStep2 from './drive/DriveStep2';
 import DriveStep3 from './drive/DriveStep3';
@@ -150,7 +152,13 @@ const TravelStack = createStackNavigator({
     RideStep4: {
         screen: RideStep4,
         navigationOptions: {
-            title: 'Ride: Step 4',
+            title: 'Ride: Zero Results',
+        }
+    },
+    RideResults: {
+        screen: RideResults,
+        navigationOptions: {
+            title: 'Ride: Found Results',
         }
     },
     DriveStep1: {
