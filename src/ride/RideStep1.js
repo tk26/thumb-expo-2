@@ -5,10 +5,10 @@ const GOOGLE_API_KEY = 'AIzaSyBjmDuIk2aL8CbCi6FBr7ExGhms42k7ZEw';
 
 const initialState = {
     startLocation: {
-        address: '', latitude: '', longitude: ''
+        address: '', latitude: '', longitude: '', city: ''
     },
     endLocation: {
-        address: '', latitude: '', longitude: ''
+        address: '', latitude: '', longitude: '', city: ''
     },
     startAddress: '', endAddress: '',
     pickupNotes: '',
@@ -34,13 +34,16 @@ export default class RideStep1 extends Component {
             if (response.length === 0) {
                 throw Error('No response found');
             }
+            let formattedAddress = response.results[0].formatted_address;
+            let formattedAddressArr = formattedAddress.split(',');
             this.setState({
                 startLocation: {
-                    address: response.results[0].formatted_address,
+                    address: formattedAddress,
                     latitude: response.results[0].geometry.location.lat,
-                    longitude: response.results[0].geometry.location.lng
+                    longitude: response.results[0].geometry.location.lng,
+                    city: formattedAddressArr[formattedAddressArr.length - 3].trim() || ''
                 },
-                startAddress: response.results[0].formatted_address
+                startAddress: formattedAddress
             });
         })
         .then(() => {
@@ -56,13 +59,16 @@ export default class RideStep1 extends Component {
                 if (response.length === 0) {
                     throw Error('No response found');
                 }
+                let formattedAddress = response.results[0].formatted_address;
+                let formattedAddressArr = formattedAddress.split(',');
                 this.setState({
                     endLocation: {
-                        address: response.results[0].formatted_address,
+                        address: formattedAddress,
                         latitude: response.results[0].geometry.location.lat,
-                        longitude: response.results[0].geometry.location.lng
+                        longitude: response.results[0].geometry.location.lng,
+                        city: formattedAddressArr[formattedAddressArr.length - 3].trim() || ''
                     },
-                    endAddress: response.results[0].formatted_address
+                    endAddress: formattedAddress
                 });
                 // build a ride object and pass it through
                 let ride = {
