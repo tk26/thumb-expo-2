@@ -70,19 +70,19 @@ export default class RideResults extends Component {
                                 <View key={drive.driveId} style={styles.view}>
                                     <TouchableHighlight>
                                         <Text>
-                                            {drive.driveDate}
+                                            {drive.travelDate}
                                             {'\n'}
-                                            {drive.driveTimes[0]} to {drive.driveTimes[1]}
+                                            {drive.travelTime}
                                             {'\n'}
-                                            {drive.drivePrice} 
+                                            {"$ 31"} 
                                             {'\n'}
-                                            {drive.driveTravelDescription}
+                                            {drive.travelDescription}
                                             {'\n'}
-                                            {drive.driverFirstName}
+                                            {drive.userFirstName}
                                             {'\n'}
-                                            {drive.driverUsername}
+                                            {drive.userName}
                                             {'\n'}
-                                            {drive.driverProfilePicture}
+                                            {drive.userProfilePicture}
                                             {'\n'}
                                         </Text>
                                     </TouchableHighlight>

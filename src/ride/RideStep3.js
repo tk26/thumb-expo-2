@@ -19,108 +19,109 @@ export default class RideStep3 extends Component {
         
         this.state.ride.travelDescription = this.state.travelDescription;
         let responseStatus = 0;
-        // fetch(API_URL + '/ride/create', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Authorization': 'Bearer' + ' ' + global.auth_token
-        //     },
-        //     body: JSON.stringify({
-        //         "startLocation": this.state.ride.startLocation,
-        //         "endLocation": this.state.ride.endLocation,
-        //         "pickupNotes": this.state.ride.pickupNotes,
-        //         "travelDate": this.state.ride.travelDate,
-        //         "travelTime": this.state.ride.travelTime,
-        //         "travelDescription": this.state.ride.travelDescription
-        //     })
-        // })
-            // .then(response => {
-            //     responseStatus = response.status;
-            //     return response.json()
-            // })
-            // .then(response => {
-            //     if (responseStatus == 400) {
-            //         this.setState({
-            //             error: "Missing one or more ride details"
-            //         })
-            //     }
-            //     else if (responseStatus == 200) {
-            //          //  Get drive results
-            //          //  then determine whether to show ZeroResults page or ResultsPage
-            //          //  written below
-            //     }
-            //     else {
-            //         this.setState({
-            //             error: "Some error occured. Please try again. If problem persists, " +
-            //                 "please let us know at support@thumbtravel.com"
-            //         })
-            //     }
-            // })
-            // .catch(error => {
-            //     // TODO log error
-            //     this.setState({
-            //         error: "Some error occured. Please try again. If problem persists, " +
-            //             "please let us know at support@thumbtravel.com"
-            //     })
-            // })
-
-            // mock data
-            let driveResults = [
-                {
-                    // Drive info
-                    driveId: 1,
-                    driveDate: '05/31/2018',
-                    driveTimes: [2, 8],
-                    drivePrice: '30 $',
-                    driveTravelDescription: 'For my cousin\'s wedding',
-                    // Driver Info
-                    driverFirstName: 'John',
-                    driverUsername: 'john_cena',
-                    driverProfilePicture: 'john.jpg',
-                },
-                {
-                    // Drive info
-                    driveId: 2,
-                    driveDate: '06/15/2018',
-                    driveTimes: [1, 9],
-                    drivePrice: '35 $',
-                    driveTravelDescription: 'For my wedding',
-                    // Driver Info
-                    driverFirstName: 'Jane',
-                    driverUsername: 'just_jane',
-                    driverProfilePicture: 'jane.jpg',
+        fetch(API_URL + '/ride/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer' + ' ' + global.auth_token
+            },
+            body: JSON.stringify({
+                "startLocation": this.state.ride.startLocation,
+                "endLocation": this.state.ride.endLocation,
+                "pickupNotes": this.state.ride.pickupNotes,
+                "travelDate": this.state.ride.travelDate,
+                "travelTime": this.state.ride.travelTime,
+                "travelDescription": this.state.ride.travelDescription
+            })
+        })
+            .then(response => {
+                responseStatus = response.status;
+                return response.json()
+            })
+            .then(response => {
+                if (responseStatus == 400) {
+                    this.setState({
+                        error: "Missing one or more ride details"
+                    })
                 }
-            ];       
-            if (driveResults.length === 0) {
-                const resetAction = StackActions.reset({
-                    index: 1,
-                    actions: [
-                        NavigationActions.navigate({ routeName: 'Travel'}),
-                        NavigationActions.navigate({ 
-                            routeName: 'RideStep4',
-                            params: {
-                                ride: this.state.ride
-                            }
-                        })
-                    ],
-                });
-                this.props.navigation.dispatch(resetAction);
-            } else {
-                const resetAction = StackActions.reset({
-                    index: 1,
-                    actions: [
-                        NavigationActions.navigate({ routeName: 'Travel'}),
-                        NavigationActions.navigate({ 
-                            routeName: 'RideResults',
-                            params: {
-                                ride: this.state.ride,
-                                driveResults: driveResults
-                            }
-                        })
-                    ],
-                });
-                this.props.navigation.dispatch(resetAction);
+                else if (responseStatus == 200) {
+                    this.getDriveResults();
+                }
+                else {
+                    this.setState({
+                        error: "Some error occured. Please try again. If problem persists, " +
+                            "please let us know at support@thumbtravel.com"
+                    })
+                }
+            })
+            .catch(error => {
+                // TODO log error
+                this.setState({
+                    error: "Some error occured. Please try again. If problem persists, " +
+                        "please let us know at support@thumbtravel.com"
+                })
+            });
+    }
+
+    getDriveResults() {
+        let responseStatus = 0;
+        fetch(API_URL + '/drive/tripmatches?' +
+            'startPoint={"latitude":' + this.state.ride.startLocation.latitude +
+            ', "longitude":' + this.state.ride.startLocation.longitude +
+            '}&endPoint={"latitude":' + this.state.ride.endLocation.latitude +
+            ', "longitude":' + this.state.ride.endLocation.longitude +
+            '}&travelDate=' + this.state.ride.travelDate, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer' + ' ' + global.auth_token
             }
+        })
+            .then(response => {
+                responseStatus = response.status;
+                return response.json()
+            })
+            .then(response => {
+                console.log(JSON.stringify(response));
+                if (responseStatus === 200 && response.length > 0) {
+                    const resetAction = StackActions.reset({
+                        index: 1,
+                        actions: [
+                            NavigationActions.navigate({ routeName: 'Travel'}),
+                            NavigationActions.navigate({ 
+                                routeName: 'RideResults',
+                                params: {
+                                    ride: this.state.ride,
+                                    driveResults: response
+                                }
+                            })
+                        ],
+                    });
+                    this.props.navigation.dispatch(resetAction);
+                } else {
+                    this.sendToZeroResultsPage();                    
+                }
+            })
+            .catch(error => {
+                // TODO log error
+                this.sendToZeroResultsPage();
+            });
+    }
+
+    sendToZeroResultsPage() {
+        const resetAction = StackActions.reset({
+            index: 1,
+            actions: [
+                NavigationActions.navigate({ routeName: 'Travel'}),
+                NavigationActions.navigate({ 
+                    routeName: 'RideStep4',
+                    params: {
+                        ride: this.state.ride
+                    }
+                })
+            ],
+        });
+        this.props.navigation.dispatch(resetAction);
     }
 
     render() {
