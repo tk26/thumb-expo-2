@@ -16,18 +16,18 @@ export default class DriveResults extends Component {
         return (
             <View>
                 <Text>
-                    {/* {JSON.stringify(ride.startLocation.address)}
+                    {drive.startLocation.address}
                     {'\n'}
-                    {JSON.stringify(ride.endLocation.address)}
+                    {drive.endLocation.address}
                     {'\n'}
-                    {ride.travelDate}
+                    Seats available: {drive.availableSeats}
                     {'\n'}
-                    {ride.travelTime[0]}:00 to {ride.travelTime[1]}:00
+                    {drive.travelDate}
                     {'\n'}
-                    {ride.pickupNotes}
+                    {drive.travelTime[0]}:00 to {drive.travelTime[1]}:00
                     {'\n'}
-                    {ride.travelDescription}
-                    {'\n'} */}
+                    {drive.travelDescription}
+                    {'\n'}
                 </Text>
 
                 <Text>Trip Results</Text>
@@ -70,19 +70,21 @@ export default class DriveResults extends Component {
                                 <View key={ride.rideId} style={styles.view}>
                                     <TouchableHighlight>
                                         <Text>
-                                            {ride.rideDate}
+                                            {ride.travelDate}
                                             {'\n'}
-                                            {ride.rideTimes[0]} to {ride.rideTimes[1]}
+                                            {ride.travelTime}
                                             {'\n'}
-                                            {ride.ridePickupNotes} 
+                                            {"$ 27"} 
                                             {'\n'}
-                                            {ride.rideTravelDescription}
+                                            {ride.travelDescription}
                                             {'\n'}
-                                            {ride.riderFirstName}
+                                            {ride.userFirstName}
                                             {'\n'}
-                                            {ride.riderUsername}
+                                            {ride.userName}
                                             {'\n'}
-                                            {ride.riderProfilePicture}
+                                            {ride.pickupNotes}
+                                            {'\n'}
+                                            {ride.userProfilePicture}
                                             {'\n'}
                                         </Text>
                                     </TouchableHighlight>

@@ -16,9 +16,9 @@ export default class RideResults extends Component {
         return (
             <View>
                 <Text>
-                    {/* {JSON.stringify(ride.startLocation.address)}
+                    {ride.startLocation.address}
                     {'\n'}
-                    {JSON.stringify(ride.endLocation.address)}
+                    {ride.endLocation.address}
                     {'\n'}
                     {ride.travelDate}
                     {'\n'}
@@ -27,7 +27,7 @@ export default class RideResults extends Component {
                     {ride.pickupNotes}
                     {'\n'}
                     {ride.travelDescription}
-                    {'\n'} */}
+                    {'\n'}
                 </Text>
 
                 <Text>Trip Results</Text>
