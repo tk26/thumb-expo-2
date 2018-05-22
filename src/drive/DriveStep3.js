@@ -45,19 +45,7 @@ export default class DriveStep3 extends Component {
                     })
                 }
                 else if (responseStatus == 200) {
-                    const resetAction = StackActions.reset({
-                        index: 1,
-                        actions: [
-                            NavigationActions.navigate({ routeName: 'Travel'}),
-                            NavigationActions.navigate({ 
-                                routeName: 'DriveStep4',
-                                params: {
-                                    drive: this.state.drive
-                                }
-                            })
-                        ],
-                    });
-                    this.props.navigation.dispatch(resetAction);
+                    this.getRideResults();
                 }
                 else {
                     this.setState({
@@ -72,7 +60,68 @@ export default class DriveStep3 extends Component {
                     error: "Some error occured. Please try again. If problem persists, " +
                         "please let us know at support@thumbtravel.com"
                 })
+            });
+    }
+
+    getRideResults() {
+        let responseStatus = 0;
+        fetch(API_URL + '/ride/tripmatches?' +
+            'startPoint={"latitude":' + this.state.drive.startLocation.latitude +
+            ', "longitude":' + this.state.drive.startLocation.longitude +
+            '}&endPoint={"latitude":' + this.state.drive.endLocation.latitude +
+            ', "longitude":' + this.state.drive.endLocation.longitude +
+            '}&travelDate=' + this.state.drive.travelDate, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer' + ' ' + global.auth_token
+            }
+        })
+            .then(response => {
+                responseStatus = response.status;
+                return response.json()
             })
+            .then(response => {
+                console.log(JSON.stringify(response));
+                if (responseStatus === 200 && response.length > 0) {
+                    const resetAction = StackActions.reset({
+                        index: 1,
+                        actions: [
+                            NavigationActions.navigate({ routeName: 'Travel'}),
+                            NavigationActions.navigate({ 
+                                routeName: 'DriveResults',
+                                params: {
+                                    drive: this.state.drive,
+                                    rideResults: response
+                                }
+                            })
+                        ],
+                    });
+                    this.props.navigation.dispatch(resetAction);
+                } else {
+                    this.sendToZeroResultsPage();                    
+                }
+            })
+            .catch(error => {
+                // TODO log error
+                this.sendToZeroResultsPage();
+            });
+    }
+
+    sendToZeroResultsPage() {
+        const resetAction = StackActions.reset({
+            index: 1,
+            actions: [
+                NavigationActions.navigate({ routeName: 'Travel'}),
+                NavigationActions.navigate({ 
+                    routeName: 'DriveStep4',
+                    params: {
+                        drive: this.state.drive
+                    }
+                })
+            ],
+        });
+        this.props.navigation.dispatch(resetAction);
     }
 
     render() {
@@ -81,9 +130,9 @@ export default class DriveStep3 extends Component {
             <View>
                 <View>
                     <Text>
-                        {JSON.stringify(drive.startLocation.address)}
+                        {drive.startLocation.address}
                         {'\n'}
-                        {JSON.stringify(drive.endLocation.address)}
+                        {drive.endLocation.address}
                         {'\n'}
                         Seats available: {drive.availableSeats}
                         {'\n'}

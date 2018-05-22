@@ -1,23 +1,16 @@
 import React, { Component } from 'react';
 import { Image, View, Text, Button, TextInput } from 'react-native';
-import { MapView, Location } from 'expo';
+
+const GOOGLE_API_KEY = 'AIzaSyBjmDuIk2aL8CbCi6FBr7ExGhms42k7ZEw';
 
 const initialState = {
-    region: { 
-        latitude: 39.716859, 
-        longitude: -86.295595, 
-        latitudeDelta: 2.4, 
-        longitudeDelta: 1.8
-    },
-    locationResult: null,
     startLocation: {
-        latitude: 39.716859, longitude: -86.295595
+        address: '', latitude: '', longitude: '', city: ''
     },
-    startAddress: '',
     endLocation: {
-        latitude: 39.184405, longitude: -86.538042
+        address: '', latitude: '', longitude: '', city: ''
     },
-    endAddress: '',
+    startAddress: '', endAddress: '',
     pickupNotes: '',
     error: ''
 }
@@ -28,81 +21,110 @@ export default class RideStep1 extends Component {
         this.state = initialState;
     }
 
-    componentDidMount() {
-        Location.setApiKey('AIzaSyBM4s2TPgaBA9JMCMMZv_VlRGdTTkucQEU');
-    }
-
-    _handleMapRegionChange = region => {
-        this.setState({ region });
-    };
-
-    _handleOnDragEndForStartLocation = e => {
-        this.setState({            
-            startLocation: e.nativeEvent.coordinate
-        });
-    }
-
-    _handleOnDragEndForEndLocation = e => {
-        this.setState({
-            endLocation: e.nativeEvent.coordinate
-        });
+    validateAndGeocodeAddresses() {
+        fetch('https://maps.googleapis.com/maps/api/geocode/json?address='+ 
+            this.state.startAddress + '&key='+ GOOGLE_API_KEY, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => {
+            return response.json()
+        })
+        .then(response => {
+            if (response.length === 0) {
+                throw Error('No response found');
+            }
+            let formattedAddress = response.results[0].formatted_address;
+            let formattedAddressArr = formattedAddress.split(',');
+            this.setState({
+                startLocation: {
+                    address: formattedAddress,
+                    latitude: response.results[0].geometry.location.lat,
+                    longitude: response.results[0].geometry.location.lng,
+                    city: formattedAddressArr[formattedAddressArr.length - 3].trim() || ''
+                },
+                startAddress: formattedAddress
+            });
+        })
+        .then(() => {
+            fetch('https://maps.googleapis.com/maps/api/geocode/json?address='+ 
+                this.state.endAddress + '&key='+ GOOGLE_API_KEY, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => {
+                return response.json()
+            })
+            .then(response => {
+                if (response.length === 0) {
+                    throw Error('No response found');
+                }
+                let formattedAddress = response.results[0].formatted_address;
+                let formattedAddressArr = formattedAddress.split(',');
+                this.setState({
+                    endLocation: {
+                        address: formattedAddress,
+                        latitude: response.results[0].geometry.location.lat,
+                        longitude: response.results[0].geometry.location.lng,
+                        city: formattedAddressArr[formattedAddressArr.length - 3].trim() || ''
+                    },
+                    endAddress: formattedAddress
+                });
+                // build a ride object and pass it through
+                let ride = {
+                    startLocation: this.state.startLocation,
+                    endLocation: this.state.endLocation,
+                    pickupNotes: this.state.pickupNotes
+                }
+                console.log(JSON.stringify(ride));
+                this.props.navigation.navigate('RideStep2', { ride });
+            })
+            .catch(() => {
+                // TODO log error: Refer https://developers.google.com/maps/documentation/geocoding/intro?csw=1#StatusCodes
+                this.setState({ error: 'Some error occured. Please try putting a correct address again.' });
+            });
+        })
+        .catch(() => {
+            // TODO log error: Refer https://developers.google.com/maps/documentation/geocoding/intro?csw=1#StatusCodes
+            this.setState({ error: 'Some error occured. Please try putting a correct address again.' });
+        }); 
     }
 
     goNext = () => {
-        Location.reverseGeocodeAsync(this.state.startLocation)
-            .then(startAddress => {
-                startAddress = startAddress[0];
-                this.setState({ startAddress });
-                Location.reverseGeocodeAsync(this.state.endLocation)
-                    .then(endAddress => {
-                        endAddress = endAddress[0];
-                        this.setState({ endAddress });
-                        // build a ride object to be passed through  
-                        let ride = {
-                            startLocation: {
-                                address: this.state.startAddress,
-                                latitude: this.state.startLocation.latitude,
-                                longitude: this.state.startLocation.longitude
-                            },
-                            endLocation: {
-                                address: this.state.endAddress,
-                                latitude: this.state.endLocation.latitude,
-                                longitude: this.state.endLocation.longitude
-                            },
-                            pickupNotes: this.state.pickupNotes
-                        }
-                        console.log(JSON.stringify(ride));
-                        this.props.navigation.navigate('RideStep2', { ride });
-                    });
-            });
+        if (this.state.startAddress.length < 10) {
+            this.setState({ error: 'Please make sure your start address is valid' });
+            return;
+        }
+
+        if (this.state.endAddress.length < 10) {
+            this.setState({ error: 'Please make sure your end address is valid' });
+            return;
+        }
+
+        this.validateAndGeocodeAddresses();
     }
 
     render() {
         return (
             <View>
                 <Text>Build your ride - Choose pickup and dropoff locations</Text>
+
+                <TextInput 
+                    maxLength={100}
+                    onChangeText={(startAddress) => this.setState({ startAddress, error: '' })}
+                    value={this.state.startAddress}
+                    placeholder="Start address"
+                />
                 
-                <MapView
-                    style={{ alignSelf: 'stretch', height: 350 }}
-                    region={this.state.region}
-                    onRegionChange={this._handleMapRegionChange}
-                >
-                    <MapView.Marker draggable
-                        coordinate={this.state.startLocation}
-                        title="Start"
-                        description="Your pickup location"
-                        onDragEnd={this._handleOnDragEndForStartLocation}
-                    />
-                    <MapView.Marker draggable
-                        coordinate={this.state.endLocation}
-                        title="End"
-                        description="Your dropoff location"
-                        onDragEnd={this._handleOnDragEndForEndLocation}
-                    />
-                </MapView>
-
+                <TextInput 
+                    maxLength={100}
+                    onChangeText={(endAddress) => this.setState({ endAddress, error: '' })}
+                    value={this.state.endAddress}
+                    placeholder="End address"
+                />
+                
                 <Text>PICK UP NOTES</Text>
-
+                
                 <TextInput
                     maxLength={100}
                     multiline={true}

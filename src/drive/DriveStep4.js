@@ -13,9 +13,9 @@ export default class DriveStep4 extends Component {
             <View>
                 <View>
                     <Text>
-                        {JSON.stringify(drive.startLocation.address)}
+                        {drive.startLocation.address}
                         {'\n'}
-                        {JSON.stringify(drive.endLocation.address)}
+                        {drive.endLocation.address}
                         {'\n'}
                         Seats available: {drive.availableSeats}
                         {'\n'}

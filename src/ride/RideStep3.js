@@ -45,19 +45,7 @@ export default class RideStep3 extends Component {
                     })
                 }
                 else if (responseStatus == 200) {
-                    const resetAction = StackActions.reset({
-                        index: 1,
-                        actions: [
-                            NavigationActions.navigate({ routeName: 'Travel'}),
-                            NavigationActions.navigate({ 
-                                routeName: 'RideStep4',
-                                params: {
-                                    ride: this.state.ride
-                                }
-                            })
-                        ],
-                    });
-                    this.props.navigation.dispatch(resetAction);
+                    this.getDriveResults();
                 }
                 else {
                     this.setState({
@@ -72,7 +60,68 @@ export default class RideStep3 extends Component {
                     error: "Some error occured. Please try again. If problem persists, " +
                         "please let us know at support@thumbtravel.com"
                 })
+            });
+    }
+
+    getDriveResults() {
+        let responseStatus = 0;
+        fetch(API_URL + '/drive/tripmatches?' +
+            'startPoint={"latitude":' + this.state.ride.startLocation.latitude +
+            ', "longitude":' + this.state.ride.startLocation.longitude +
+            '}&endPoint={"latitude":' + this.state.ride.endLocation.latitude +
+            ', "longitude":' + this.state.ride.endLocation.longitude +
+            '}&travelDate=' + this.state.ride.travelDate, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer' + ' ' + global.auth_token
+            }
+        })
+            .then(response => {
+                responseStatus = response.status;
+                return response.json()
             })
+            .then(response => {
+                console.log(JSON.stringify(response));
+                if (responseStatus === 200 && response.length > 0) {
+                    const resetAction = StackActions.reset({
+                        index: 1,
+                        actions: [
+                            NavigationActions.navigate({ routeName: 'Travel'}),
+                            NavigationActions.navigate({ 
+                                routeName: 'RideResults',
+                                params: {
+                                    ride: this.state.ride,
+                                    driveResults: response
+                                }
+                            })
+                        ],
+                    });
+                    this.props.navigation.dispatch(resetAction);
+                } else {
+                    this.sendToZeroResultsPage();                    
+                }
+            })
+            .catch(error => {
+                // TODO log error
+                this.sendToZeroResultsPage();
+            });
+    }
+
+    sendToZeroResultsPage() {
+        const resetAction = StackActions.reset({
+            index: 1,
+            actions: [
+                NavigationActions.navigate({ routeName: 'Travel'}),
+                NavigationActions.navigate({ 
+                    routeName: 'RideStep4',
+                    params: {
+                        ride: this.state.ride
+                    }
+                })
+            ],
+        });
+        this.props.navigation.dispatch(resetAction);
     }
 
     render() {
@@ -81,9 +130,9 @@ export default class RideStep3 extends Component {
             <View>
                 <View>
                     <Text>
-                        {JSON.stringify(ride.startLocation.address)}
+                        {ride.startLocation.address}
                         {'\n'}
-                        {JSON.stringify(ride.endLocation.address)}
+                        {ride.endLocation.address}
                         {'\n'}
                         {ride.travelDate}
                         {'\n'}
