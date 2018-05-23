@@ -12,6 +12,7 @@ import SignupSuccess from './signup/SignupSuccess';
 import Home from './home/Home';
 import Thumb from './thumb/Thumb';
 import Travel from './travel/Travel';
+import Notifications from './notifications/Notifications';
 
 import RideStep1 from './ride/RideStep1';
 import RideStep2 from './ride/RideStep2';
@@ -210,6 +211,12 @@ const LoggedInTabs = createBottomTabNavigator({
         screen: TravelStack,
         navigationOptions: {
             tabBarLabel: 'Travel'
+        }
+    },
+    Notification: {
+        screen: Notifications,
+        navigationOptions: {
+            tabBarLabel: 'Notifications'
         }
     },
     Profile: {

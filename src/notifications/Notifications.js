@@ -3,7 +3,7 @@ import { View, Text, Button, Image } from 'react-native';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { FontAwesome } from '@expo/vector-icons';
 
-export default class Home extends Component {
+export default class Notifications extends Component {
     constructor(props) {
         super(props);
     }
@@ -14,8 +14,8 @@ export default class Home extends Component {
                 <Image source={require('./../../assets/thumb-horizontal-logo.png')} />
                 
                 <FontAwesome name="search" size={32} />
-                
-                <Text>Hello from Home!</Text>
+
+                <Text>your notifications</Text>
 
                 <Button title="Ride" onPress={() => {
                     const resetAction = StackActions.reset({
