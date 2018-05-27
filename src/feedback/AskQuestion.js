@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Button, TextInput, Image } from 'react-native';
-import { API_URL } from 'react-native-dotenv';
+import { getApiUrl } from '.././helper';
 import { NavigationActions } from 'react-navigation';
 
 const initialState = {
@@ -20,7 +20,7 @@ export default class AskQuestion extends Component {
         }
 
         let responseStatus = 0;
-        fetch(API_URL + '/feedback/submit/', {
+        fetch(getApiUrl() + '/feedback/submit/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

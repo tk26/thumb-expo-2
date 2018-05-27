@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Button, TextInput, Image } from 'react-native';
-import { API_URL } from 'react-native-dotenv';
+import { getApiUrl } from '.././helper';
 import { NavigationActions, StackActions } from 'react-navigation';
 
 export default class RideStep3 extends Component {
@@ -19,7 +19,7 @@ export default class RideStep3 extends Component {
         
         this.state.ride.travelDescription = this.state.travelDescription;
         let responseStatus = 0;
-        fetch(API_URL + '/ride/create', {
+        fetch(getApiUrl() + '/ride/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export default class RideStep3 extends Component {
 
     getDriveResults() {
         let responseStatus = 0;
-        fetch(API_URL + '/drive/tripmatches?' +
+        fetch(getApiUrl() + '/drive/tripmatches?' +
             'startPoint={"latitude":' + this.state.ride.startLocation.latitude +
             ', "longitude":' + this.state.ride.startLocation.longitude +
             '}&endPoint={"latitude":' + this.state.ride.endLocation.latitude +

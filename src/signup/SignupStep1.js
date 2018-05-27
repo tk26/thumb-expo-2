@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Button, TextInput } from 'react-native';
-import { API_URL } from 'react-native-dotenv';
+import { getApiUrl } from '.././helper';
 
 const initialState = {
     firstName: '', lastName: '', username: '', error: ''
@@ -34,7 +34,7 @@ export default class SignupStep1 extends Component {
 
         // server side validation
         let responseStatus = 0;
-        fetch(API_URL + '/user/validate/username/' + this.state.username, {
+        fetch(getApiUrl() + '/user/validate/username/' + this.state.username, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

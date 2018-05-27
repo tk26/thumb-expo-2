@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, Button, TextInput, Image, AsyncStorage, TouchableOpacity } from 'react-native';
 import { NavigationActions } from 'react-navigation';
-import { API_URL } from 'react-native-dotenv';
+import { getApiUrl } from '.././helper';
 import { ImagePicker, Permissions } from 'expo';
 
 const headerPhotoMap = {
@@ -39,7 +39,7 @@ export default class EditProfile extends Component {
     validateAndUpdate() {
         // server side validation
         let responseStatus = 0;
-        fetch(API_URL+'/user/edit/', {
+        fetch(getApiUrl() + '/user/edit/', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

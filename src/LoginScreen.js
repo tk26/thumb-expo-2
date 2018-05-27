@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Button, TextInput, Image, Linking, AsyncStorage } from 'react-native';
-import { API_URL } from 'react-native-dotenv';
+import { getApiUrl } from './helper';
 import { onLogIn } from './auth';
 
 const initialState = {
@@ -32,7 +32,7 @@ export default class LoginScreen extends Component {
 
         // server side validation
         let responseStatus = 0;
-        fetch(API_URL + '/user/login', {
+        fetch(getApiUrl() + '/user/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

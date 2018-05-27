@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Button, TextInput, Picker } from 'react-native';
-import { API_URL } from 'react-native-dotenv';
+import { getApiUrl } from '.././helper';
 import DatePicker from 'react-native-datepicker';
 import moment from 'moment';
 
@@ -41,7 +41,7 @@ export default class SignupStep3 extends Component {
 
         // server side validation
         let responseStatus = 0
-        fetch(API_URL + '/user/validate/email/' + this.state.email.toLowerCase(), {
+        fetch(getApiUrl() + '/user/validate/email/' + this.state.email.toLowerCase(), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

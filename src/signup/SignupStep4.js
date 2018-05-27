@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Button, Image, Linking } from 'react-native';
-import { API_URL } from 'react-native-dotenv';
+import { getApiUrl } from '.././helper';
 import { NavigationActions, StackActions } from 'react-navigation';
 
 export default class SignupStep4 extends Component {
@@ -12,7 +12,7 @@ export default class SignupStep4 extends Component {
 
     submitUser() {
         let responseStatus = 0;
-        fetch(API_URL + '/user/create', {
+        fetch(getApiUrl() + '/user/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
