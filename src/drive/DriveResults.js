@@ -84,12 +84,14 @@ export default class DriveResults extends Component {
                                             {'\n'}
                                             {ride.pickupNotes}
                                             {'\n'}
-                                            {ride.userProfilePicture}
+                                            {/* {ride.userProfilePicture} */}
                                             {'\n'}
                                         </Text>
                                     </TouchableHighlight>
 
-                                    <Button title="Invite Rider" onPress={() => {}} />
+                                    <Button title="Invite Rider" onPress={() => {
+                                        this.props.navigation.navigate('InviteRider', { ride, drive });
+                                    }} />
                                 </View>
                             );
                         })

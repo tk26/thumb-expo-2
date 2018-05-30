@@ -25,6 +25,7 @@ import DriveStep2 from './drive/DriveStep2';
 import DriveStep3 from './drive/DriveStep3';
 import DriveStep4 from './drive/DriveStep4';
 import DriveResults from './drive/DriveResults';
+import InviteRider from './drive/InviteRider';
 
 import Profile from './profile/Profile';
 import EditProfile from './profile/EditProfile';
@@ -190,6 +191,12 @@ const TravelStack = createStackNavigator({
         screen: DriveResults,
         navigationOptions: {
             title: 'Drive: Found Results',
+        }
+    },
+    InviteRider: {
+        screen: InviteRider,
+        navigationOptions: {
+            title: 'Invite Rider',
         }
     },
 });
