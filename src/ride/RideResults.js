@@ -87,7 +87,9 @@ export default class RideResults extends Component {
                                         </Text>
                                     </TouchableHighlight>
 
-                                    <Button title="Invite Driver" onPress={() => {}} />
+                                    <Button title="Invite Driver" onPress={() => {
+                                        this.props.navigation.navigate('InviteDriver', { drive, ride });
+                                    }} />
                                 </View>
                             );
                         })
