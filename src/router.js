@@ -30,6 +30,7 @@ import InviteRider from './drive/InviteRider';
 
 import Profile from './profile/Profile';
 import EditProfile from './profile/EditProfile';
+import PublicProfile from './profile/PublicProfile';
 
 import Feedback from './feedback/Feedback';
 import ReportBug from './feedback/ReportBug';
@@ -254,6 +255,9 @@ export const createRootNavigator = (loggedIn = false) => {
             navigationOptions: {
                 gesturesEnabled: false
             }
+        },
+        PublicProfile: {
+            screen: PublicProfile,
         }
     },
     {
