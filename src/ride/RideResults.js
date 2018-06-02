@@ -68,24 +68,35 @@ export default class RideResults extends Component {
                         driveResults.map(drive => {
                             return (
                                 <View key={drive.driveId} style={styles.view}>
-                                    <TouchableHighlight>
+                                    <Text>
+                                        {drive.travelDate}
+                                        {'\n'}
+                                        {drive.travelTime}
+                                        {'\n'}
+                                        {"$ 31"} 
+                                        {'\n'}
+                                        {drive.travelDescription}
+                                        {'\n'}
+                                        {drive.userFirstName}
+                                        {'\n'}
+                                    </Text>
+
+                                    <TouchableHighlight
+                                        onPress={() => {
+                                            drive.userName === global.username ? this.props.navigation.navigate('Profile')
+                                                : this.props.navigation.navigate('PublicProfile', { username: drive.userName });
+                                        }}
+                                    >
                                         <Text>
-                                            {drive.travelDate}
-                                            {'\n'}
-                                            {drive.travelTime}
-                                            {'\n'}
-                                            {"$ 31"} 
-                                            {'\n'}
-                                            {drive.travelDescription}
-                                            {'\n'}
-                                            {drive.userFirstName}
-                                            {'\n'}
                                             {drive.userName}
-                                            {'\n'}
-                                            {drive.userProfilePicture}
                                             {'\n'}
                                         </Text>
                                     </TouchableHighlight>
+                                    
+                                    <Text>
+                                        {/* {drive.userProfilePicture} */}
+                                        {'\n'}
+                                    </Text>
 
                                     <Button title="Invite Driver" onPress={() => {
                                         this.props.navigation.navigate('InviteDriver', { drive, ride });

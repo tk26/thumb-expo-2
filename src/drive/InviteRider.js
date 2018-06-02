@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Button, Picker, Alert } from 'react-native';
+import { View, Text, Button, Picker, Alert, TouchableHighlight } from 'react-native';
 
 const initialState = {
     timeRequested: 'none', isInvited: false, error: ''
@@ -54,8 +54,19 @@ export default class InviteRider extends Component {
                     {'\n'}
                     {/* Profile Picture: {ride.userProfilePicture} */}
                     {'\n'}
-                    @ {ride.userName}
-                    {'\n'}
+                </Text>
+                <TouchableHighlight
+                    onPress={() => {
+                        ride.userName === global.username ? this.props.navigation.navigate('Profile')
+                            : this.props.navigation.navigate('PublicProfile', { username: ride.userName });
+                    }}
+                >
+                    <Text>
+                        @{ride.userName}
+                        {'\n'}
+                    </Text>
+                </TouchableHighlight>
+                <Text>
                     {ride.travelDescription}
                     {'\n'}
                     {ride.pickupNotes}

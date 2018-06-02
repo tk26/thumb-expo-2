@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Button, Picker, Alert } from 'react-native';
+import { View, Text, Button, Picker, Alert, TouchableHighlight } from 'react-native';
 
 const initialState = {
     timeRequested: 'none', isInvited: false, error: ''
@@ -54,8 +54,19 @@ export default class InviteDriver extends Component {
                     {'\n'}
                     {/* Profile Picture: {drive.userProfilePicture} */}
                     {'\n'}
-                    @ {drive.userName}
-                    {'\n'}
+                </Text>
+                <TouchableHighlight
+                    onPress={() => {
+                        drive.userName === global.username ? this.props.navigation.navigate('Profile')
+                            : this.props.navigation.navigate('PublicProfile', { username: drive.userName });
+                    }}
+                >
+                    <Text>
+                        @{drive.userName}
+                        {'\n'}
+                    </Text>
+                </TouchableHighlight>
+                <Text>
                     {drive.travelDescription}
                     {'\n'}
                     {drive.travelTime}
