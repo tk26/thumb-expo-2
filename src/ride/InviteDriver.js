@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Button, Picker, Alert, TouchableHighlight } from 'react-native';
+import { getApiUrl } from '.././helper';
 
 const initialState = {
     timeRequested: 'none', isInvited: false, error: ''
@@ -9,6 +10,7 @@ export default class InviteDriver extends Component {
     constructor(props) {
         super(props);
         this.state = initialState;
+        this.state.rideId = this.props.navigation.state.params.rideId;
     }
 
     getEarliestTravelTime(left, right) {
@@ -38,9 +40,50 @@ export default class InviteDriver extends Component {
             this.setState({ error: "Please select a time" });
             return;
         }
-        // TODO call API, also attach it to the results as "Request sent"
-        Alert.alert('Request sent', '');
-        this.setState({ isInvited: true });
+
+        let responseStatus = 0;
+        fetch(getApiUrl() + '/ride/invitedriver', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer' + ' ' + global.auth_token
+            },
+            body: JSON.stringify({
+                "toUserId": this.props.navigation.state.params.drive.userId,
+                "rideId": this.props.navigation.state.params.rideId,
+                "driveId": this.props.navigation.state.params.drive.driveId,
+                "requestedTimes": this.state.timeRequested.toString().split(","),
+                "comment": this.props.navigation.state.params.ride.travelDescription || "",
+            })
+        })
+        .then(response => {
+            responseStatus = response.status;
+            return response.json()
+        })
+        .then(response => {
+            if (responseStatus == 400) {
+                this.setState({
+                    error: "Missing one or more invitation details"
+                })
+            }
+            else if (responseStatus == 200) {
+                Alert.alert('Request sent', '');
+                this.setState({ isInvited: true });
+            }
+            else {
+                this.setState({
+                    error: "Some error occured. Please try again. If problem persists, " +
+                        "please let us know at support@thumbtravel.com"
+                })
+            }
+        })
+        .catch(error => {
+            // TODO log error
+            this.setState({
+                error: "Some error occured. Please try again. If problem persists, " +
+                    "please let us know at support@thumbtravel.com"
+            })
+        });
     }
 
     render() {

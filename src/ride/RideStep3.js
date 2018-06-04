@@ -9,6 +9,7 @@ export default class RideStep3 extends Component {
         this.state = this.props.navigation.state.params;
         this.state.error = '';
         this.state.travelDescription = '';
+        this.state.rideId = '';
     }
 
     submitRide() {
@@ -45,6 +46,8 @@ export default class RideStep3 extends Component {
                     })
                 }
                 else if (responseStatus == 200) {
+                    // TODO save user rides in local storage with a key
+                    this.setState({ rideId: response.ride.rideId });
                     this.getDriveResults();
                 }
                 else {
@@ -92,7 +95,8 @@ export default class RideStep3 extends Component {
                                 routeName: 'RideResults',
                                 params: {
                                     ride: this.state.ride,
-                                    driveResults: response
+                                    driveResults: response,
+                                    rideId: this.state.rideId,
                                 }
                             })
                         ],
@@ -116,7 +120,8 @@ export default class RideStep3 extends Component {
                 NavigationActions.navigate({ 
                     routeName: 'RideStep4',
                     params: {
-                        ride: this.state.ride
+                        ride: this.state.ride,
+                        rideId: this.state.rideId,
                     }
                 })
             ],

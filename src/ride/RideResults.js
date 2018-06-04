@@ -12,6 +12,7 @@ export default class RideResults extends Component {
     render() {
         const ride = this.props.navigation.state.params.ride;
         const driveResults = this.props.navigation.state.params.driveResults;
+        const rideId = this.props.navigation.state.params.rideId;
         
         return (
             <View>
@@ -99,7 +100,7 @@ export default class RideResults extends Component {
                                     </Text>
 
                                     <Button title="Invite Driver" onPress={() => {
-                                        this.props.navigation.navigate('InviteDriver', { drive, ride });
+                                        this.props.navigation.navigate('InviteDriver', { drive, ride, rideId });
                                     }} />
                                 </View>
                             );

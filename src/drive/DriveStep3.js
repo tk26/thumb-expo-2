@@ -9,6 +9,7 @@ export default class DriveStep3 extends Component {
         this.state = this.props.navigation.state.params;
         this.state.error = '';
         this.state.travelDescription = '';
+        this.state.driveId = '';
     }
     
     submitDrive() {
@@ -45,6 +46,8 @@ export default class DriveStep3 extends Component {
                     })
                 }
                 else if (responseStatus == 200) {
+                    // TODO save user drives in local storage with a key
+                    this.setState({ driveId: response.drive.driveId });
                     this.getRideResults();
                 }
                 else {
@@ -92,7 +95,8 @@ export default class DriveStep3 extends Component {
                                 routeName: 'DriveResults',
                                 params: {
                                     drive: this.state.drive,
-                                    rideResults: response
+                                    rideResults: response,
+                                    driveId: this.state.driveId,
                                 }
                             })
                         ],
@@ -116,7 +120,8 @@ export default class DriveStep3 extends Component {
                 NavigationActions.navigate({ 
                     routeName: 'DriveStep4',
                     params: {
-                        drive: this.state.drive
+                        drive: this.state.drive,
+                        driveId: this.state.driveId,
                     }
                 })
             ],
