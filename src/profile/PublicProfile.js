@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, Button } from 'react-native';
+import { View, Text, Image, Button, Alert } from 'react-native';
 import { getApiUrl } from '.././helper';
 
 const initialState = {
@@ -85,6 +85,51 @@ export default class PublicProfile extends Component {
         });
     }
 
+    unfollowUser() {
+        let responseStatus = 0;
+        fetch(getApiUrl() + '/user/unfollow/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer' + ' ' + global.auth_token
+            },
+            body: JSON.stringify({
+                "toUsername" : this.state.username,
+            })
+        }).then( response => {
+            responseStatus = response.status;
+            return response.json();
+        }).then( response => {
+            if (responseStatus === 200) {
+                this.setState({ followedByMe: false });
+            }
+            else {
+                this.setState({
+                    error: "Some error occured. Please try again. If problem persists, " +
+                        "please let us know at support@thumbtravel.com"
+                });
+            }
+        }).catch(error => {
+            // TODO log error
+            this.setState({
+                error: "Some error occured. Please try again. If problem persists, " +
+                    "please let us know at support@thumbtravel.com"
+            });
+        });
+    }
+
+    alertUnfollow() {
+        Alert.alert(
+            '@' + this.state.username,
+            'Are you sure you want to unfollow ?',
+            [
+              {text: 'Cancel', onPress: () => {}, style: 'cancel'},
+              {text: 'Confirm', onPress: () => this.unfollowUser(), style: 'destructive'},
+            ],
+            { cancelable: false }
+        );
+    }
+
     render() {
         return (
             <View>
@@ -107,9 +152,9 @@ export default class PublicProfile extends Component {
                 </Text>
 
                 <Button
-                    disabled= {this.state.followedByMe ? true : false} //had to resolve to boolean to avoid nasty warnings
-                    onPress={() => this.followUser()}
+                    onPress={() => !this.state.followedByMe ? this.followUser() : this.alertUnfollow()}
                     title={this.state.followedByMe ? "Following" : "Follow"}
+                    color={this.state.followedByMe ? "#808080" : "#4286f4"}
                 />
 
                 <Button
