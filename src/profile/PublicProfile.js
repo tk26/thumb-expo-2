@@ -4,7 +4,9 @@ import { getApiUrl } from '.././helper';
 
 const initialState = {
     firstName: '', lastName: '', school: '', profilePicture: '', 
-    followsMe: false, followedByMe: false, error: ''
+    followsMe: false, followedByMe: false, error: '',
+    followers: 0, following: 0, 
+    onTravelTab: true, onTerminalTab: false,
 }
 
 export default class PublicProfile extends Component {
@@ -34,7 +36,9 @@ export default class PublicProfile extends Component {
                     school: response.school,
                     profilePicture: response.profilePicture,
                     followsMe: response.follows.find( _ => _.username === global.username),
+                    following: response.follows.length,
                     followedByMe: response.followedBy.find( _ => _.username === global.username),
+                    followers: response.followedBy.length,
                 });
             }
             else {
@@ -68,7 +72,7 @@ export default class PublicProfile extends Component {
             return response.json();
         }).then( response => {
             if (responseStatus === 200) {
-                this.setState({ followedByMe: true });
+                this.setState({ followedByMe: true, followers: this.state.followers + 1 });
             }
             else {
                 this.setState({
@@ -101,7 +105,7 @@ export default class PublicProfile extends Component {
             return response.json();
         }).then( response => {
             if (responseStatus === 200) {
-                this.setState({ followedByMe: false });
+                this.setState({ followedByMe: false, followers: this.state.followers - 1 });
             }
             else {
                 this.setState({
@@ -130,6 +134,25 @@ export default class PublicProfile extends Component {
         );
     }
 
+    toggleTabs() {
+        this.setState({
+           onTravelTab: !this.state.onTravelTab,
+           onTerminalTab: !this.state.onTerminalTab, 
+        });
+    }
+
+    displayTravelContent() {
+        return "Bummer - they haven’t shared any trips yet! "
+            + "Skip the hassle of posting in a zillion different to find fellow riders. "
+            + "Share your trips with thumb and skip the hassle.";
+    }
+
+    displayTerminalContent() {
+        return "Bummer - they haven’t added any trips to their terminal yet. "
+        + "It’s time to make your future travel attainable. Head to the thumb Terminal "
+        + "and check out how you can start planning your future travel now.";
+    }
+
     render() {
         return (
             <View>
@@ -149,6 +172,10 @@ export default class PublicProfile extends Component {
                     {this.state.school}
                     {'\n'}
                     {this.state.followsMe ? "Follows You" : ""}
+                    {'\n'}
+                    {"Following " + this.state.following}
+                    {'\n'}
+                    {"Followers " + this.state.followers}
                 </Text>
 
                 <Button
@@ -156,6 +183,22 @@ export default class PublicProfile extends Component {
                     title={this.state.followedByMe ? "Following" : "Follow"}
                     color={this.state.followedByMe ? "#808080" : "#4286f4"}
                 />
+
+                {/* Travel and Terminal tabs */}    
+                <Text style={{fontWeight: this.state.onTravelTab ? 'bold' : 'normal'}}
+                    onPress={() => this.toggleTabs()}
+                >
+                    Travel
+                </Text>
+                <Text style={{fontWeight: this.state.onTerminalTab ? 'bold' : 'normal'}}
+                    onPress={() => this.toggleTabs()}
+                >
+                    Terminal
+                </Text>
+
+                <Text>
+                    {this.state.onTravelTab ? this.displayTravelContent() : this.displayTerminalContent()}
+                </Text>
 
                 <Button
                     onPress={() => this.props.navigation.goBack()}
