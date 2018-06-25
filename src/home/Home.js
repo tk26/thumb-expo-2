@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
-import { View, Text, Button, Image } from 'react-native';
+import { View, Text, Image, FlatList } from 'react-native';
+import { Container, Header, Left, Right, Body, Content, Button} from 'native-base';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { FontAwesome } from '@expo/vector-icons';
 import { Permissions, Notifications } from 'expo';
 import { getApiUrl } from '.././helper';
+import PostItem from './PostItem';
 
 const initialState = {
-    error: ''
+    error: '',
+    posts: [],
+    refreshing: false,
+    lastTimestamp: '1/1/2018'
 }
 
 export default class Home extends Component {
@@ -17,6 +22,7 @@ export default class Home extends Component {
 
     componentDidMount() {
         this._registerForPushNotifications();
+        this._refreshData();
     }
 
     _registerForPushNotifications = async () => {
@@ -70,39 +76,105 @@ export default class Home extends Component {
         })
     }
 
+    _refreshData = function(){
+        console.log('Refreshing...');
+        this.setState({refreshing: true});
+        let responseStatus;
+
+        fetch(getApiUrl() + '/home/feed?fromTimestamp='+ this.state.lastTimestamp,{
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer' + ' ' + global.auth_token
+            }
+        })
+        .then( response => {
+            responseStatus = response.status
+            return response.json();
+        })
+        .then (response => {
+            let posts = response;
+            let lastTimestamp;
+            if (responseStatus === 200 && response.length > 0) {
+                lastTimestamp = posts[0].createdDate;
+                posts.concat(this.state.posts);
+                this.setState({
+                    posts: posts,
+                    lastTimestamp: lastTimestamp
+                });
+            }
+            this.setState({
+                refreshing: false
+            });
+        })
+        .catch( error => {
+            // TODO log error
+            console.log(error);
+            this.setState({
+                error: "Error refreshing feed",
+                refreshing: false
+            })
+        })
+    }
+
     render() {
         return (
-            <View>
-                <Image source={require('./../../assets/thumb-horizontal-logo.png')} />
-                
-                <FontAwesome name="search" size={32} />
-                
-                <Text>Hello from Home!</Text>
-
-                <Button title="Ride" onPress={() => {
-                    const resetAction = StackActions.reset({
-                        index: 1,
-                        actions: [
-                            NavigationActions.navigate({ routeName: 'Travel'}),
-                            NavigationActions.navigate({ routeName: 'RideStep1'})
-                        ]
-                    });
-                    this.props.navigation.dispatch(resetAction);
-                }} />
-                                
-                <Button title="Drive" onPress={() => { 
-                    const resetAction = StackActions.reset({
-                        index: 1,
-                        actions: [
-                            NavigationActions.navigate({ routeName: 'Travel'}),
-                            NavigationActions.navigate({ routeName: 'DriveStep1'})
-                        ]
-                    });
-                    this.props.navigation.dispatch(resetAction);
-                }} />
-
-                <Text>{ this.state.error }</Text>
-            </View>
+            <Container>
+                <Header style={styles.headerStyle}>
+                    <Body>
+                        <FontAwesome name="search" size={32} />
+                    </Body>
+                    <Body>
+                        <Text>HOME</Text>
+                    </Body>
+                    <Right>
+                        <Button rounded small bordered light 
+                            style={styles.buttonStyle} 
+                            onPress={() => {
+                                const resetAction = StackActions.reset({
+                                    index: 1,
+                                    actions: [
+                                        NavigationActions.navigate({ routeName: 'Travel'}),
+                                        NavigationActions.navigate({ routeName: 'RideStep1'})
+                                    ]
+                                });
+                                this.props.navigation.dispatch(resetAction);
+                            }}>
+                            <Text>Ride</Text>
+                        </Button>                                
+                        <Button rounded small bordered light 
+                            style={styles.buttonStyle} 
+                            onPress={() => { 
+                            const resetAction = StackActions.reset({
+                                    index: 1,
+                                    actions: [
+                                        NavigationActions.navigate({ routeName: 'Travel'}),
+                                        NavigationActions.navigate({ routeName: 'DriveStep1'})
+                                    ]
+                                });
+                                this.props.navigation.dispatch(resetAction);
+                            }}>
+                            <Text>Drive</Text>
+                        </Button>
+                    </Right>                 
+                </Header>
+                <Content>
+                    <FlatList
+                        data={this.state.posts}
+                        renderItem={({item}) => <PostItem postData={item}/>}
+                        onRefresh={() => this._refreshData()}
+                        refreshing={this.state.refreshing}
+                    />               
+                    <Text>{ this.state.error }</Text>
+                </Content>            
+            </Container>
         );
+    }
+}
+
+const styles = {
+    headerStyle : {
+    },
+    buttonStyle: {
+        backgroundColor: 'white'
     }
 }
