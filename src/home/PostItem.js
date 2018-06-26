@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-//import { View, Text} from 'react-native';
-import {Card, Text, Body, Icon, Button, Grid, Col, Row, Left, Right } from 'native-base';
+import {Card, Text, Icon, Button, Grid, Col, Row, Left, Right } from 'native-base';
 import TimeAgo from 'react-native-timeago';
 
 export default class PostItem extends Component{
@@ -28,30 +27,32 @@ export default class PostItem extends Component{
                 <Grid>
                     <Col style={styles.leftCardItem}>
                         <Row>
-                            <Text>Profile Picture</Text>
+                            <Button transparent>
+                                <Icon active name="person" />
+                            </Button>                            
                         </Row>
                         <Row>
-                            <Text style={styles.leftCardItemText}>{this.props.postData.city}</Text>
+                            <Text style={styles.cardText}>{this.props.postData.city}</Text>
                         </Row>
                         <Row>
-                            <Text style={styles.leftCardItemText}>{new Date(this.props.postData.date).toLocaleDateString()}</Text>
+                            <Text style={styles.cardText}>{new Date(this.props.postData.date).toLocaleDateString()}</Text>
                         </Row>                  
                     </Col>
                     <Col>
                         <Row>
                             <Left>
-                                <Text>{this.props.postData.firstName}</Text>
+                                <Text style={styles.cardText}>{this.props.postData.firstName}</Text>
                             </Left>
                             <Left>
-                                <Text>{this.props.postData.username}</Text>
+                                <Text style={styles.cardText}>{this.props.postData.username}</Text>
                             </Left>
                             <Right>
-                                <TimeAgo time={this.props.postData.createdDate} hideAgo={true} interval={20000} />
+                                <TimeAgo style={styles.cardText} time={this.props.postData.createdDate} hideAgo={true} interval={20000} />
                             </Right>
                         </Row>
                         <Row>
                             <Left>
-                                <Text>{this.props.postData.caption}</Text>
+                                <Text style={styles.cardText}>{this.props.postData.caption}</Text>
                             </Left>
                         </Row>
                         <Row>
@@ -85,16 +86,14 @@ export default class PostItem extends Component{
 
 const styles = {
     card : {
-        borderColor: "yellow",
-        borderWidth: 2,
         marginTop: 0,
-        marginBottom: 0
+        marginBottom: 1
     },
     leftCardItem : {
         flex: 0.3,
         flexDirection: "column"
     },
-    leftCardItemText : {
+    cardText : {
         fontSize: 11
     },
     topCardItem : {
