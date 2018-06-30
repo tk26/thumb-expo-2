@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import {Card, Text, Icon, Button, Grid, Col, Row, Left, Right } from 'native-base';
+import {Card, Text, Icon, Button, Grid, Col, Row, Left, Right, Thumbnail } from 'native-base';
 import TimeAgo from 'react-native-timeago';
+const defaultProfilePic = require('../../assets/default-profile-picture.png'); 
 
 export default class PostItem extends Component{
     constructor(props) {
@@ -18,18 +19,24 @@ export default class PostItem extends Component{
         this.setState({loading: false});
       }
 
+    getProfilePic(picture){
+        return picture === '' ? defaultProfilePic : {uri: picture};
+    }
+
+    openPost(post){
+        console.log(post.postId);
+    }
+
     render(){
         if (this.state.loading) {
             return <Expo.AppLoading />;
         }
         return(
             <Card style={styles.card}>
-                <Grid>
+                <Grid onTouchEnd={() => this.openPost(this.props.postData)}>
                     <Col style={styles.leftCardItem}>
                         <Row>
-                            <Button transparent>
-                                <Icon active name="person" />
-                            </Button>                            
+                            <Thumbnail source={this.getProfilePic(this.props.postData.profilePicture)}/>                           
                         </Row>
                         <Row>
                             <Text style={styles.cardText}>{this.props.postData.city}</Text>
@@ -40,12 +47,12 @@ export default class PostItem extends Component{
                     </Col>
                     <Col>
                         <Row>
-                            <Left>
-                                <Text style={styles.cardText}>{this.props.postData.firstName}</Text>
-                            </Left>
-                            <Left>
-                                <Text style={styles.cardText}>{this.props.postData.username}</Text>
-                            </Left>
+                            <Col>
+                                <Text style={styles.firstNameText}>{this.props.postData.firstName}</Text>
+                            </Col>
+                            <Col>
+                                <Text style={styles.userNameText}>@{this.props.postData.username}</Text>
+                            </Col>
                             <Right>
                                 <TimeAgo style={styles.cardText} time={this.props.postData.createdDate} hideAgo={true} interval={20000} />
                             </Right>
@@ -56,12 +63,12 @@ export default class PostItem extends Component{
                             </Left>
                         </Row>
                         <Row>
-                            <Col>
+                            <Col style = {styles.iconButton}>
                                 <Button transparent>
                                     <Icon active name="heart" />                            
                                 </Button>
                             </Col>
-                            <Col>
+                            <Col style = {styles.iconButton}>
                                 <Button transparent>
                                     <Icon active name="musical-note" />
                                 </Button>
@@ -93,13 +100,26 @@ const styles = {
         flex: 0.3,
         flexDirection: "column"
     },
+    firstNameText : {
+        fontWeight: "bold",
+        fontSize: 14,
+        textAlign: "right",
+        marginRight: 4
+    },
+    userNameText : {
+        fontSize: 14,
+        textAlign: "left"
+    },
     cardText : {
-        fontSize: 11
+        fontSize: 12
     },
     topCardItem : {
     },
     nonIconButton : {
-        width: 100
+        width: 90
+    },
+    iconButton : {
+        width: 55
     },
     nonIconButtonText: {
         fontSize: 8
