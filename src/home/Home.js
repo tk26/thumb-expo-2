@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, Button, Image } from 'react-native';
+import { Text } from 'react-native';
+import { Container, Header, Right, Body, Content, Button } from 'native-base';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { FontAwesome } from '@expo/vector-icons';
 import { Permissions, Notifications } from 'expo';
 import { getApiUrl } from '.././helper';
+import Feed from './Feed';
 
 const initialState = {
     error: ''
@@ -72,37 +74,58 @@ export default class Home extends Component {
 
     render() {
         return (
-            <View>
-                <Image source={require('./../../assets/thumb-horizontal-logo.png')} />
-                
-                <FontAwesome name="search" size={32} />
-                
-                <Text>Hello from Home!</Text>
-
-                <Button title="Ride" onPress={() => {
-                    const resetAction = StackActions.reset({
-                        index: 1,
-                        actions: [
-                            NavigationActions.navigate({ routeName: 'Travel'}),
-                            NavigationActions.navigate({ routeName: 'RideStep1'})
-                        ]
-                    });
-                    this.props.navigation.dispatch(resetAction);
-                }} />
-                                
-                <Button title="Drive" onPress={() => { 
-                    const resetAction = StackActions.reset({
-                        index: 1,
-                        actions: [
-                            NavigationActions.navigate({ routeName: 'Travel'}),
-                            NavigationActions.navigate({ routeName: 'DriveStep1'})
-                        ]
-                    });
-                    this.props.navigation.dispatch(resetAction);
-                }} />
-
-                <Text>{ this.state.error }</Text>
-            </View>
+            <Container>
+                <Header style={styles.headerStyle}>
+                    <Body>
+                        <FontAwesome name="search" size={32} />
+                    </Body>
+                    <Body>
+                        <Text>HOME</Text>
+                    </Body>
+                    <Right>
+                        <Button rounded small bordered light 
+                            style={styles.buttonStyle} 
+                            onPress={() => {
+                                const resetAction = StackActions.reset({
+                                    index: 1,
+                                    actions: [
+                                        NavigationActions.navigate({ routeName: 'Travel'}),
+                                        NavigationActions.navigate({ routeName: 'RideStep1'})
+                                    ]
+                                });
+                                this.props.navigation.dispatch(resetAction);
+                            }}>
+                            <Text>Ride</Text>
+                        </Button>                                
+                        <Button rounded small bordered light 
+                            style={styles.buttonStyle} 
+                            onPress={() => { 
+                            const resetAction = StackActions.reset({
+                                    index: 1,
+                                    actions: [
+                                        NavigationActions.navigate({ routeName: 'Travel'}),
+                                        NavigationActions.navigate({ routeName: 'DriveStep1'})
+                                    ]
+                                });
+                                this.props.navigation.dispatch(resetAction);
+                            }}>
+                            <Text>Drive</Text>
+                        </Button>
+                    </Right>                 
+                </Header>
+                <Content>
+                    <Feed />
+                    <Text>{ this.state.error }</Text>
+                </Content>            
+            </Container>
         );
+    }
+}
+
+const styles = {
+    headerStyle : {
+    },
+    buttonStyle: {
+        backgroundColor: 'white'
     }
 }
