@@ -20,11 +20,37 @@ export default class PostItem extends Component{
       }
 
     getProfilePic(picture){
-        return picture === '' ? defaultProfilePic : {uri: picture};
+        return picture === '' || picture === null ? defaultProfilePic : {uri: picture};
     }
 
     openPost(post){
         console.log(post.postId);
+    }
+
+    thumbnailStyle(postType){
+        const borderColor = postType === 'RIDE' ? '#6200EE' : '#03DAC6';
+        return {
+            borderWidth: 1,
+            borderColor: borderColor
+        }
+    }
+
+    getButtonText(postType) {
+        return postType === 'RIDE' ? 'Offer Ride' : 'Ride With';
+    }
+
+    cardStyle(postType){
+        const borderColor = postType === 'RIDE' ? '#6200EE' : '#03DAC6';
+        return {
+            marginTop: 0,
+            marginBottom: 0,
+            padding: 2,
+            borderTopWidth: 0,
+            borderBottomWidth: 1,
+            borderRightWidth: 1,
+            borderLeftWidth: 1,
+            borderColor: borderColor
+        }
     }
 
     render(){
@@ -32,11 +58,11 @@ export default class PostItem extends Component{
             return <Expo.AppLoading />;
         }
         return(
-            <Card style={styles.card}>
+            <Card style={this.cardStyle(this.props.postData.postType)}>
                 <Grid onTouchEnd={() => this.openPost(this.props.postData)}>
                     <Col style={styles.leftCardItem}>
                         <Row>
-                            <Thumbnail source={this.getProfilePic(this.props.postData.profilePicture)}/>                           
+                            <Thumbnail source={this.getProfilePic(this.props.postData.profilePicture)} style={this.thumbnailStyle(this.props.postData.postType)}/>                      
                         </Row>
                         <Row>
                             <Text style={styles.cardText}>{this.props.postData.city}</Text>
@@ -54,7 +80,7 @@ export default class PostItem extends Component{
                                 <Text style={styles.userNameText}>@{this.props.postData.username}</Text>
                             </Col>
                             <Right>
-                                <TimeAgo style={styles.cardText} time={this.props.postData.createdDate} hideAgo={true} interval={20000} />
+                                <TimeAgo style={styles.cardText} time={this.props.postData.postedOn} hideAgo={true} interval={20000} />
                             </Right>
                         </Row>
                         <Row>
@@ -75,7 +101,7 @@ export default class PostItem extends Component{
                             </Col>
                             <Col>
                                 <Button transparent outline style={styles.nonIconButton}>
-                                    <Text style={styles.nonIconButtonText}>Offer Ride</Text>
+                                    <Text style={styles.nonIconButtonText}>{this.getButtonText(this.props.postData.postType)}</Text>
                                 </Button>
                             </Col>
                             <Col>
@@ -92,18 +118,17 @@ export default class PostItem extends Component{
 }
 
 const styles = {
-    card : {
-        marginTop: 0,
-        marginBottom: 1
-    },
     leftCardItem : {
         flex: 0.3,
         flexDirection: "column"
     },
+    postTypeText : {
+        textAlign: 'right'
+    },
     firstNameText : {
         fontWeight: "bold",
         fontSize: 14,
-        textAlign: "right",
+        textAlign: "left",
         marginRight: 4
     },
     userNameText : {
