@@ -65,11 +65,11 @@ export default class PostItem extends Component{
                             <Thumbnail source={this.getProfilePic(this.props.postData.profilePicture)} style={this.thumbnailStyle(this.props.postData.postType)}/>                      
                         </Row>
                         <Row>
-                            <Text style={styles.cardText}>{this.props.postData.city}</Text>
-                        </Row>
-                        <Row>
                             <Text style={styles.cardText}>{new Date(this.props.postData.date).toLocaleDateString()}</Text>
-                        </Row>                  
+                        </Row>   
+                        <Row>
+                            <Text style={styles.cardText}>{this.props.postData.city}</Text>
+                        </Row>               
                     </Col>
                     <Col>
                         <Row>
