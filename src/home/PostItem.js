@@ -122,9 +122,6 @@ const styles = {
         flex: 0.3,
         flexDirection: "column"
     },
-    postTypeText : {
-        textAlign: 'right'
-    },
     firstNameText : {
         fontWeight: "bold",
         fontSize: 14,
