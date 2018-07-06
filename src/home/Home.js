@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Text } from 'react-native';
-import { Container, Header, Right, Body, Content, Button } from 'native-base';
+import { Text, View } from 'react-native';
+import { Container, Header, Right, Body, Button } from 'native-base';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { FontAwesome } from '@expo/vector-icons';
 import { Permissions, Notifications } from 'expo';
@@ -113,10 +113,10 @@ export default class Home extends Component {
                         </Button>
                     </Right>                 
                 </Header>
-                <Content>
+                <View>
                     <Feed />
                     <Text>{ this.state.error }</Text>
-                </Content>            
+                </View>
             </Container>
         );
     }
