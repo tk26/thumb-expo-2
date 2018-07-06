@@ -67,7 +67,7 @@ export default class Feed extends Component{
             let posts = response;
             let lastTimestamp;
             if (responseStatus === 200 && response.length > 0) {
-                lastTimestamp = posts[0].createdDate;
+                lastTimestamp = posts[0].postedOn;
                 posts = posts.concat(this.state.posts);
                 this.setState({
                     posts: posts,
@@ -92,35 +92,32 @@ export default class Feed extends Component{
         if (this.state.loading) {
             return <Expo.AppLoading />;
         }
-        return (
-            <View>
-                {
-                    this.state.posts.length > 0 ?
-                    (
-                        <FlatList
-                            data={this.state.posts}
-                            renderItem={({item}) => <PostItem postData={item}/>}
-                            onRefresh={() => this._refreshData()}
-                            refreshing={this.state.refreshing}
-                        />   
-                    ) 
-                    :
-                    (
-                        <Body>
-                            <Button
-                                style={styles.noPostsFoundButton}
-                                onPress={() => this._refreshData()}
-                            >
-                                <Text>Bummer, no posts found.  Tap to refresh.</Text>
-                            </Button>    
-                        </Body>
-                    )
-                }   
-                <Text>{ this.state.error }</Text>  
-            </View>                   
-        )
-    }
 
+        if (this.state.posts.length > 0){
+            return (
+                <View>
+                    <FlatList
+                        data={this.state.posts}
+                        renderItem={({item}) => <PostItem postData={item}/>}
+                        onRefresh={() => this._refreshData()}
+                        refreshing={this.state.refreshing}
+                    />
+                    <Text>{this.state.error}</Text>
+                </View>
+        );
+        }
+        else {
+            return (<Body>
+                <Button
+                    style={styles.noPostsFoundButton}
+                    onPress={() => this._refreshData()}
+                >
+                    <Text>Bummer, no posts found.  Tap to refresh.</Text>
+                </Button>  
+                <Text>{this.state.error}</Text>  
+            </Body>);
+        }
+    }
 }
 
 const styles = {
