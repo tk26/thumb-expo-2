@@ -64,6 +64,35 @@ class Profile extends Component {
                     }}
                 />
                 
+                {/* Demo redux */}
+                {/* All the actions are available through screenProps */}
+                <Button title="Follow Josh" onPress={ () => {
+                        this.props.screenProps.followUser('jdromine');
+                }}/>
+                
+                <Button title="Follow Conner" onPress={ () => {
+                    this.props.screenProps.followUser('cwritt');
+                }}/>
+                
+                <Button title="Follow Tejas" onPress={ () => {
+                    this.props.screenProps.followUser('tk26');
+                }}/>
+
+                <Button title="Unfollow Josh" onPress={ () => {
+                        this.props.screenProps.unfollowUser('jdromine');
+                }}/>
+                
+                <Button title="Unfollow Conner" onPress={ () => {
+                    this.props.screenProps.unfollowUser('cwritt');
+                }}/>
+                
+                <Button title="Unfollow Tejas" onPress={ () => {
+                    this.props.screenProps.unfollowUser('tk26');
+                }}/>
+
+                <View> <Text>{ JSON.stringify(this.props.screenProps.social.follows) } </Text></View>
+                {/* Redux demo ends */}
+
                 <Button title="Settings" style={{ alignSelf: 'center' }} onPress={() => {} }/>
 
                 <Button title="Give us some feedback" style={{ alignSelf: 'center' }}

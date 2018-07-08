@@ -39,6 +39,10 @@ import RequestFeature from '../components/feedback/RequestFeature';
 import OtherFeedback from '../components/feedback/OtherFeedback';
 
 // imports related to redux
+import { followUser, unfollowUser } from './actions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 const SignedOutStack = createStackNavigator({
     LaunchScreen: {
         screen: LaunchScreen,
@@ -210,8 +214,25 @@ const TravelStack = createStackNavigator({
     },
 });
 
+// used as a third argument in connect method
+// Taken from https://stackoverflow.com/a/51366591
+const mergeProps = (state, dispatch, ownProps) => {
+    return ({
+        ...ownProps,
+        screenProps: {
+          ...ownProps.screenProps,
+          ...state,
+          ...dispatch,
+        }
+    })
+}
+
 // connect is used to connect react components to the redux store
-const LoggedInTabs = createBottomTabNavigator({
+const LoggedInTabs = connect(
+    state => state,
+    dispatch => bindActionCreators({followUser, unfollowUser}, dispatch),
+    mergeProps
+)(createBottomTabNavigator({
     Home: {
         screen: Home,
         navigationOptions: {
@@ -242,7 +263,7 @@ const LoggedInTabs = createBottomTabNavigator({
             tabBarLabel: 'Profile'
         }
     }
-});
+}));
 
 export default createRootNavigator = (loggedIn = false) => {
     const navigator = createStackNavigator({
