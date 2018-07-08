@@ -115,6 +115,48 @@ export default class Home extends Component {
                 </Header>
                 <View>
                     <Feed />
+                    
+                    {/* Demo redux */}
+                    {/* All the actions are available through screenProps */}
+                    <Button onPress={ () => {
+                        this.props.screenProps.followUser('jdromine');
+                    }}>
+                        <Text> Follow Josh </Text>
+                    </Button>
+
+                    <Button onPress={ () => {
+                        this.props.screenProps.followUser('cwritt');
+                    }}>
+                        <Text> Follow Conner </Text>
+                    </Button>
+                    
+                    <Button onPress={ () => {
+                        this.props.screenProps.followUser('tk26');
+                    }}>
+                        <Text> Follow Tejas </Text>
+                    </Button>
+
+                    <Button onPress={ () => {
+                        this.props.screenProps.unfollowUser('jdromine');
+                    }}>
+                        <Text> Unfollow Josh </Text>
+                    </Button>
+
+                    <Button onPress={ () => {
+                        this.props.screenProps.unfollowUser('cwritt');
+                    }}>
+                        <Text> Unfollow Conner </Text>
+                    </Button>
+                    
+                    <Button onPress={ () => {
+                        this.props.screenProps.unfollowUser('tk26');
+                    }}>
+                        <Text> Unfollow Tejas </Text>
+                    </Button>
+                    
+                    <Text>{ JSON.stringify(this.props.screenProps.social.follows) } </Text>
+                    {/* Redux demo ends */}
+
                     <Text>{ this.state.error }</Text>
                 </View>
             </Container>
