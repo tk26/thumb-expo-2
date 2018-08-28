@@ -10,8 +10,7 @@ import {
     LOGIN_USER_FAILED,
     LOGOUT_USER
   } from '../actions/types';
-  import * as constants from '../constants';
-
+  
   const INITIAL_STATE = {
     email: '',
     password: '',
@@ -39,16 +38,19 @@ import {
                 return {...state, error: '', loading: false, token: action.token, isLoggedIn: true, password: ''};
             case LOGIN_UNVERIFIED_USER_FAILED:
                 return {...state, 
-                    error: constants.UNVERIFIED_USER_LOGIN, 
+                    error: "It seems that you haven't confirmed your email just yet. " +
+                    "We have resent the email verification link to you. " +
+                    "Please confirm your email by clicking on it. " +
+                    "Feel free to email us at support@thumbtravel.com if you face any issues.", 
                     loading: false, 
                     isLoggedIn: false, 
-                    password: '',
-                    token: ''           
+                    password: ''           
                 };
             case LOGIN_USER_AUTH_FAILED:
-                return {...state, error: constants.INVALID_LOGIN, loading: false, isLoggedIn: false, password: ''};
+                return {...state, error: "Invalid email or password", loading: false, isLoggedIn: false, password: ''};
             case LOGIN_USER_FAILED:
-                const errorMessage = action.error || constants.INTERNAL_EXCEPTION;
+                const errorMessage = action.error || "Some error occured. Please try again. If problem persists, " +
+                "please let us know at support@thumbtravel.com";
                 return {...state, error: errorMessage, loading: false, isLoggedIn: false, password: ''}; 
             case LOGOUT_USER:
                 return {...state, error: '', loading: false, isLoggedIn: false, email: '', password: '', token: ''};

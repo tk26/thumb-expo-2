@@ -1,7 +1,7 @@
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
-import LaunchScreen from '../components/LaunchScreen';
-import LoginScreen from '../components/auth/LoginForm';
+import LaunchScreen from './LaunchScreen';
+import LoginScreen from './components/auth/LoginForm';
 
 import SignupStep1 from '../components/signup/SignupStep1';
 import SignupStep2 from '../components/signup/SignupStep2';

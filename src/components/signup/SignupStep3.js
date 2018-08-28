@@ -1,41 +1,95 @@
 import React, { Component } from 'react';
 import { View, Text, Button, TextInput, Picker } from 'react-native';
-import { connect } from 'react-redux';
+import { getApiUrl } from '../../helper';
 import DatePicker from 'react-native-datepicker';
 import moment from 'moment';
-import { signupUpdate, submitStep3, dispatchUncaughtError } from '../../actions'; 
-import { Spinner } from '../common';
 
-class SignupStep3 extends Component {
-    onEmailChange(email){
-        this.props.signupUpdate({prop: 'email', value: email.toLowerCase()});
+const initialState = {
+    email: '', university: 'none', birthday: '', error: ''
+};
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export default class SignupStep3 extends Component {
+    constructor(props) {
+        super(props);
+        this.state = initialState;
     }
-    onBirthdayChange(birthday){
-        this.props.signupUpdate({prop: 'birthday', value: birthday});
+
+    onValueChange(university) {
+        this.setState({ university, error: '' });
     }
-    onUniversityChange(university){
-        this.props.signupUpdate({prop: 'university', value: university});
-    }
-    next() {
-        const {email, birthday, university} = this.props;
-        this.props.submitStep3({email, birthday, university})
-            .then(() => {
-                if(this.props.step3IsValid){
-                    this.props.navigation.navigate('SignupStep4');                  
+
+    validate() {
+        // client side validation
+        if (this.state.birthday === '') {
+            this.setState({ error: "Please select your birthday" });
+            return;
+        }
+        if (this.state.university === 'none') {
+            this.setState({ error: "Please select your school" });
+            return;
+        }
+        if (!emailRegex.test(this.state.email)) {
+            this.setState({ error: "Incorrect email address" });
+            return;
+        }
+        if (this.state.email.substr(this.state.email.length - 4) !== '.edu') {
+            this.setState({ error: "Email address must end in .edu" });
+            return;
+        }
+
+        // server side validation
+        let responseStatus = 0
+        fetch(getApiUrl() + '/user/validate/email/' + this.state.email.toLowerCase(), {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                responseStatus = response.status
+                return response.json()
+            })
+            .then(response => {
+                if (responseStatus == 422) {
+                    this.setState({
+                        error: "Invalid email"
+                    })
+                }
+                else if (responseStatus == 409) {
+                    this.setState({
+                        error: "Duplicate email"
+                    })
+                }
+                else if (responseStatus == 200) {
+                    // validation success
+                    this.props.navigation.navigate('SignupStep4', {
+                        user: {
+                            firstName: this.props.navigation.state.params.user.firstName,
+                            lastName: this.props.navigation.state.params.user.lastName,
+                            username: this.props.navigation.state.params.user.username,
+                            password: this.props.navigation.state.params.user.password,
+                            email: this.state.email,
+                            university: this.state.university,
+                            birthday: this.state.birthday
+                        }
+                    });
+                }
+                else {
+                    this.setState({
+                        error: "Some error occured. Please try again. If problem persists, " +
+                            "please let us know at support@thumbtravel.com"
+                    })
                 }
             })
-            .catch(() => {
-                const step = 3;
-                this.props.dispatchUncaughtError(step);
-            });
-    }
-    renderNextButton(){
-        if (this.props.loading) {
-            return <Spinner size="large" />;
-        }      
-        return (
-            <Button title="NEXT" onPress={() => this.next()}/>
-        );        
+            .catch(error => {
+                // TODO log error
+                this.setState({
+                    error: "Some error occured. Please try again. If problem persists, " +
+                        "please let us know at support@thumbtravel.com"
+                })
+            })
     }
 
     render() {
@@ -52,8 +106,11 @@ class SignupStep3 extends Component {
                     maxLength={254}
                     autoCorrect={false}
                     autoCapitalize="none"
-                    onChangeText={this.onEmailChange.bind(this)}
-                    value={this.props.email}
+                    onChangeText={(email) => this.setState({
+                        email: email.toLowerCase(),
+                        error: ''
+                    })}
+                    value={this.state.email}
                 />
                 <Text>
                     Don't have a '.edu' email address to sign up with? Click here.
@@ -66,8 +123,8 @@ class SignupStep3 extends Component {
                     UNIVERSITY
                 </Text>
                 <Picker
-                    selectedValue={this.props.university}
-                    onValueChange={this.onUniversityChange.bind(this)}>
+                    selectedValue={this.state.university}
+                    onValueChange={this.onValueChange.bind(this)}>
                     <Picker.Item label="Select University" value="none" />
                     <Picker.Item label="Indiana University" value="indiana-university" />
                     <Picker.Item label="Purdue University" value="purdue-university" />
@@ -82,7 +139,7 @@ class SignupStep3 extends Component {
                     each person is using the application. We want to make the best product and this will help us improve.
                 </Text>
                 <DatePicker
-                    date={this.props.birthday}
+                    date={this.state.birthday}
                     mode="date"
                     placeholder="select birthday"
                     format="MM-DD-YYYY"
@@ -90,24 +147,17 @@ class SignupStep3 extends Component {
                     maxDate={new Date(moment().subtract(16, 'y'))}
                     confirmBtnText="Confirm"
                     cancelBtnText="Cancel"
-                    onDateChange={this.onBirthdayChange.bind(this)}
+                    onDateChange={(date) => { this.setState({ birthday: date, error: '' }) }}
                 />
-                {this.renderNextButton()}
+
+                <Button title="NEXT" onPress={() => this.validate()} />
+
                 <View>
                     <Text>
-                        {this.props.error}
+                        {this.state.error}
                     </Text>
                 </View>
             </View>        
         );
     }
 }
-
-const mapStateToProps = ({ signUp }) => {
-    const { email, birthday, university, error, loading, step3IsValid } = signUp;
-    return { email, birthday, university, error, loading, step3IsValid };
-};
-  
-export default connect(mapStateToProps, {
-    signupUpdate, submitStep3, dispatchUncaughtError 
-})(SignupStep3);
