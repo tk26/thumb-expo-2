@@ -1,48 +1,44 @@
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
-import LaunchScreen from './LaunchScreen';
-import LoginScreen from './components/auth/LoginForm';
+import LaunchScreen from '../components/LaunchScreen';
+import LoginScreen from '../components/auth/LoginForm';
 
-import SignupStep1 from './signup/SignupStep1';
-import SignupStep2 from './signup/SignupStep2';
-import SignupStep3 from './signup/SignupStep3';
-import SignupStep4 from './signup/SignupStep4';
-import SignupSuccess from './signup/SignupSuccess';
+import SignupStep1 from '../components/signup/SignupStep1';
+import SignupStep2 from '../components/signup/SignupStep2';
+import SignupStep3 from '../components/signup/SignupStep3';
+import SignupStep4 from '../components/signup/SignupStep4';
+import SignupSuccess from '../components/signup/SignupSuccess';
 
-import Home from './home/Home';
-import Thumb from './thumb/Thumb';
-import Travel from './travel/Travel';
-import Notifications from './notifications/Notifications';
+import Home from '../components/home/Home';
+import Thumb from '../components/thumb/Thumb';
+import Travel from '../components/travel/Travel';
+import Notifications from '../components/notifications/Notifications';
 
-import RideStep1 from './ride/RideStep1';
-import RideStep2 from './ride/RideStep2';
-import RideStep3 from './ride/RideStep3';
-import RideStep4 from './ride/RideStep4';
-import RideResults from './ride/RideResults';
-import InviteDriver from './ride/InviteDriver';
+import RideStep1 from '../components/ride/RideStep1';
+import RideStep2 from '../components/ride/RideStep2';
+import RideStep3 from '../components/ride/RideStep3';
+import RideStep4 from '../components/ride/RideStep4';
+import RideResults from '../components/ride/RideResults';
+import InviteDriver from '../components/ride/InviteDriver';
 
-import DriveStep1 from './drive/DriveStep1';
-import DriveStep2 from './drive/DriveStep2';
-import DriveStep3 from './drive/DriveStep3';
-import DriveStep4 from './drive/DriveStep4';
-import DriveResults from './drive/DriveResults';
-import InviteRider from './drive/InviteRider';
+import DriveStep1 from '../components/drive/DriveStep1';
+import DriveStep2 from '../components/drive/DriveStep2';
+import DriveStep3 from '../components/drive/DriveStep3';
+import DriveStep4 from '../components/drive/DriveStep4';
+import DriveResults from '../components/drive/DriveResults';
+import InviteRider from '../components/drive/InviteRider';
 
-import Profile from './profile/Profile';
-import EditProfile from './profile/EditProfile';
-import PublicProfile from './profile/PublicProfile';
+import Profile from '../components/profile/Profile';
+import EditProfile from '../components/profile/EditProfile';
+import PublicProfile from '../components/profile/PublicProfile';
 
-import Feedback from './feedback/Feedback';
-import ReportBug from './feedback/ReportBug';
-import AskQuestion from './feedback/AskQuestion';
-import RequestFeature from './feedback/RequestFeature';
-import OtherFeedback from './feedback/OtherFeedback';
+import Feedback from '../components/feedback/Feedback';
+import ReportBug from '../components/feedback/ReportBug';
+import AskQuestion from '../components/feedback/AskQuestion';
+import RequestFeature from '../components/feedback/RequestFeature';
+import OtherFeedback from '../components/feedback/OtherFeedback';
 
 // imports related to redux
-import { followUser, unfollowUser } from './actions';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-
 const SignedOutStack = createStackNavigator({
     LaunchScreen: {
         screen: LaunchScreen,
@@ -214,25 +210,8 @@ const TravelStack = createStackNavigator({
     },
 });
 
-// used as a third argument in connect method
-// Taken from https://stackoverflow.com/a/51366591
-const mergeProps = (state, dispatch, ownProps) => {
-    return ({
-        ...ownProps,
-        screenProps: {
-          ...ownProps.screenProps,
-          ...state,
-          ...dispatch,
-        }
-    })
-}
-
 // connect is used to connect react components to the redux store
-const LoggedInTabs = connect(
-    state => state,
-    dispatch => bindActionCreators({followUser, unfollowUser}, dispatch),
-    mergeProps
-)(createBottomTabNavigator({
+const LoggedInTabs = createBottomTabNavigator({
     Home: {
         screen: Home,
         navigationOptions: {
@@ -263,10 +242,10 @@ const LoggedInTabs = connect(
             tabBarLabel: 'Profile'
         }
     }
-}));
+});
 
-export const createRootNavigator = (loggedIn = false) => {
-    return createStackNavigator({
+export default createRootNavigator = (loggedIn = false) => {
+    const navigator = createStackNavigator({
         SignedOutStack: {
             screen: SignedOutStack,
             navigationOptions: {
@@ -288,4 +267,5 @@ export const createRootNavigator = (loggedIn = false) => {
         mode: 'modal',
         initialRouteName: loggedIn ? 'LoggedInTabs' : 'SignedOutStack'
     });
+    return navigator;
 };
