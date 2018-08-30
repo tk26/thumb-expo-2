@@ -7,17 +7,22 @@ import createRootNavigator from '../navigation/router';
 import { AuthService } from '../services';
 
 class App_Startup extends Component {
+  /*constructor(props) {
+    this.setGlobalVariables();
+  } */
+  componentDidMount(){
+    this.setGlobalVariables();
+  }
   setGlobalVariables(){
     const {  token } = this.props;
     const { firstName, profilePicture } = this.props.profile;
-    debugger;
     AuthService.setAuthToken(token);
     global.firstName = firstName;
     global.profilePicture = profilePicture;
   }
   render() {
-    this.setGlobalVariables();
     const { isLoggedIn } = this.props;
+    console.log(isLoggedIn);
     const TopLevelNavigationContainer = createRootNavigator(isLoggedIn);
     return <TopLevelNavigationContainer 
           ref={navigatorRef => {

@@ -45,6 +45,9 @@ export default class AuthService {
                 default:
                     return loginUserFail(dispatch);             
             }
+        })
+        .catch(() => {
+            return loginUserFail(dispatch);  
         });
     }
 
@@ -78,6 +81,7 @@ const loginUnverifiedUserFail = (dispatch) => {
 const loginSuccess = (dispatch, response) => {
     //debugger;
     const auth_token = response.token;
+    AuthService.setAuthToken(auth_token);
     // Save user details
     let profile = {
         firstName: response.firstName,
@@ -88,6 +92,8 @@ const loginSuccess = (dispatch, response) => {
         birthday: response.birthday,
         bio: response.bio
     };
+    global.firstName = profile.firstName;
+    global.profilePicture = profile.profilePicture;
     dispatch({type: LOGIN_USER_SUCCESS, token: auth_token});
     dispatch({type: PROFILE_UPDATED, profile: profile});
 }
