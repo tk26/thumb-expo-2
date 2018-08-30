@@ -12,5 +12,13 @@
     "react-native-timeago": "^0.4.0",
     "react-navigation": "^2.0.1"
   },
-  "devDependencies": {}
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest-expo": "^29.0.0"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
 }
