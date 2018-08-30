@@ -16,5 +16,13 @@
     "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0"
   },
-  "devDependencies": {}
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest-expo": "^29.0.0"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
 }
