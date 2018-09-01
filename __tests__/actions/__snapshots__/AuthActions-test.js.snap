@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Auth_Actions email change Dispatches the correct action and payload 1`] = `
+Array [
+  Object {
+    "email": "testemail@testing.edu",
+    "type": "EMAIL_CHANGED",
+  },
+]
+`;
+
+exports[`Auth_Actions password change Dispatches the correct action and payload 1`] = `
+Array [
+  Object {
+    "password": "Password123!",
+    "type": "PASSWORD_CHANGED",
+  },
+]
+`;

@@ -1,5 +1,5 @@
 import React from 'react';
-import Travel from '../src/travel/Travel.js';
+import Travel from '../src/components/travel/Travel';
 
 import renderer from 'react-test-renderer';
 
