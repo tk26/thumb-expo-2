@@ -1,9 +1,4 @@
 import { getApiUrl } from '../helper';
-import { LOGIN_USER_SUCCESS,
-    LOGIN_USER_AUTH_FAILED, 
-    LOGIN_USER_FAILED, 
-    LOGIN_UNVERIFIED_USER_FAILED,
-    PROFILE_UPDATED } from '../actions/types';
 
 export default class AuthService {
     static validateEmailAndPassword(email, password){
@@ -19,10 +14,9 @@ export default class AuthService {
         }
         return '';
     }
-    static login(dispatch, email, password){
-        let responseStatus;
-    
-        fetch(getApiUrl() + '/user/login', {
+
+    static login(email, password) {
+        return  fetch(getApiUrl() + '/user/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -31,69 +25,20 @@ export default class AuthService {
                 "email": email,
                 "password": password
             })
-        }).then(response => {
-            responseStatus = response.status;
-            return response.json();
-        }).then(response => {
-            switch (responseStatus){
-                case 403:
-                    return loginUnverifiedUserFail(dispatch);
-                case 400:
-                    return loginUserAuthFail(dispatch);
-                case 200:
-                    return loginSuccess(dispatch, response);
-                default:
-                    return loginUserFail(dispatch);             
-            }
-        })
-        .catch(() => {
-            return loginUserFail(dispatch);  
         });
     }
 
-    static logout = () => {
-        AuthService.setAuthToken('');
+    static logout (){
+        setAuthToken('');
         global.firstName = '';
         global.profilePicture = '';
     }
 
-    static setAuthToken = (token) => {
+    static setAuthToken(token){
         global.auth_token = token;
     }
 
     static getAuthToken(){
         return global.auth_token;
     }
-}   
-
-const loginUserAuthFail = (dispatch) => {
-    dispatch({ type: LOGIN_USER_AUTH_FAILED });
-};
-
-const loginUserFail = (dispatch) => {
-    dispatch({ type: LOGIN_USER_FAILED });
-};
-
-const loginUnverifiedUserFail = (dispatch) => {
-    dispatch({ type: LOGIN_UNVERIFIED_USER_FAILED });
-};
-
-const loginSuccess = (dispatch, response) => {
-    //debugger;
-    const auth_token = response.token;
-    AuthService.setAuthToken(auth_token);
-    // Save user details
-    let profile = {
-        firstName: response.firstName,
-        lastName: response.lastName,
-        school: response.school,
-        username: response.username,
-        profilePicture: response.profilePicture,
-        birthday: response.birthday,
-        bio: response.bio
-    };
-    global.firstName = profile.firstName;
-    global.profilePicture = profile.profilePicture;
-    dispatch({type: LOGIN_USER_SUCCESS, token: auth_token});
-    dispatch({type: PROFILE_UPDATED, profile: profile});
 }

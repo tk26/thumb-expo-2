@@ -2,7 +2,10 @@ import { AuthService } from '../services' ;
 import { EMAIL_CHANGED, 
         PASSWORD_CHANGED, 
         LOGIN_USER,
+        LOGIN_USER_SUCCESS,
         LOGIN_USER_FAILED,
+        LOGIN_USER_AUTH_FAILED,
+        LOGIN_UNVERIFIED_USER_FAILED,
         LOGOUT_USER} from './types';
 
 
@@ -23,7 +26,24 @@ export function loginUser({ email, password }){
             loginUserFailWithError(dispatch, error);
             return;
         }
-        return AuthService.login(dispatch, email, password);
+        AuthService.login(email, password)
+            .then((response) => {
+                switch (response.status){
+                    case 403:
+                        loginUnverifiedUserFail(dispatch);
+                        return;
+                    case 400:
+                        loginUserAuthFail(dispatch);
+                        return;
+                    case 200:
+                        loginSuccess(dispatch, response);
+                        return;
+                    default:
+                        loginUserFail(dispatch);
+                        return;             
+                }
+            })
+            .catch(() => loginUserFail(dispatch));
     };
 }
 
@@ -35,3 +55,38 @@ export function logoutUser(){
 const loginUserFailWithError = (dispatch, error) => {
     dispatch({ type: LOGIN_USER_FAILED, error: error });
 };
+
+const loginUserAuthFail = (dispatch) => {
+    dispatch({ type: LOGIN_USER_AUTH_FAILED });
+};
+
+const loginUserFail = (dispatch) => {
+    dispatch({ type: LOGIN_USER_FAILED });
+};
+
+const loginUnverifiedUserFail = (dispatch) => {
+    dispatch({ type: LOGIN_UNVERIFIED_USER_FAILED });
+};
+
+const loginSuccess = (dispatch, rawResponse) => {
+    rawResponse.json()
+        .then((response) => {
+            const auth_token = response.token;
+            AuthService.setAuthToken(auth_token);
+            // Save user details
+            let profile = {
+                firstName: response.firstName,
+                lastName: response.lastName,
+                school: response.school,
+                username: response.username,
+                profilePicture: response.profilePicture,
+                birthday: response.birthday,
+                bio: response.bio
+            };
+            global.firstName = profile.firstName;
+            global.profilePicture = profile.profilePicture;
+            dispatch({type: LOGIN_USER_SUCCESS, token: auth_token});
+            dispatch({type: PROFILE_UPDATED, profile: profile});
+        })
+        .catch((dispatch) => loginUserFail(dispatch));
+}
