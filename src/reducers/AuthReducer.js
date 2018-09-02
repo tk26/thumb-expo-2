@@ -44,7 +44,8 @@ import {
                     "Feel free to email us at support@thumbtravel.com if you face any issues.", 
                     loading: false, 
                     isLoggedIn: false, 
-                    password: ''           
+                    password: '',
+                    token: ''           
                 };
             case LOGIN_USER_AUTH_FAILED:
                 return {...state, error: "Invalid email or password", loading: false, isLoggedIn: false, password: ''};
