@@ -1,15 +1,21 @@
-import configureStore from 'redux-mock-store';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import AuthService from '../../src/services/AuthService';
+
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
+const store = mockStore();
 
 // Actions to be tested
 import * as authActions from '../../src/actions/AuthActions';
 import * as types from '../../src/actions/types';
 
-const mockStore = configureStore();
-const store = mockStore();
-
 describe('Auth_Actions', () => {
     beforeEach(() => { // Runs before each test in the suite
       store.clearActions();
+    });
+    afterEach(() => {
+        fetch.resetMocks();
     });
     describe('email change', () => {
         test('Dispatches the correct action and payload', () => {
@@ -25,4 +31,82 @@ describe('Auth_Actions', () => {
             expect(store.getActions()).toMatchSnapshot();
         });
     });
+    describe('login', () => {
+        test('Dispatches login and auth failed actions when provided invalid username / password', () => {
+            fetch.mockResponse(JSON.stringify({}),{ status: 400 });
+            const expectedActions = [
+                { type: types.LOGIN_USER },
+                { type: types.LOGIN_USER_AUTH_FAILED }
+            ]; 
+            store.dispatch(authActions.loginUser({email: 'jsmith@testing.edu', password: 'InvalidPassword123!'}))
+                .then(() => {
+                    expect(store.getActions()).toEqual(expectedActions);     
+                });           
+        });
+        test('Dispatches login and unverified actions when provided unverified user', () => {
+            fetch.mockResponse(JSON.stringify({}),{ status: 403 });
+            const expectedActions = [
+                { type: types.LOGIN_USER },
+                { type: types.LOGIN_UNVERIFIED_USER_FAILED }
+            ]; 
+            store.dispatch(authActions.loginUser({email: 'unverified@testing.edu', password: 'Password123!'}))
+                .then(() => {
+                    expect(store.getActions()).toEqual(expectedActions);     
+                });           
+        });
+        test('Dispatches login and unverified actions when provided unverified user', () => {
+            fetch.mockResponse(JSON.stringify({}),{ status: 500 });
+            const expectedActions = [
+                { type: types.LOGIN_USER },
+                { type: types.LOGIN_USER_FAILED }
+            ]; 
+            store.dispatch(authActions.loginUser({email: 'failinguser@testing.edu', password: 'Password123!'}))
+                .then(() => {
+                    expect(store.getActions()).toEqual(expectedActions);     
+                });           
+        });
+        test('Dispatches login and unverified actions when provided unverified user', () => {
+            const token = 'asdfasdf';
+            const profile = {
+                firstName: 'First Name',
+                lastName: 'Last Name',
+                school: 'School',
+                username: 'username',
+                profilePicture: 'profile picture',
+                birthday: 'birthday',
+                bio: 'bio'
+            };
+            fetch.mockResponse(JSON.stringify({
+                token: token,
+                firstName: 'First Name',
+                lastName: 'Last Name',
+                school: 'School',
+                username: 'username',
+                profilePicture: 'profile picture',
+                birthday: 'birthday',
+                bio: 'bio'
+            }),{ status: 200 });
+            const expectedActions = [
+                { type: types.LOGIN_USER },
+                { type: types.LOGIN_USER_SUCCESS, token },
+                { type: types.PROFILE_UPDATED, profile }
+            ]; 
+            store.dispatch(authActions.loginUser({email: 'test@testing.edu', password: 'Password123!'}))
+                .then(() => {
+                    expect(store.getActions()).toEqual(expectedActions); 
+                    expect(AuthService.getAuthToken().toEqual(token));    
+                });           
+        });
+        test('Dispatches auth failed action when API request throws exception', () => {
+            fetch.mockReject(new Error('fake error message'));
+            const expectedActions = [
+                { type: types.LOGIN_USER },
+                { type: types.LOGIN_USER_FAILED }
+            ]; 
+            store.dispatch(authActions.loginUser({email: 'jsmith@testing.edu', password: 'InvalidPassword123!'}))
+                .then(() => {
+                    expect(store.getActions()).toEqual(expectedActions);     
+                });           
+        });
+    })
 });

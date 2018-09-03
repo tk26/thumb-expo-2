@@ -29,7 +29,7 @@ export default class AuthService {
     }
 
     static logout (){
-        setAuthToken('');
+        this.setAuthToken('');
         global.firstName = '';
         global.profilePicture = '';
     }

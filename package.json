@@ -18,14 +18,18 @@
   },
   "scripts": {
     "test": "jest",
-    "update-snapshot": "jest --updateSnapshot" 
+    "update-snapshot": "jest --updateSnapshot"
   },
   "devDependencies": {
     "expo-file-system": "^1.0.1",
     "jest-expo": "26.0.0",
+    "jest-fetch-mock": "^1.6.5",
     "redux-mock-store": "^1.5.3"
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "setupFiles": [
+      "./setupJest.js"
+    ]
   }
 }

@@ -26,21 +26,17 @@ export function loginUser({ email, password }){
             loginUserFailWithError(dispatch, error);
             return;
         }
-        AuthService.login(email, password)
+        return AuthService.login(email, password)
             .then((response) => {
                 switch (response.status){
                     case 403:
-                        loginUnverifiedUserFail(dispatch);
-                        return;
+                        return loginUnverifiedUserFail(dispatch);
                     case 400:
-                        loginUserAuthFail(dispatch);
-                        return;
+                        return loginUserAuthFail(dispatch);
                     case 200:
-                        loginSuccess(dispatch, response);
-                        return;
+                        return loginSuccess(dispatch, response);
                     default:
-                        loginUserFail(dispatch);
-                        return;             
+                        return loginUserFail(dispatch);            
                 }
             })
             .catch(() => loginUserFail(dispatch));
@@ -50,6 +46,10 @@ export function loginUser({ email, password }){
 export function logoutUser(){
     AuthService.logout();
     return { type: LOGOUT_USER };
+}
+
+export function loginFailed(){
+    return { type: LOGIN_USER_FAILED };
 }
 
 const loginUserFailWithError = (dispatch, error) => {
