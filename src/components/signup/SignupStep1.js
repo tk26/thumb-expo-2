@@ -1,84 +1,36 @@
 import React, { Component } from 'react';
 import { View, Text, Button, TextInput } from 'react-native';
-import { getApiUrl } from '../../helper';
+import { connect } from 'react-redux';
+import { signupUpdate, submitStep1 } from '../../actions';
 
-const initialState = {
-    firstName: '', lastName: '', username: '', error: ''
-};
-
-const usernameRegex = /^[a-z0-9._]{3,30}$/;
-
-export default class SignupStep1 extends Component {
-    constructor(props) {
-        super(props);
-        this.state = initialState;
+class SignupStep1 extends Component {
+    onFirstNameChange(text) {
+        this.props.signupUpdate({prop: 'firstName', value: text});
+    }
+    
+    onLastNameChange(text) {
+        this.props.signupUpdate({prop: 'lastName', value: text});
     }
 
-    validate() {
-        // client side validation
-        if (this.state.firstName.length < 1) {
-            this.setState({ error: "First Name cannot be empty" });
-            return;
-        }
-        if (this.state.lastName.length < 1) {
-            this.setState({ error: "Last Name cannot be empty" });
-            return;
-        }
-        if (!usernameRegex.test(this.state.username)) {
-            this.setState({
-                error: "Username should be between 3 to 30 characters " +
-                    "and can only contain numbers, letters, periods and underscores"
-            })
-            return;
-        }
+    onUsernameChange(text) {
+        this.props.signupUpdate({prop: 'username', value: text});
+    }
+    next() {
+        const { firstName, lastName, username } = this.props;
 
-        // server side validation
-        let responseStatus = 0;
-        fetch(getApiUrl() + '/user/validate/username/' + this.state.username, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(response => {
-                responseStatus = response.status
-                return response.json()
-            })
-            .then(response => {
-                if (responseStatus == 422) {
-                    this.setState({
-                        error: "Invalid username"
-                    })
-                }
-                else if (responseStatus == 409) {
-                    this.setState({
-                        error: "Duplicate username"
-                    })
-                }
-                else if (responseStatus == 200) {
-                    // validation success
-                    this.props.navigation.navigate('SignupStep2', {
-                        user: {
-                            firstName: this.state.firstName,
-                            lastName: this.state.lastName,
-                            username: this.state.username
-                        }
-                    });
-                }
-                else {
-                    this.setState({
-                        error: "Some error occured. Please try again. If problem persists, " +
-                            "please let us know at support@thumbtravel.com"
-                    })
-                }
-            })
-            .catch(error => {
-                // TODO log error
-                this.setState({
-                    error: "Some error occured. Please try again. If problem persists, " +
-                        "please let us know at support@thumbtravel.com"
-                })
-            })
+        this.props.submitStep1({ firstName, lastName, username })
+          .then(() => {
+              if(this.props.step1IsValid){
+                this.props.navigation.navigate('SignupStep2', {
+                    user: {
+                        firstName: this.props.firstName,
+                        lastName: this.props.lastName,
+                        username: this.props.username
+                    }
+                });                  
+              }
+          })
+          .catch(() => {});
     }
 
     render() {
@@ -96,13 +48,8 @@ export default class SignupStep1 extends Component {
                     maxLength={30}
                     autoCorrect={false}
                     autoCapitalize="words"
-                    onChangeText={(firstName) =>
-                        this.setState({
-                            firstName,
-                            error: '',
-                        })
-                    }
-                    value={this.state.firstName}
+                    onChangeText={this.onFirstNameChange.bind(this)}
+                    value={this.props.firstName}
                 />
                 <View>
                     <Text>
@@ -113,13 +60,8 @@ export default class SignupStep1 extends Component {
                     maxLength={30}
                     autoCorrect={false}
                     autoCapitalize="words"
-                    onChangeText={(lastName) =>
-                        this.setState({
-                            lastName,
-                            error: '',
-                        })
-                    }
-                    value={this.state.lastName}
+                    onChangeText={this.onLastNameChange.bind(this)}
+                    value={this.props.lastName}
                 />
                 <View>
                     <Text>
@@ -130,23 +72,27 @@ export default class SignupStep1 extends Component {
                     maxLength={30}
                     autoCorrect={false}
                     autoCapitalize="none"
-                    onChangeText={(username) => {
-                        this.setState({
-                            username: username.toLowerCase(),
-                            error: '',
-                        })
-                    }}
-                    value={this.state.username}
+                    onChangeText={this.onUsernameChange.bind(this)}
+                    value={this.props.username}
                 />
                 
-                <Button title="NEXT" onPress={() => this.validate()} />
+                <Button title="NEXT" onPress={() => this.next()} />
 
                 <View>
                     <Text>
-                        {this.state.error}
+                        {this.props.error}
                     </Text>
                 </View>
             </View>
         );
     }
 }
+
+const mapStateToProps = ({ signUp }) => {
+    const { firstName, lastName, username, error, loading, step1IsValid } = signUp;
+    return { firstName, lastName, username, error, loading, step1IsValid };
+  };
+  
+  export default connect(mapStateToProps, {
+    signupUpdate, submitStep1 
+  })(SignupStep1);
