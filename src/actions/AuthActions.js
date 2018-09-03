@@ -19,27 +19,29 @@ export function passwordChanged(password) {
 }
 
 export function loginUser({ email, password }){
-    return (dispatch) => {
+    return async(dispatch) => {
         dispatch({ type: LOGIN_USER });
         const error = AuthService.validateEmailAndPassword(email, password);
         if (error !== ''){
             loginUserFailWithError(dispatch, error);
             return;
         }
-        return AuthService.login(email, password)
-            .then((response) => {
-                switch (response.status){
-                    case 403:
-                        return loginUnverifiedUserFail(dispatch);
-                    case 400:
-                        return loginUserAuthFail(dispatch);
-                    case 200:
-                        return loginSuccess(dispatch, response);
-                    default:
-                        return loginUserFail(dispatch);            
-                }
-            })
-            .catch(() => loginUserFail(dispatch));
+        try {
+            let response = await AuthService.login(email, password);
+            switch (response.status){
+                case 403:
+                    return loginUnverifiedUserFail(dispatch);
+                case 400:
+                    return loginUserAuthFail(dispatch);
+                case 200:
+                    return loginSuccess(dispatch, response);
+                default:
+                    return loginUserFail(dispatch);            
+            }
+        }
+        catch(error){
+            loginUserFail(dispatch);
+        }
     };
 }
 

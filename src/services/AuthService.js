@@ -1,6 +1,14 @@
 import { getApiUrl } from '../helper';
 
 export default class AuthService {
+    static validateUsername(username){
+        return fetch(getApiUrl() + '/user/validate/username/' + username, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    }
     static validateEmailAndPassword(email, password){
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
