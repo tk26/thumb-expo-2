@@ -1,41 +1,26 @@
 import React, { Component } from 'react';
 import { View, Text, Button, TextInput } from 'react-native';
+import { connect } from 'react-redux';
+import { signupUpdate, submitStep2 } from '../../actions';
 
-const initialState = {
-    password: '', confirmPassword: '', error: ''
-};
-
-const passwordRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
-
-export default class SignupStep2 extends Component {
-    constructor(props) {
-        super(props);
-        this.state = initialState;
+class SignupStep2 extends Component {
+    onPasswordChange(text){
+        this.props.signupUpdate({prop: 'password', value: text});
     }
+    onConfirmPasswordChange(text){
+        this.props.signupUpdate({prop: 'confirmPassword', value: text});
+    }
+    next() {
+        const { password, confirmPassword } = this.props;
+        this.props.submitStep2({ password, confirmPassword });
 
-    validate() {
-        if (this.state.password.length < 8 || this.state.password.length > 30) {
-            this.setState({ error: "Password should be between 8 to 30 characters" });
-            return;
-        }
-        if (!passwordRegex.test(this.state.password)) {
-            this.setState({
-                error: "Password should be a combinaton of upper and lowercase letters, " +
-                "a number and a special character"
-            })
-            return;
-        }
-        if (this.state.password !== this.state.confirmPassword) {
-            this.setState({ error: "Password and Confirm Password do not match" });
-            return;
-        }
         // validation success
         this.props.navigation.navigate('SignupStep3', {
             user: {
                 firstName: this.props.navigation.state.params.user.firstName,
                 lastName: this.props.navigation.state.params.user.lastName,
                 username: this.props.navigation.state.params.user.username,
-                password: this.state.password
+                password: this.props.password
             }
         })
     }
@@ -63,8 +48,8 @@ export default class SignupStep2 extends Component {
                     autoCapitalize="none"
                     autoCorrect={false}
                     secureTextEntry={true}
-                    onChangeText={(password) => this.setState({ password, error: '' })}
-                    value={this.state.password}
+                    onChangeText={this.onPasswordChange.bind(this)}
+                    value={this.props.password}
                 />
 
                 <View>
@@ -76,18 +61,28 @@ export default class SignupStep2 extends Component {
                     autoCapitalize="none"
                     autoCorrect={false}
                     secureTextEntry={true}
-                    onChangeText={(confirmPassword) => this.setState({ confirmPassword, error: '' })}
-                    value={this.state.confirmPassword}
+                    onChangeText={this.onConfirmPasswordChange.bind(this)}
+                    value={this.props.confirmPassword}
                 />
 
-                <Button title="NEXT" onPress={() => this.validate()} />
+                <Button title="NEXT" onPress={() => this.next()} />
 
                 <View>
                     <Text>
-                        {this.state.error}
+                        {this.props.error}
                     </Text>
                 </View>
             </View>
         );
     }
 }
+
+
+const mapStateToProps = ({ signUp }) => {
+    const { password, confirmPassword, error, loading, step2IsValid } = signUp;
+    return { password, confirmPassword, error, loading, step2IsValid };
+  };
+  
+  export default connect(mapStateToProps, {
+    signupUpdate, submitStep2 
+  })(SignupStep2);
