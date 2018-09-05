@@ -1,4 +1,4 @@
-import { AuthService } from '../services';
+import { SignupService } from '../services';
 import { SIGNUP_UPDATE,
   SIGNUP_SUBMIT_STEP,
   SIGNUP_STEP1_SUCCESS,
@@ -6,9 +6,13 @@ import { SIGNUP_UPDATE,
   SIGNUP_STEP2_SUCCESS,
   SIGNUP_STEP2_ERROR,
   SIGNUP_STEP3_SUCCESS,
-  SIGNUP_STEP3_ERROR
+  SIGNUP_STEP3_ERROR,
+  SIGNUP_STEP4_SUCCESS,
+  SIGNUP_STEP4_ERROR
 } from './types';
 
+const unexpectedException = "Some error occured. Please try again. If problem persists, " +
+  "please let us know at support@thumbtravel.com";
 
 export const signupUpdate = ({prop, value}) => {
   return {
@@ -35,12 +39,8 @@ export const submitStep1 = ({firstName, lastName, username}) => {
       return stepFailed(dispatch, step, "Username should be between 3 to 30 characters " +
                       "and can only contain numbers, letters, periods and underscores");
     }
-
-    const unexpectedException = "Some error occured. Please try again. If problem persists, " +
-      "please let us know at support@thumbtravel.com";
-
     try {
-      let response = await AuthService.validateUsername(username);
+      let response = await SignupService.validateUsername(username);
       switch (response.status){
         case 422:
             return stepFailed(dispatch, step, 'Invalid username');
@@ -62,6 +62,7 @@ export const submitStep2 = ({password, confirmPassword}) => {
   const passwordRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
   const step = 2;
   return (dispatch) => {
+    dispatch({ type: SIGNUP_SUBMIT_STEP });
     if (password.length < 8 || password.length > 30) {
       return stepFailed(dispatch, step, "Password should be between 8 to 30 characters" );
     }
@@ -77,9 +78,63 @@ export const submitStep2 = ({password, confirmPassword}) => {
   }
 }
 
+export const submitStep3 = ({email, birthday, university}) => {
+  const step = 3;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return async(dispatch) => {
+    dispatch({ type: SIGNUP_SUBMIT_STEP });
+    if (birthday === '') {
+      return stepFailed(dispatch, "Please select your birthday");
+    }
+    if (university === 'none') {
+      return stepFailed(dispatch, "Please select your school");
+    }
+    if (!emailRegex.test(email)) {
+      return stepFailed(dispatch, "Incorrect email address");
+    }
+    if (email.substr(email.length - 4) !== '.edu') {
+      return stepFailed(dispatch, "Email address must end in .edu");
+    }
+    try {
+      let response = await SignupService.validateEmail(email);
+      switch (response.status){
+        case 422:
+          return stepFailed(dispatch, step, 'Invalid email');
+        case 409:
+          return stepFailed(dispatch, step, 'Duplicate email');
+        case 200:
+          return stepSucceeded(dispatch, step, response);
+        default:
+          return stepFailed(dispatch, step, unexpectedException);
+      }
+    } catch(error){
+      return stepFailed(dispatch, step, unexpectedException);
+    }
+  }
+}
+
+export const createUser = ({firstName, lastName, username, password, email, birthday, university}) => {
+  const step = 4;
+  return async(dispatch) => {
+    dispatch({ type: SIGNUP_SUBMIT_STEP });
+    try {
+      let response = await SignupService.createUser({firstName, lastName, username, password, email, birthday, university});
+      switch(response.status){
+        case 200:
+          return stepSucceeded(dispatch, step);
+        case 400:
+          return stepFailed(dispatch, step, "Missing one or more user details");
+        default:
+          return stepFailed(dispatch, step, unexpectedException);
+      }
+    } catch(error){
+      return stepFailed(dispatch, step, unexpectedException);
+    }
+  }
+}
+
 const stepSucceeded = (dispatch, step) => {
   let type;
-  console.log(step);
   switch (step){
     case 1:
       type = SIGNUP_STEP1_SUCCESS;
@@ -87,9 +142,14 @@ const stepSucceeded = (dispatch, step) => {
     case 2:
       type = SIGNUP_STEP2_SUCCESS;
       break;
-    default:
+    case 3:
       type = SIGNUP_STEP3_SUCCESS;
       break;
+    case 4:
+      type = SIGNUP_STEP4_SUCCESS;
+      break;
+    default:
+      return;
   }
 
   dispatch ({
@@ -102,10 +162,18 @@ const stepFailed = (dispatch, step, error) => {
   switch (step){
     case 1:
       type = SIGNUP_STEP1_ERROR;
+      break;
     case 2:
       type = SIGNUP_STEP2_ERROR;
-    default:
+      break;
+    case 3:
       type = SIGNUP_STEP3_ERROR;
+      break;
+    case 4:
+      type = SIGNUP_STEP4_ERROR;
+      break;
+    default:
+      return;
   }
   dispatch ({
     type: type,
