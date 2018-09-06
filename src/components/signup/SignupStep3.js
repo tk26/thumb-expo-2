@@ -3,7 +3,7 @@ import { View, Text, Button, TextInput, Picker } from 'react-native';
 import { connect } from 'react-redux';
 import DatePicker from 'react-native-datepicker';
 import moment from 'moment';
-import { signupUpdate, submitStep3 } from '../../actions'; 
+import { signupUpdate, submitStep3, dispatchUncaughtError } from '../../actions'; 
 
 class SignupStep3 extends Component {
     onEmailChange(email){
@@ -23,7 +23,10 @@ class SignupStep3 extends Component {
                     this.props.navigation.navigate('SignupStep4');                  
                 }
             })
-            .catch(() => {});
+            .catch(() => {
+                const step = 3;
+                this.props.dispatchUncaughtError(step);
+            });
     }
 
     render() {
@@ -99,5 +102,5 @@ const mapStateToProps = ({ signUp }) => {
 };
   
 export default connect(mapStateToProps, {
-    signupUpdate, submitStep3 
+    signupUpdate, submitStep3, dispatchUncaughtError 
 })(SignupStep3);

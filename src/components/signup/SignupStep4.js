@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, Button, Image, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { NavigationActions, StackActions } from 'react-navigation';
-import { createUser } from '../../actions'; 
+import { createUser, dispatchUncaughtError } from '../../actions'; 
 
 class SignupStep4 extends Component {
     submitUser() {
@@ -18,7 +18,8 @@ class SignupStep4 extends Component {
                 }
             })
             .catch(() => {
-
+                const step = 4;
+                this.props.dispatchUncaughtError(step);
             })
     }
 
@@ -69,5 +70,5 @@ const mapStateToProps = ({ signUp }) => {
 };
   
 export default connect(mapStateToProps, {
-    createUser
+    createUser, dispatchUncaughtError
 })(SignupStep4);

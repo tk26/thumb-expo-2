@@ -10,6 +10,7 @@ import {
   LOGIN_UNVERIFIED_USER_FAILED,
   LOGOUT_USER
 } from '../../src/actions/types';
+import * as constants from '../../src/constants';
 
 describe('AuthReducer', () => {
   const initialState = {
@@ -116,7 +117,7 @@ describe('AuthReducer', () => {
         password: '',
         token: '',
         isLoggedIn: false,
-        error: 'Invalid email or password',
+        error: constants.INVALID_LOGIN,
         loading: false
       };
       const action = { type: LOGIN_USER_AUTH_FAILED, loginState};
@@ -133,14 +134,12 @@ describe('AuthReducer', () => {
           error: '',
           loading: true
       };
-      const expectedError = 'Some error occured. Please try again. If problem persists, '
-            + 'please let us know at support@thumbtravel.com';
       const expectedState = {
         email: 'test@test.edu',
         password: '',
         token: '',
         isLoggedIn: false,
-        error: expectedError,
+        error: constants.INTERNAL_EXCEPTION,
         loading: false
       };
       const action = { type: LOGIN_USER_FAILED};
@@ -178,16 +177,12 @@ describe('AuthReducer', () => {
           error: '',
           loading: true
       };
-      const expectedError = "It seems that you haven't confirmed your email just yet. " +
-        "We have resent the email verification link to you. " +
-        "Please confirm your email by clicking on it. " +
-        "Feel free to email us at support@thumbtravel.com if you face any issues.";
       const expectedState = {
         email: 'test@test.edu',
         password: '',
         token: '',
         isLoggedIn: false,
-        error: expectedError,
+        error: constants.UNVERIFIED_USER_LOGIN,
         loading: false
       };
       const action = { type: LOGIN_UNVERIFIED_USER_FAILED};

@@ -10,9 +10,7 @@ import { SIGNUP_UPDATE,
   SIGNUP_STEP4_SUCCESS,
   SIGNUP_STEP4_ERROR
 } from './types';
-
-const unexpectedException = "Some error occured. Please try again. If problem persists, " +
-  "please let us know at support@thumbtravel.com";
+import * as constants from '../constants';
 
 export const signupUpdate = ({prop, value}) => {
   return {
@@ -28,32 +26,31 @@ export const submitStep1 = ({firstName, lastName, username}) => {
     const step = 1;
 
     if (firstName.length < 1) {
-      return stepFailed(dispatch, step, "First Name cannot be empty");
+      return stepFailed(dispatch, step, constants.MISSING_FIRSTNAME);
     }
 
     if (lastName.length < 1) {
-      return stepFailed(dispatch, step, "Last Name cannot be empty");
+      return stepFailed(dispatch, step, constants.MISSING_LASTNAME);
     }
 
     if(!usernameRegex.test(username)){
-      return stepFailed(dispatch, step, "Username should be between 3 to 30 characters " +
-                      "and can only contain numbers, letters, periods and underscores");
+      return stepFailed(dispatch, step, constants.INVALID_USERNAME_FORMAT);
     }
     try {
       let response = await SignupService.validateUsername(username);
       switch (response.status){
         case 422:
-            return stepFailed(dispatch, step, 'Invalid username');
+            return stepFailed(dispatch, step, constants.INVALID_USERNAME_GENERIC);
         case 409:
-            return stepFailed(dispatch, step, 'Duplicate username');
+            return stepFailed(dispatch, step, constants.DUPLICATE_USERNAME);
         case 200:
             return stepSucceeded(dispatch, step, response);
         default:
-            return stepFailed(dispatch, step, unexpectedException);
+            return stepFailed(dispatch, step, constants.INTERNAL_EXCEPTION);
       }
     }
     catch(error) {
-      stepFailed(dispatch, step, unexpectedException);
+      stepFailed(dispatch, step, constants.INTERNAL_EXCEPTION);
     }
   }
 }
@@ -64,15 +61,13 @@ export const submitStep2 = ({password, confirmPassword}) => {
   return (dispatch) => {
     dispatch({ type: SIGNUP_SUBMIT_STEP });
     if (password.length < 8 || password.length > 30) {
-      return stepFailed(dispatch, step, "Password should be between 8 to 30 characters" );
+      return stepFailed(dispatch, step, constants.INVALID_PASSWORD_LENGTH );
     }
     if (!passwordRegex.test(password)) {
-      const error = "Password should be a combinaton of upper and lowercase letters, " +
-          "a number and a special character";
-      return stepFailed(dispatch, step, error);
+      return stepFailed(dispatch, step, constants.INVALID_PASSWORD_FORMAT);
     }
     if (password !== confirmPassword) {
-      return stepFailed(dispatch, step, "Password and Confirm Password do not match");
+      return stepFailed(dispatch, step, constants.PASSWORD_MISMATCH);
     }
     return stepSucceeded(dispatch, step);
   }
@@ -84,31 +79,31 @@ export const submitStep3 = ({email, birthday, university}) => {
   return async(dispatch) => {
     dispatch({ type: SIGNUP_SUBMIT_STEP });
     if (birthday === '') {
-      return stepFailed(dispatch, "Please select your birthday");
+      return stepFailed(dispatch, step, constants.MISSING_BIRTHDAY);
     }
     if (university === 'none') {
-      return stepFailed(dispatch, "Please select your school");
+      return stepFailed(dispatch, step, constants.MISSING_UNIVERSITY);
     }
     if (!emailRegex.test(email)) {
-      return stepFailed(dispatch, "Incorrect email address");
+      return stepFailed(dispatch, step, constants.INVALID_EMAIL_ADDRESS);
     }
     if (email.substr(email.length - 4) !== '.edu') {
-      return stepFailed(dispatch, "Email address must end in .edu");
+      return stepFailed(dispatch, step, constants.EMAIL_MISSING_EDU);
     }
     try {
       let response = await SignupService.validateEmail(email);
       switch (response.status){
         case 422:
-          return stepFailed(dispatch, step, 'Invalid email');
+          return stepFailed(dispatch, step, constants.INVALID_EMAIL_ADDRESS);
         case 409:
-          return stepFailed(dispatch, step, 'Duplicate email');
+          return stepFailed(dispatch, step, constants.DUPLICATE_EMAIL);
         case 200:
           return stepSucceeded(dispatch, step, response);
         default:
-          return stepFailed(dispatch, step, unexpectedException);
+          return stepFailed(dispatch, step, constants.INTERNAL_EXCEPTION);
       }
     } catch(error){
-      return stepFailed(dispatch, step, unexpectedException);
+      return stepFailed(dispatch, step, constants.INTERNAL_EXCEPTION);
     }
   }
 }
@@ -123,13 +118,21 @@ export const createUser = ({firstName, lastName, username, password, email, birt
         case 200:
           return stepSucceeded(dispatch, step);
         case 400:
-          return stepFailed(dispatch, step, "Missing one or more user details");
+          return stepFailed(dispatch, step, constants.MISSING_USER_DATA);
         default:
-          return stepFailed(dispatch, step, unexpectedException);
+          return stepFailed(dispatch, step, constants.INTERNAL_EXCEPTION);
       }
     } catch(error){
-      return stepFailed(dispatch, step, unexpectedException);
+      return stepFailed(dispatch, step, constants.INTERNAL_EXCEPTION);
     }
+  }
+}
+
+export const dispatchUncaughtError = (step) => {
+  let type = getErrorType(step);
+  return {
+    type: type,
+    error: constants.INTERNAL_EXCEPTION
   }
 }
 
@@ -158,25 +161,24 @@ const stepSucceeded = (dispatch, step) => {
 }
 
 const stepFailed = (dispatch, step, error) => {
-  let type;
-  switch (step){
-    case 1:
-      type = SIGNUP_STEP1_ERROR;
-      break;
-    case 2:
-      type = SIGNUP_STEP2_ERROR;
-      break;
-    case 3:
-      type = SIGNUP_STEP3_ERROR;
-      break;
-    case 4:
-      type = SIGNUP_STEP4_ERROR;
-      break;
-    default:
-      return;
-  }
+  let type = getErrorType(step);
   dispatch ({
     type: type,
     error
   });
+}
+
+const getErrorType = (step) => {
+  switch (step){
+    case 1:
+      return SIGNUP_STEP1_ERROR;
+    case 2:
+      return SIGNUP_STEP2_ERROR;
+    case 3:
+      return SIGNUP_STEP3_ERROR;
+    case 4:
+      return SIGNUP_STEP4_ERROR;
+    default:
+      return '';
+  }
 }

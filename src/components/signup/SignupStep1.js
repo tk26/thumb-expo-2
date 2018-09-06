@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, Button, TextInput } from 'react-native';
 import { connect } from 'react-redux';
-import { signupUpdate, submitStep1 } from '../../actions';
+import { signupUpdate, submitStep1, dispatchUncaughtError } from '../../actions';
 
 class SignupStep1 extends Component {
     onFirstNameChange(text) {
@@ -30,7 +30,10 @@ class SignupStep1 extends Component {
                 });                  
               }
           })
-          .catch(() => {});
+          .catch(() => {
+            const step = 1;
+            this.props.dispatchUncaughtError(step);
+          });
     }
 
     render() {
@@ -94,5 +97,5 @@ const mapStateToProps = ({ signUp }) => {
   };
   
   export default connect(mapStateToProps, {
-    signupUpdate, submitStep1 
+    signupUpdate, submitStep1, dispatchUncaughtError
   })(SignupStep1);
