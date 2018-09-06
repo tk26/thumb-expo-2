@@ -32,40 +32,34 @@ describe('Auth_Actions', () => {
         });
     });
     describe('login', () => {
-        test('Dispatches login and auth failed actions when provided invalid username / password', () => {
+        test('Dispatches login and auth failed actions when provided invalid username / password', async() => {
             fetch.mockResponse(JSON.stringify({}),{ status: 400 });
             const expectedActions = [
                 { type: types.LOGIN_USER },
                 { type: types.LOGIN_USER_AUTH_FAILED }
             ]; 
-            store.dispatch(authActions.loginUser({email: 'jsmith@testing.edu', password: 'InvalidPassword123!'}))
-                .then(() => {
-                    expect(store.getActions()).toEqual(expectedActions);     
-                });           
+            await store.dispatch(authActions.loginUser({email: 'jsmith@testing.edu', password: 'InvalidPassword123!'}));
+            expect(store.getActions()).toEqual(expectedActions);                
         });
-        test('Dispatches login and unverified actions when provided unverified user', () => {
+        test('Dispatches login and unverified actions when provided unverified user', async() => {
             fetch.mockResponse(JSON.stringify({}),{ status: 403 });
             const expectedActions = [
                 { type: types.LOGIN_USER },
                 { type: types.LOGIN_UNVERIFIED_USER_FAILED }
             ]; 
-            store.dispatch(authActions.loginUser({email: 'unverified@testing.edu', password: 'Password123!'}))
-                .then(() => {
-                    expect(store.getActions()).toEqual(expectedActions);     
-                });           
+            await store.dispatch(authActions.loginUser({email: 'unverified@testing.edu', password: 'Password123!'}));
+            expect(store.getActions()).toEqual(expectedActions);              
         });
-        test('Dispatches login and unverified actions when provided unverified user', () => {
+        test('Dispatches login and unverified actions when provided unverified user', async() => {
             fetch.mockResponse(JSON.stringify({}),{ status: 500 });
             const expectedActions = [
                 { type: types.LOGIN_USER },
                 { type: types.LOGIN_USER_FAILED }
             ]; 
-            store.dispatch(authActions.loginUser({email: 'failinguser@testing.edu', password: 'Password123!'}))
-                .then(() => {
-                    expect(store.getActions()).toEqual(expectedActions);     
-                });           
+            await store.dispatch(authActions.loginUser({email: 'failinguser@testing.edu', password: 'Password123!'}));
+            expect(store.getActions()).toEqual(expectedActions);               
         });
-        test('Dispatches login and unverified actions when provided unverified user', () => {
+        test('Dispatches login success actions when login completes successfully', async() => {
             const token = 'asdfasdf';
             const profile = {
                 firstName: 'First Name',
@@ -91,22 +85,18 @@ describe('Auth_Actions', () => {
                 { type: types.LOGIN_USER_SUCCESS, token },
                 { type: types.PROFILE_UPDATED, profile }
             ]; 
-            store.dispatch(authActions.loginUser({email: 'test@testing.edu', password: 'Password123!'}))
-                .then(() => {
-                    expect(store.getActions()).toEqual(expectedActions); 
-                    expect(AuthService.getAuthToken().toEqual(token));    
-                });           
+            await store.dispatch(authActions.loginUser({email: 'test@testing.edu', password: 'Password123!'}));
+            expect(store.getActions()).toEqual(expectedActions);
+            expect(AuthService.getAuthToken()).toEqual(token);             
         });
-        test('Dispatches auth failed action when API request throws exception', () => {
+        test('Dispatches auth failed action when API request throws exception', async() => {
             fetch.mockReject(new Error('fake error message'));
             const expectedActions = [
                 { type: types.LOGIN_USER },
                 { type: types.LOGIN_USER_FAILED }
             ]; 
-            store.dispatch(authActions.loginUser({email: 'jsmith@testing.edu', password: 'InvalidPassword123!'}))
-                .then(() => {
-                    expect(store.getActions()).toEqual(expectedActions);     
-                });           
+            await store.dispatch(authActions.loginUser({email: 'jsmith@testing.edu', password: 'InvalidPassword123!'}));
+            expect(store.getActions()).toEqual(expectedActions);             
         });
     })
 });

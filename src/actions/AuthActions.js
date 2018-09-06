@@ -6,7 +6,9 @@ import { EMAIL_CHANGED,
         LOGIN_USER_FAILED,
         LOGIN_USER_AUTH_FAILED,
         LOGIN_UNVERIFIED_USER_FAILED,
-        LOGOUT_USER} from './types';
+        LOGOUT_USER,
+        PROFILE_UPDATED
+    } from './types';
 
 
 // Imp: actions must have a type
