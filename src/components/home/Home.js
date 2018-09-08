@@ -21,7 +21,7 @@ export default class Home extends Component {
         this._registerForPushNotifications();
     }
 
-    _registerForPushNotifications = async () => {
+    async _registerForPushNotifications(){
         const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
         let finalStatus = existingStatus;
     

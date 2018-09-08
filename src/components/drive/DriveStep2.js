@@ -14,7 +14,7 @@ export default class DriveStep2 extends Component {
         this.state = initialState;
     }
 
-    travelTimesChange = (values) => {
+    travelTimesChange(values){
         this.setState({
             travelTime: values,
             error: ''
@@ -121,9 +121,6 @@ var styles = StyleSheet.create({
     text: {
         alignSelf: 'center',
         paddingVertical: 20,
-    },
-    title: {
-        fontSize: 30,
     },
     sliderOne: {
         flexDirection: 'row',

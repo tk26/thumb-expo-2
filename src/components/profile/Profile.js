@@ -21,7 +21,7 @@ class Profile extends Component {
         });
     }
 
-    refreshUserProfile = (profilePicture) => {
+    refreshUserProfile(profilePicture){
         this.setState({ profilePicture });
     }
 

@@ -1,0 +1,25 @@
+{
+  "plugins": [
+    "react",
+    "react-native"
+  ],
+  "ecmaFeatures": {
+    "jsx": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "env": {
+    "react-native/react-native": true,
+    "es6": true
+  },
+  "extends": ["plugin:react-native/all"],
+  "rules": {
+    "react-native/no-inline-styles": 1,
+    "react-native/no-color-literals": 1
+  }
+}

@@ -95,7 +95,7 @@ export default class EditProfile extends Component {
         })
     }
 
-    _checkPermissions = async () => {
+    async _checkPermissions(){
         const { status } = await Permissions.getAsync(Permissions.CAMERA_ROLL);
         this.setState({ status });
     
@@ -103,15 +103,13 @@ export default class EditProfile extends Component {
         this.setState({ cameraRollPermission: cameraRollPermission.status });
     };
 
-    _pickImage = async () => {
+    async _pickImage(){
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
             aspect: [4, 3],
             base64: true,
             quality: 0
         });
-      
-        console.log(result);
       
         if (!result.cancelled) {
             this.setState({ profilePicture: result.base64 });

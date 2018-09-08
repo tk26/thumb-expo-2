@@ -49,7 +49,7 @@ export default class Feed extends Component{
         this._refreshData();
     }
 
-    _refreshData = function(){
+    _refreshData(){
         this.setState({refreshing: true});
         let responseStatus;
 

@@ -22,7 +22,7 @@ export default class RideStep1 extends Component {
     }
 
     validateAndGeocodeAddresses() {
-        fetch('https://maps.googleapis.com/maps/api/geocode/json?address='+ 
+        fetch('https://maps.googleapis.com/maps/api/geocode/json?address='+
             this.state.startAddress + '&key='+ GOOGLE_API_KEY, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
@@ -47,7 +47,7 @@ export default class RideStep1 extends Component {
             });
         })
         .then(() => {
-            fetch('https://maps.googleapis.com/maps/api/geocode/json?address='+ 
+            fetch('https://maps.googleapis.com/maps/api/geocode/json?address='+
                 this.state.endAddress + '&key='+ GOOGLE_API_KEY, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
@@ -87,10 +87,10 @@ export default class RideStep1 extends Component {
         .catch(() => {
             // TODO log error: Refer https://developers.google.com/maps/documentation/geocoding/intro?csw=1#StatusCodes
             this.setState({ error: 'Some error occured. Please try putting a correct address again.' });
-        }); 
+        });
     }
 
-    goNext = () => {
+    goNext(){
         if (this.state.startAddress.length < 10) {
             this.setState({ error: 'Please make sure your start address is valid' });
             return;
@@ -109,22 +109,22 @@ export default class RideStep1 extends Component {
             <View>
                 <Text>Build your ride - Choose pickup and dropoff locations</Text>
 
-                <TextInput 
+                <TextInput
                     maxLength={100}
                     onChangeText={(startAddress) => this.setState({ startAddress, error: '' })}
                     value={this.state.startAddress}
                     placeholder="Start address"
                 />
-                
-                <TextInput 
+
+                <TextInput
                     maxLength={100}
                     onChangeText={(endAddress) => this.setState({ endAddress, error: '' })}
                     value={this.state.endAddress}
                     placeholder="End address"
                 />
-                
+
                 <Text>PICK UP NOTES</Text>
-                
+
                 <TextInput
                     maxLength={100}
                     multiline={true}
