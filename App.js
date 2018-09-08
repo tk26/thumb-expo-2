@@ -1,33 +1,22 @@
-import React, { Component } from 'react';
-import { createRootNavigator } from './src/router';
-import { isLoggedIn } from './src/auth';
+import React from 'react';
 
-const initialState = {
-    loggedIn: false,
-    isLoggedInChecked: false
-}
+// imports related to redux
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/lib/integration/react';
+import { persistor, store } from './src/store';
 
-export default class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = initialState;
-    }
+//thumb imports
+import { Spinner } from './src/components/common';
+import  App_Startup  from './src/components/App_Startup'; 
 
-    componentWillMount() {
-        isLoggedIn()
-            .then(response => {
-                this.setState({
-                    loggedIn: response,
-                    isLoggedInChecked: true
-                })
-            })
-    }
-
-    render() {
-        if (!this.state.isLoggedInChecked) {
-            return null;
-        }
-        const Layout = createRootNavigator(this.state.loggedIn);
-        return <Layout />
-    }
-}
+const App = () => {
+    return (
+      <Provider store={store}>
+        <PersistGate loading={<Spinner />} persistor={persistor}>
+          <App_Startup />
+        </PersistGate>
+      </Provider>
+    );
+  };
+  
+export default App;
