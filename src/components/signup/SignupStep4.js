@@ -3,6 +3,7 @@ import { View, Text, Button, Image, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { createUser, dispatchUncaughtError } from '../../actions'; 
+import { Spinner } from '../common';
 
 class SignupStep4 extends Component {
     submitUser() {
@@ -22,7 +23,14 @@ class SignupStep4 extends Component {
                 this.props.dispatchUncaughtError(step);
             })
     }
-
+    renderSubmitButton(){
+        if(this.props.loading){
+            return <Spinner />
+        }
+        return (
+            <Button title="CONTINUE" onPress={() => this.submitUser()} />
+        )
+    }
     render() {
         return (
             <View>
@@ -52,7 +60,7 @@ class SignupStep4 extends Component {
                     </Text>
                 </View>
 
-                <Button title="CONTINUE" onPress={() => this.submitUser()} />
+                {this.renderSubmitButton()}
 
                 <View>
                     <Text>

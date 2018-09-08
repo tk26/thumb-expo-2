@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text, Button, TextInput } from 'react-native';
+import { Text, TextInput } from 'react-native';
 import { connect } from 'react-redux';
 import { signupUpdate, submitStep1, dispatchUncaughtError } from '../../actions';
+import { Card, CardSection, Spinner, Button, Input } from '../common';
 
 class SignupStep1 extends Component {
     onFirstNameChange(text) {
         this.props.signupUpdate({prop: 'firstName', value: text});
-    }
-    
+    }   
     onLastNameChange(text) {
         this.props.signupUpdate({prop: 'lastName', value: text});
     }
@@ -35,58 +35,72 @@ class SignupStep1 extends Component {
             this.props.dispatchUncaughtError(step);
           });
     }
-
-    render() {
+    renderNextButton(){
+        if (this.props.loading) {
+            return <Spinner size="large" />;
+        }     
         return (
-            <View>
-                <View>
-                    <Text>
-                        What's your name?
-                    </Text>
-                    <Text>
-                        FIRST NAME
-                    </Text>
-                </View>
-                <TextInput
-                    maxLength={30}
-                    autoCorrect={false}
-                    autoCapitalize="words"
-                    onChangeText={this.onFirstNameChange.bind(this)}
-                    value={this.props.firstName}
-                />
-                <View>
-                    <Text>
-                        LAST NAME
-                    </Text>
-                </View>
-                <TextInput
-                    maxLength={30}
-                    autoCorrect={false}
-                    autoCapitalize="words"
-                    onChangeText={this.onLastNameChange.bind(this)}
-                    value={this.props.lastName}
-                />
-                <View>
-                    <Text>
-                        Choose your username.
-                    </Text>
-                </View>
-                <TextInput
-                    maxLength={30}
-                    autoCorrect={false}
-                    autoCapitalize="none"
-                    onChangeText={this.onUsernameChange.bind(this)}
-                    value={this.props.username}
-                />
-                
-                <Button title="NEXT" onPress={() => this.next()} />
-
-                <View>
+            <Button onPress={() => this.next()}>
+                NEXT
+            </Button>
+        );
+    }
+    renderError(){
+        if(this.props.error !== ''){
+            return (
+                <CardSection>
                     <Text>
                         {this.props.error}
                     </Text>
-                </View>
-            </View>
+                </CardSection>
+            );
+        }
+        return null;
+    }
+
+    render() {
+        return (
+            <Card>
+                <CardSection>
+                    <Text>
+                        What's your name?
+                    </Text>
+                </CardSection>
+                <CardSection>                
+                    <Input
+                        label='First Name:'
+                        maxLength={30}
+                        autoCorrect={false}
+                        autoCapitalize="words"
+                        onChangeText={this.onFirstNameChange.bind(this)}
+                        value={this.props.firstName}
+                    />
+                </CardSection>
+                <CardSection>
+                    <Input
+                        label="Last Name:"
+                        maxLength={30}
+                        autoCorrect={false}
+                        autoCapitalize="words"
+                        onChangeText={this.onLastNameChange.bind(this)}
+                        value={this.props.lastName}
+                    />
+                </CardSection>
+                <CardSection>
+                    <Input
+                        label="Username:"
+                        maxLength={30}
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                        onChangeText={this.onUsernameChange.bind(this)}
+                        value={this.props.username}
+                    /> 
+                </CardSection>
+                <CardSection>               
+                    {this.renderNextButton()}
+                </CardSection>
+                {this.renderError()}
+            </Card>
         );
     }
 }

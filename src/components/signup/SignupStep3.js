@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import DatePicker from 'react-native-datepicker';
 import moment from 'moment';
 import { signupUpdate, submitStep3, dispatchUncaughtError } from '../../actions'; 
+import { Spinner } from '../common';
 
 class SignupStep3 extends Component {
     onEmailChange(email){
@@ -27,6 +28,14 @@ class SignupStep3 extends Component {
                 const step = 3;
                 this.props.dispatchUncaughtError(step);
             });
+    }
+    renderNextButton(){
+        if (this.props.loading) {
+            return <Spinner size="large" />;
+        }      
+        return (
+            <Button title="NEXT" onPress={() => this.next()}/>
+        );        
     }
 
     render() {
@@ -83,9 +92,7 @@ class SignupStep3 extends Component {
                     cancelBtnText="Cancel"
                     onDateChange={this.onBirthdayChange.bind(this)}
                 />
-
-                <Button title="NEXT" onPress={() => this.next()} />
-
+                {this.renderNextButton()}
                 <View>
                     <Text>
                         {this.props.error}
