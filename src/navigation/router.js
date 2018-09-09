@@ -1,7 +1,7 @@
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
-import LaunchScreen from './LaunchScreen';
-import LoginScreen from './components/auth/LoginForm';
+import LaunchScreen from '../components/LaunchScreen';
+import LoginScreen from '../components/auth/LoginForm';
 
 import SignupStep1 from '../components/signup/SignupStep1';
 import SignupStep2 from '../components/signup/SignupStep2';
@@ -39,7 +39,7 @@ import RequestFeature from '../components/feedback/RequestFeature';
 import OtherFeedback from '../components/feedback/OtherFeedback';
 
 // imports related to redux
-import { followUser, unfollowUser } from './actions';
+import { followUser, unfollowUser } from '../actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 

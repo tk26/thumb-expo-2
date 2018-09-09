@@ -9,7 +9,7 @@ export default class Feedback extends Component {
         this.state = initialState;
     }
 
-    showFeedbackSubmitMessage(message){
+    showFeedbackSubmitMessage = (message) => {
         this.setState({ feedbackSubmitMessage: message });
     }
 

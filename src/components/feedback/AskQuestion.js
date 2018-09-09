@@ -2,67 +2,30 @@ import React, { Component } from 'react';
 import { View, Text, Button, TextInput, Image } from 'react-native';
 import { getApiUrl } from '../../helper';
 import { NavigationActions } from 'react-navigation';
+import { connect } from 'react-redux';
+import { feedbackUpdate, submitFeedback } from '../../actions';
 
-const initialState = {
-    question: '', error: ''
-};
-
-export default class AskQuestion extends Component {
-    constructor(props) {
-        super(props);
-        this.state = initialState;
+class AskQuestion extends Component {
+    onQuestionChange(text) {
+        this.props.feedbackUpdate({prop: 'feedbackDescription', value: text});
     }
 
     submitQuestion() {
-        if (this.state.question.length < 1) {
-            this.setState({ error: "Question cannot be empty" });
-            return;
-        }
-
-        let responseStatus = 0;
-        fetch(getApiUrl() + '/feedback/submit/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer' + ' ' + global.auth_token
-            },
-            body: JSON.stringify({
-                "feedbackType": "question",
-                "feedbackDescription": this.state.question
-            })
+        this.props.submitFeedback({
+            feedbackType: 'question',
+            feedbackDescription: this.props.feedbackDescription 
         })
-            .then(response => {
-                responseStatus = response.status
-                return response.json()
-            })
-            .then(response => {
-                if (responseStatus == 400) {
-                    this.setState({
-                        error: "Invalid user details"
-                    })
-                }
-                else if (responseStatus == 200) {
-                    // go back to Feedback Screen and show the message there
-                    this.props.navigation.state.params.showFeedbackSubmitMessage(response.message);
-                    const backAction = NavigationActions.back({
-                        key: null
-                    });
-                    this.props.navigation.dispatch(backAction);
-                }
-                else {
-                    this.setState({
-                        error: "Some error occured. Please try again. If problem persists, " +
-                            "please let us know at support@thumbtravel.com"
-                    })
-                }
-            })
-            .catch(error => {
-                // TODO log error
-                this.setState({
-                    error: "Some error occured. Please try again. If problem persists, " +
-                        "please let us know at support@thumbtravel.com"
-                })
-            })
+        .then(() => {
+            if(this.props.isValid) {
+                // go back to Feedback Screen and show the message there
+                this.props.navigation.state.params.showFeedbackSubmitMessage("Feedback submitted successfully");
+                const backAction = NavigationActions.back({
+                    key: null
+                });
+                this.props.navigation.dispatch(backAction);
+            }
+        })
+        .catch(() => {});
     }
 
     render() {
@@ -87,14 +50,23 @@ export default class AskQuestion extends Component {
                     multiline={true}
                     numberOfLines={4}
                     placeholder="Where can I see my upcoming trips?"
-                    onChangeText={(question) => this.setState({ question, error: '' })}
-                    value={this.state.question}
+                    onChangeText={this.onQuestionChange.bind(this)}
+                    value={this.props.feedbackDescription}
                 />
 
                 <Button title="SUBMIT" onPress={() => this.submitQuestion()} />
 
-                <Text>{this.state.error}</Text>
+                <Text>{this.props.error}</Text>
             </View>
         );
     }
 }
+
+const mapStateToProps = ({ feedback }) => {
+    const { feedbackDescription, isValid, error } = feedback;
+    return { feedbackDescription, isValid, error };
+};
+  
+export default connect(mapStateToProps, {
+    feedbackUpdate, submitFeedback
+})(AskQuestion);

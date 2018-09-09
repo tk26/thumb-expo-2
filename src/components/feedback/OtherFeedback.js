@@ -2,67 +2,30 @@ import React, { Component } from 'react';
 import { View, Text, Button, TextInput, Image } from 'react-native';
 import { getApiUrl } from '../../helper';
 import { NavigationActions } from 'react-navigation';
+import { connect } from 'react-redux';
+import { feedbackUpdate, submitFeedback } from '../../actions';
 
-const initialState = {
-    other: '', error: ''
-};
-
-export default class OtherFeedback extends Component {
-    constructor(props) {
-        super(props);
-        this.state = initialState;
+class OtherFeedback extends Component {
+    onOtherChange(text) {
+        this.props.feedbackUpdate({prop: 'feedbackDescription', value: text});
     }
 
     submitOther() {
-        if (this.state.other.length < 1) {
-            this.setState({ error: "Description cannot be empty" });
-            return;
-        }
-
-        let responseStatus = 0;
-        fetch(getApiUrl() + '/feedback/submit/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer' + ' ' + global.auth_token
-            },
-            body: JSON.stringify({
-                "feedbackType" : "other",
-                "feedbackDescription": this.state.other
-            })
+        this.props.submitFeedback({
+            feedbackType: 'other',
+            feedbackDescription: this.props.feedbackDescription 
         })
-        .then( response => {
-            responseStatus = response.status
-            return response.json()
-        })
-        .then( response => {
-            if(responseStatus == 400) {
-                this.setState({
-                    error: "Invalid user details"
-                })
-            }
-            else if(responseStatus == 200) {
+        .then(() => {
+            if(this.props.isValid) {
                 // go back to Feedback Screen and show the message there
-                this.props.navigation.state.params.showFeedbackSubmitMessage(response.message);
+                this.props.navigation.state.params.showFeedbackSubmitMessage("Feedback submitted successfully");
                 const backAction = NavigationActions.back({
                     key: null
                 });
                 this.props.navigation.dispatch(backAction);
             }
-            else {
-                this.setState({
-                    error: "Some error occured. Please try again. If problem persists, " + 
-                        "please let us know at support@thumbtravel.com"
-                })
-            }
         })
-        .catch( error => {
-            // TODO log error
-            this.setState({
-                error: "Some error occured. Please try again. If problem persists, " + 
-                    "please let us know at support@thumbtravel.com"
-            })
-        })
+        .catch(() => {});
     }
 
     render() {
@@ -88,14 +51,23 @@ export default class OtherFeedback extends Component {
                     multiline={true}
                     numberOfLines={4}
                     placeholder="thumb has changed my life"
-                    onChangeText={(other) => this.setState({ other })}
-                    value={this.state.other}
+                    onChangeText={this.onOtherChange.bind(this)}
+                    value={this.props.feedbackDescription}
                 />
 
                 <Button title="SUBMIT" onPress={() => this.submitOther()} />
                 
-                <Text>{this.state.error}</Text>
+                <Text>{this.props.error}</Text>
             </View>
         );
     }
 }
+
+const mapStateToProps = ({ feedback }) => {
+    const { feedbackDescription, isValid, error } = feedback;
+    return { feedbackDescription, isValid, error };
+};
+  
+export default connect(mapStateToProps, {
+    feedbackUpdate, submitFeedback
+})(OtherFeedback);
