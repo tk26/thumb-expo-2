@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FeedbackActions feedbackUpdate - description change Dispatches the correct action and payload 1`] = `
+Array [
+  Object {
+    "payload": Object {
+      "prop": "feedbackDescription",
+      "value": "test feedback description",
+    },
+    "type": "FEEDBACK_UPDATED",
+  },
+]
+`;
