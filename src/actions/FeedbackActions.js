@@ -5,7 +5,7 @@ import { FEEDBACK_UPDATE,
     FEEDBACK_SUBMIT_ERROR
 } from './types';
 
-const unexpectedException = "Some error occured. Please try again. If problem persists, " +
+export const unexpectedException = "Some error occured. Please try again. If problem persists, " +
     "please let us know at support@thumbtravel.com";
 
 export const feedbackUpdate = ({prop, value}) => {
