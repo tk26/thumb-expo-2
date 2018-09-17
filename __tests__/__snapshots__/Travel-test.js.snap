@@ -3,11 +3,7 @@
 exports[`renders correctly 1`] = `
 <View>
   <Image
-    source={
-      Object {
-        "testUri": "../../../assets/thumb-horizontal-logo.png",
-      }
-    }
+    source={1}
   />
   <View>
     <Text
@@ -20,13 +16,19 @@ exports[`renders correctly 1`] = `
   </View>
   <View
     accessibilityComponentType="button"
+    accessibilityLabel={undefined}
     accessibilityTraits={
       Array [
         "button",
       ]
     }
     accessible={true}
+    collapsable={undefined}
+    hasTVPreferredFocus={undefined}
+    hitSlop={undefined}
     isTVSelectable={true}
+    nativeID={undefined}
+    onLayout={undefined}
     onResponderGrant={[Function]}
     onResponderMove={[Function]}
     onResponderRelease={[Function]}
@@ -38,6 +40,8 @@ exports[`renders correctly 1`] = `
         "opacity": 1,
       }
     }
+    testID={undefined}
+    tvParallaxProperties={undefined}
   >
     <View
       style={
@@ -49,6 +53,7 @@ exports[`renders correctly 1`] = `
       <Text
         accessible={true}
         allowFontScaling={true}
+        disabled={undefined}
         ellipsizeMode="tail"
         style={
           Array [
@@ -67,13 +72,19 @@ exports[`renders correctly 1`] = `
   </View>
   <View
     accessibilityComponentType="button"
+    accessibilityLabel={undefined}
     accessibilityTraits={
       Array [
         "button",
       ]
     }
     accessible={true}
+    collapsable={undefined}
+    hasTVPreferredFocus={undefined}
+    hitSlop={undefined}
     isTVSelectable={true}
+    nativeID={undefined}
+    onLayout={undefined}
     onResponderGrant={[Function]}
     onResponderMove={[Function]}
     onResponderRelease={[Function]}
@@ -85,6 +96,8 @@ exports[`renders correctly 1`] = `
         "opacity": 1,
       }
     }
+    testID={undefined}
+    tvParallaxProperties={undefined}
   >
     <View
       style={
@@ -96,6 +109,7 @@ exports[`renders correctly 1`] = `
       <Text
         accessible={true}
         allowFontScaling={true}
+        disabled={undefined}
         ellipsizeMode="tail"
         style={
           Array [
