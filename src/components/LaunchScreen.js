@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import { View, Text, Image, Linking, Button } from 'react-native';
+import { Card, CardSection, Header1, Logo } from '../components/common';
 
 export default class LaunchScreen extends Component {
     render() {
         return (
-            <View>
-                <Image source={require('../../assets/thumb-horizontal-logo.png')} />
-                <Text>Welcome to thumb</Text>
-            
+            <Card>
+                <CardSection>
+                  <Logo />
+                </CardSection>
+                <Header1>Welcome to thumb</Header1>
+
                 <Button title="Login" onPress={() => this.props.navigation.navigate('LoginScreen')} />
                 <Button title="Create Account" onPress={() => this.props.navigation.navigate('SignupStep1')}/>
-                
+
                 <Text>
                     By tapping Log In or Create Account, I agree to thumb's&nbsp;
                     <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://www.google.com')}>
@@ -26,7 +29,7 @@ export default class LaunchScreen extends Component {
                     </Text>
                     .
                 </Text>
-            </View>
+            </Card>
         );
     }
 }
