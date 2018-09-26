@@ -45,10 +45,7 @@ import { bindActionCreators } from 'redux';
 
 const SignedOutStack = createStackNavigator({
     LaunchScreen: {
-        screen: LaunchScreen,
-        navigationOptions: {
-            title: 'Thumb'
-        }
+        screen: LaunchScreen
     },
     SignupStep1: {
         screen: SignupStep1,

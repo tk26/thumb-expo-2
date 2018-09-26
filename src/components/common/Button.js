@@ -1,11 +1,12 @@
 import React from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 
-const Button = ({ onPress, children }) => {
-  const { buttonStyle, textStyle } = styles;
+const Button = ({ onPress, children, size }) => {
+  const { buttonStyle, textStyle, stripe } = styles;
 
   return (
     <TouchableOpacity onPress={onPress} style={buttonStyle}>
+      <View style={stripe}></View>
       <Text style={textStyle}>
         {children}
       </Text>
@@ -13,11 +14,22 @@ const Button = ({ onPress, children }) => {
   );
 };
 
+
 const styles = {
+  stripe: {
+    backgroundColor: '#98FB98',
+    position: 'absolute',
+    height: 8,
+    top: 18,
+    left: 0,
+    right: 0,
+    bottom: 0
+  },
   textStyle: {
     alignSelf: 'center',
-    color: '#007aff',
+    color: '#424242',
     fontSize: 16,
+    fontFamily: 'Helvetica Neue',
     fontWeight: '600',
     paddingTop: 10,
     paddingBottom: 10
@@ -26,9 +38,6 @@ const styles = {
     flex: 1,
     alignSelf: 'stretch',
     backgroundColor: '#fff',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#007aff',
     marginLeft: 5,
     marginRight: 5
   }

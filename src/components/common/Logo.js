@@ -1,22 +1,15 @@
 import React from 'react';
 import { Image } from 'react-native';
 
-const Logo = () => {
-
+const Logo = ({ size }) => {
   return (
-    <Image style={styles.smallLogo} source={require('../../../assets/images/thumb_logo_no_text.png')}/>
+    <Image style={styles.logoSize} source={require('../../../assets/images/thumb_logo_no_text.png')}/>
   );
 };
 
 const styles = {
-  smallLogo: {
+  logoSize: {
     width: 100, height: 100
-  },
-  mediumLogo: {
-    width: 200, height: 200
-  },
-  largeLogo: {
-    width: 300, height: 300
   }
 }
 
