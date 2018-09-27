@@ -243,7 +243,7 @@ exports[`renders correctly 1`] = `
           }
         }
       >
-        By tapping "log in" or "create account", I agree to thumb's 
+        By tapping "log in" or "create account", I agree to thumb's 
         <Text
           accessible={true}
           allowFontScaling={true}
@@ -263,7 +263,7 @@ exports[`renders correctly 1`] = `
         >
           TERMS OF SERVICE
         </Text>
-         and 
+         and 
         <Text
           accessible={true}
           allowFontScaling={true}

@@ -28,13 +28,16 @@ export default class LaunchScreen extends Component {
             <CardSection>
               <StandardText>
                 By tapping "log in" or "create account", I agree
-                to thumb's <Link1
+                to thumb's&nbsp;
+                <Link1
                   linkText='terms of service'
                   onPress={() => Linking.openURL(privacyPolicyUrl)}
-                  /> and <Link1
+                />
+                &nbsp;and&nbsp;
+                <Link1
                     linkText='privacy policy'
                     onPress={() => Linking.openURL(termsOfServiceUrl)}
-                  />.
+                />.
               </StandardText>
             </CardSection>
           </Card>
