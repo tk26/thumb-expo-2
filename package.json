@@ -18,7 +18,8 @@
   },
   "scripts": {
     "test": "jest",
-    "update-snapshot": "jest --updateSnapshot"
+    "update-snapshot": "jest --updateSnapshot",
+    "build": "eslint src __tests__"
   },
   "devDependencies": {
     "eslint": "^5.5.0",
