@@ -12,7 +12,7 @@ export default class LaunchScreen extends Component {
         <Container>
           <Card>
             <CardSection>
-              <Logo size="small"/>
+              <Logo size="medium"/>
             </CardSection>
             <CardSection>
               <HeaderText1 headerText='Welcome to thumb' />
