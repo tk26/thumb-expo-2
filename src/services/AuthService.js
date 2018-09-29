@@ -1,7 +1,7 @@
 import { getApiUrl } from '../helper';
 import { LOGIN_USER_SUCCESS,
-    LOGIN_USER_AUTH_FAILED, 
-    LOGIN_USER_FAILED, 
+    LOGIN_USER_AUTH_FAILED,
+    LOGIN_USER_FAILED,
     LOGIN_UNVERIFIED_USER_FAILED,
     PROFILE_UPDATED } from '../actions/types';
 
@@ -21,7 +21,7 @@ export default class AuthService {
     }
     static login(dispatch, email, password){
         let responseStatus;
-    
+
         fetch(getApiUrl() + '/user/login', {
             method: 'POST',
             headers: {
@@ -43,25 +43,25 @@ export default class AuthService {
                 case 200:
                     return loginSuccess(dispatch, response);
                 default:
-                    return loginUserFail(dispatch);             
+                    return loginUserFail(dispatch);
             }
         });
     }
 
-    static logout = () => {
+    static logout(){
         AuthService.setAuthToken('');
         global.firstName = '';
         global.profilePicture = '';
     }
 
-    static setAuthToken = (token) => {
+    static setAuthToken(token){
         global.auth_token = token;
     }
 
     static getAuthToken(){
         return global.auth_token;
     }
-}   
+}
 
 const loginUserAuthFail = (dispatch) => {
     dispatch({ type: LOGIN_USER_AUTH_FAILED });

@@ -1,66 +1,36 @@
 import React, { Component } from 'react';
 import { View, Text, Button, Image, Linking } from 'react-native';
-import { getApiUrl } from '../../helper';
+import { connect } from 'react-redux';
 import { NavigationActions, StackActions } from 'react-navigation';
+import { createUser, dispatchUncaughtError } from '../../actions'; 
+import { Spinner } from '../common';
 
-export default class SignupStep4 extends Component {
-    constructor(props) {
-        super(props);
-        this.state = this.props.navigation.state.params.user;
-        this.state.error = ''
-    }
-
+class SignupStep4 extends Component {
     submitUser() {
-        let responseStatus = 0;
-        fetch(getApiUrl() + '/user/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                "firstName": this.state.firstName,
-                "lastName": this.state.lastName,
-                "email": this.state.email,
-                "school": this.state.university,
-                "password": this.state.password,
-                "username": this.state.username,
-                "birthday": this.state.birthday
-            })
-        })
-            .then(response => {
-                responseStatus = response.status;
-                return response.json()
-            })
-            .then(response => {
-                if (responseStatus == 400) {
-                    this.setState({
-                        error: "Missing one or more user details"
-                    })
-                }
-                else if (responseStatus == 200) {
-                    // account created successfully
+        const {firstName, lastName, username, password, email, birthday, university} = this.props;
+        this.props.createUser({firstName, lastName, username, password, email, birthday, university})
+            .then(() => {
+                if(this.props.step4IsValid){
                     const resetAction = StackActions.reset({
                         index: 0,
                         actions: [NavigationActions.navigate({ routeName: 'SignupSuccess' })],
                     });
                     this.props.navigation.dispatch(resetAction);
                 }
-                else {
-                    this.setState({
-                        error: "Some error occured. Please try again. If problem persists, " +
-                            "please let us know at support@thumbtravel.com"
-                    })
-                }
             })
-            .catch(error => {
-                // TODO log error
-                this.setState({
-                    error: "Some error occured. Please try again. If problem persists, " +
-                        "please let us know at support@thumbtravel.com"
-                })
+            .catch(() => {
+                const step = 4;
+                this.props.dispatchUncaughtError(step);
             })
     }
-
+    renderSubmitButton(){
+        if(this.props.loading){
+            return <Spinner />
+        }
+        return (
+            <Button title="CONTINUE" onPress={() => this.submitUser()} />
+        )
+    }
     render() {
         return (
             <View>
@@ -90,14 +60,23 @@ export default class SignupStep4 extends Component {
                     </Text>
                 </View>
 
-                <Button title="CONTINUE" onPress={() => this.submitUser()} />
+                {this.renderSubmitButton()}
 
                 <View>
                     <Text>
-                        {this.state.error}
+                        {this.props.error}
                     </Text>
                 </View>
             </View>
         );
     }
 }
+
+const mapStateToProps = ({ signUp }) => {
+    const { firstName, lastName, username, password, email, birthday, university, error, loading, step4IsValid } = signUp;
+    return { firstName, lastName, username, password, email, birthday, university, error, loading, step4IsValid };
+};
+  
+export default connect(mapStateToProps, {
+    createUser, dispatchUncaughtError
+})(SignupStep4);

@@ -1,32 +1,47 @@
 import React, { Component } from 'react';
-import { View, Text, Image, Linking, Button } from 'react-native';
+import { Linking } from 'react-native';
+import { Container, Card, CardSection, HeaderText1, Link1, Logo, Button, StandardText } from '../components/common';
+
+//TODO - Change to actual privacy policy and terms of service.
+const privacyPolicyUrl = "https://thumbtravel.co/how-thumb-works.html";
+const termsOfServiceUrl = "https://thumbtravel.co/how-thumb-works.html";
 
 export default class LaunchScreen extends Component {
-    render() {
-        return (
-            <View>
-                <Image source={require('../../assets/thumb-horizontal-logo.png')} />
-                <Text>Welcome to thumb</Text>
-            
-                <Button title="Login" onPress={() => this.props.navigation.navigate('LoginScreen')} />
-                <Button title="Create Account" onPress={() => this.props.navigation.navigate('SignupStep1')}/>
-                
-                <Text>
-                    By tapping Log In or Create Account, I agree to thumb's&nbsp;
-                    <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://www.google.com')}>
-                        Terms of Service
-                    </Text>
-                    ,&nbsp;
-                    <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://www.google.com')}>
-                        Privacy Policy
-                    </Text>
-                    , and&nbsp;
-                    <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://www.google.com')}>
-                        Non-discrimination Policy
-                    </Text>
-                    .
-                </Text>
-            </View>
-        );
-    }
+  render() {
+      return (
+        <Container>
+          <Card>
+            <CardSection>
+              <Logo size="medium"/>
+            </CardSection>
+            <CardSection>
+              <HeaderText1 headerText='Welcome to thumb' />
+            </CardSection>
+            <CardSection>
+              <Button onPress={() => this.props.navigation.navigate('LoginScreen')}>
+                log in
+              </Button>
+              <Button onPress={() => this.props.navigation.navigate('SignupStep1')}>
+                create account
+              </Button>
+            </CardSection>
+            <CardSection>
+              <StandardText>
+                By tapping "log in" or "create account", I agree
+                to thumb's&nbsp;
+                <Link1
+                  linkText='terms of service'
+                  onPress={() => Linking.openURL(privacyPolicyUrl)}
+                />
+                &nbsp;and&nbsp;
+                <Link1
+                    linkText='privacy policy'
+                    onPress={() => Linking.openURL(termsOfServiceUrl)}
+                />.
+              </StandardText>
+            </CardSection>
+          </Card>
+        </Container>
+      );
+  }
 }

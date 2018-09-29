@@ -7,7 +7,7 @@ import { persistor, store } from './src/store';
 
 //thumb imports
 import { Spinner } from './src/components/common';
-import  App_Startup  from './src/components/App_Startup'; 
+import  App_Startup  from './src/components/App_Startup';
 
 const App = () => {
     return (
@@ -18,5 +18,5 @@ const App = () => {
       </Provider>
     );
   };
-  
+
 export default App;
