@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Text, Linking, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { emailChanged, passwordChanged, loginUser, logoutUser } from '../../actions';
-import { Card, CardSection, Input, Button, Spinner } from '../common';
+import { Header, BackButton, Container, Card, CardSection, Input, Link1,
+  Logo, Button, Spinner, StandardText } from '../common';
 
 class LoginForm extends Component {
   onEmailChange(text) {
@@ -30,54 +31,51 @@ class LoginForm extends Component {
 
     return (
       <Button onPress={this.onButtonPress.bind(this)}>
-        Login
+        log in
       </Button>
     );
   }
 
   render() {
+    const { goBack } = this.props.navigation;
     return (
-      <Card>
-        <Image
-          source={require('../../../assets/thumb-horizontal-logo.png')}
-        />
-        <CardSection>
-            <Text>
-                Log in to thumb
-            </Text>
-        </CardSection>        
-        <CardSection>
-          <Input
-            label="Email"
-            placeholder="email@university.edu"
-            onChangeText={this.onEmailChange.bind(this)}
-            value={this.props.email}
-          />
-        </CardSection>
+      <Container>
+        <Card>
+          <Header>
+            <BackButton onPress={() => {goBack()}} />
+          </Header>
+          <CardSection>
+            <Logo size="medium" includeText  />
+          </CardSection>
+          <CardSection>
+            <Input
+              label="Email"
+              placeholder="email@university.edu"
+              onChangeText={this.onEmailChange.bind(this)}
+              value={this.props.email}
+            />
+          </CardSection>
 
-        <CardSection>
-          <Input
-            secureTextEntry
-            label="Password"
-            placeholder="password"
-            onChangeText={this.onPasswordChange.bind(this)}
-            value={this.props.password}
-          />
-        </CardSection>
-
-        <Text style={styles.errorTextStyle}>
-          {this.props.error}
-        </Text>
-
-        <CardSection>
-          {this.renderButton()}
-        </CardSection>
-        <CardSection>
-          <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://thumb-webapp.herokuapp.com/#/forgot')}>
-              Forgot your password?
-          </Text>
-        </CardSection>
-      </Card>
+          <CardSection>
+            <Input
+              secureTextEntry
+              label="Password"
+              placeholder="password"
+              onChangeText={this.onPasswordChange.bind(this)}
+              value={this.props.password}
+            />
+          </CardSection>
+          <CardSection>
+            {this.renderButton()}
+          </CardSection>
+          <CardSection>
+            <Link1
+              onPress={() => Linking.openURL('https://thumb-webapp.herokuapp.com/#/forgot')}
+              linkText="Forgot Password?"
+            />
+          </CardSection>
+        </Card>
+      </Container>
     );
   }
 }

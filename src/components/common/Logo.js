@@ -19,19 +19,19 @@ const Logo = ({ size, includeText }) => {
       break;
   }
   return (
-    <Image style={imageStyle} source={logos[imageSource]}/>
+    <Image style={imageStyle}  source={logos[imageSource]}/>
   );
 };
 
 const styles = {
   smallLogo: {
-    width: 60, height: 60
+    width: 60, height: 60, resizeMode: 'contain'
   },
   mediumLogo: {
-    width: 120, height: 120
+    width: 120, height: 120, resizeMode: 'contain'
   },
   largeLogo: {
-    width: 180, height: 180
+    width: 180, height: 180, resizeMode: 'contain'
   }
 }
 

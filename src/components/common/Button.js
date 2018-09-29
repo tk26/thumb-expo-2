@@ -38,8 +38,7 @@ const styles = {
     flex: 1,
     alignSelf: 'stretch',
     backgroundColor: '#fff',
-    marginLeft: 5,
-    marginRight: 5
+    maxWidth: 150
   }
 };
 
