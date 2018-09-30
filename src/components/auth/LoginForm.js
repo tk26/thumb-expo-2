@@ -74,8 +74,9 @@ class LoginForm extends Component {
           <Header>
             <BackButton onPress={() => {goBack()}} />
           </Header>
+          <Space height={30} />
           <CardSection>
-            <Logo size="medium" includeText />
+            <Logo size="small" includeText />
           </CardSection>
           <Space height={30} />
           <CardSection>

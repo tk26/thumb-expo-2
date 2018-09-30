@@ -3,7 +3,8 @@ export const INTERNAL_EXCEPTION = 'Some error occured. Please try again. If prob
   'please let us know at support@thumbtravel.com';
 
 //Auth Exceptions
-export const INVALID_LOGIN = 'Invalid email or password';
+export const INVALID_LOGIN = 'The username and password you entered did not match our records. ' +
+  'Please double-check and try again.';
 export const UNVERIFIED_USER_LOGIN = "It seems that you haven't confirmed your email just yet. " +
 "We have resent the email verification link to you. " +
 "Please confirm your email by clicking on it. " +

@@ -20,7 +20,7 @@ const styles = {
     backgroundColor: '#98FB98',
     position: 'absolute',
     height: 8,
-    top: 18,
+    top: 20,
     left: 0,
     right: 0,
     bottom: 0
