@@ -15,12 +15,11 @@ const Header = (props) => {
 
 const styles = {
   viewStyle: {
-    padding: 5,
+    paddingTop: 20,
     backgroundColor: '#fff',
     justifyContent: 'space-between',
     flexDirection: 'row',
-    position: 'relative',
-    height: 40
+    height: 60
   }
 };
 

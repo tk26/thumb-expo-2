@@ -1,7 +1,7 @@
 import React from 'react';
-import { TextInput, View, Text } from 'react-native';
+import { TextInput, View } from 'react-native';
 
-const Input = ({ value, onChangeText, placeholder, secureTextEntry, autoCorrect, autoCapitalize }) => {
+const Input = ({ children, value, onChangeText, placeholder, secureTextEntry, autoCorrect, autoCapitalize }) => {
   const { inputStyle, containerStyle } = styles;
 
   return (
@@ -17,6 +17,7 @@ const Input = ({ value, onChangeText, placeholder, secureTextEntry, autoCorrect,
         underlineColorAndroid='transparent'
         placeholderTextColor='#757575'
       />
+      {children}
     </View>
   );
 };
@@ -28,15 +29,15 @@ const styles = {
     fontFamily: 'Helvetica Neue',
     letterSpacing: 0,
     lineHeight: 23,
-    flex: 1,
-    borderBottomWidth: 1,
-    borderBottomColor: '#979797'
+    flex: 1
   },
   containerStyle: {
     height: 40,
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'flex-end',
+    borderBottomWidth: 1,
+    borderBottomColor: '#979797'
   }
 };
 

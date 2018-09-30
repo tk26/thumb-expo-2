@@ -20,7 +20,7 @@ const styles = {
     backgroundColor: '#fff'
   },
   imageStyle: {
-    height: 20, width: 20
+    height: 34, width: 20
   }
 };
 

@@ -32,11 +32,12 @@ const styles = {
     fontFamily: 'Helvetica Neue',
     fontWeight: '600',
     paddingTop: 10,
-    paddingBottom: 10
+    paddingBottom: 10,
+    paddingLeft: 15,
+    paddingRight: 15
   },
   buttonStyle: {
-    flex: 1,
-    alignSelf: 'stretch',
+    alignSelf: 'center',
     backgroundColor: '#fff',
     maxWidth: 150
   }
