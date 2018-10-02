@@ -1,5 +1,6 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
+import { fontColors } from './BaseStyles';
 
 const HeaderText1 = (props) => {
   const { textStyle } = styles;
@@ -15,7 +16,7 @@ const styles = {
     fontSize: 44,
     letterSpacing: 0,
     lineHeight: 43,
-    color: '#212121'
+    color: fontColors.black
   }
 };
 export { HeaderText1 };

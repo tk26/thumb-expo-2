@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text } from 'react-native';
+import { fontColors } from './BaseStyles';
 
 const StandardText = (props) => {
   const { textStyle } = styles;
@@ -15,7 +16,7 @@ const styles = {
     fontSize: 13,
     letterSpacing: 0,
     lineHeight: 18,
-    color: '#424242'
+    color: fontColors.lightBlack
   }
 };
 export { StandardText };

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { primaryColors, fontColors } from './BaseStyles';
 
 const Button = ({ onPress, children, size }) => {
   const { buttonStyle, textStyle, stripe } = styles;
@@ -17,7 +18,7 @@ const Button = ({ onPress, children, size }) => {
 
 const styles = {
   stripe: {
-    backgroundColor: '#98FB98',
+    backgroundColor: primaryColors.green,
     position: 'absolute',
     height: 8,
     top: 20,
@@ -27,7 +28,7 @@ const styles = {
   },
   textStyle: {
     alignSelf: 'center',
-    color: '#424242',
+    color: fontColors.lightBlack,
     fontSize: 16,
     fontFamily: 'Helvetica Neue',
     fontWeight: '600',
@@ -38,7 +39,7 @@ const styles = {
   },
   buttonStyle: {
     alignSelf: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: primaryColors.white,
     maxWidth: 150
   }
 };

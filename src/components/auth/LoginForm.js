@@ -3,7 +3,7 @@ import { Linking, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { emailChanged, passwordChanged, loginUser, logoutUser } from '../../actions';
 import { Header, BackButton, Container, Card, CardSection, Input, Link1,
-  ErrorText, Logo, Button, Space, Spinner } from '../common';
+  ErrorText, Logo, Button, Space, Spinner, fontColors } from '../common';
 import NavigationService from '../../services/NavigationService';
 
 const initialState = {
@@ -124,7 +124,7 @@ const styles = {
   showStyle: {
     fontFamily: 'Helvetica Neue',
     fontSize: 14,
-    color: '#757575',
+    color: fontColors.grey,
     letterSpacing: 0,
     paddingBottom: 5
   }

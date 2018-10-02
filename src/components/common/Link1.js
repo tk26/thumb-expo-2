@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text } from 'react-native';
+import { fontColors } from './BaseStyles';
 
 const Link1 = (props) => {
   const { textStyle } = styles;
@@ -16,9 +17,9 @@ const styles = {
     fontSize: 12,
     letterSpacing: 1.2,
     lineHeight: 16,
-    color: '#424242',
+    color: fontColors.lightBlack,
     textDecorationLine: 'underline',
-    textDecorationColor: '#424242'
+    textDecorationColor: fontColors.lightBlack
   }
 };
 export { Link1 };

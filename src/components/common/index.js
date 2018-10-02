@@ -1,4 +1,5 @@
 export * from './BackButton';
+export * from './BaseStyles';
 export * from './Button';
 export * from './Card';
 export * from './CardSection';
