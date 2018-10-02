@@ -1,0 +1,229 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing Login Form renders successfully when loading 1`] = `
+<Container>
+  <Card>
+    <Header>
+      <BackButton
+        onPress={[Function]}
+      />
+    </Header>
+    <Space
+      height={30}
+    />
+    <CardSection>
+      <Logo
+        includeText={true}
+        size="small"
+      />
+    </CardSection>
+    <Space
+      height={30}
+    />
+    <CardSection>
+      <Input
+        label="Email"
+        onChangeText={[Function]}
+        placeholder="email@university.edu"
+        value=""
+      />
+    </CardSection>
+    <CardSection>
+      <Input
+        label="Password"
+        onChangeText={[Function]}
+        placeholder="password"
+        secureTextEntry={true}
+        value=""
+      >
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          ellipsizeMode="tail"
+          onPress={[Function]}
+          style={
+            Object {
+              "color": "#757575",
+              "fontFamily": "Helvetica Neue",
+              "fontSize": 14,
+              "letterSpacing": 0,
+              "paddingBottom": 5,
+            }
+          }
+        >
+          show
+        </Text>
+      </Input>
+    </CardSection>
+    <CardSection>
+      <Spinner
+        size="large"
+      />
+    </CardSection>
+    <Space
+      height={30}
+    />
+    <CardSection>
+      <Link1
+        linkText="Forgot Password?"
+        onPress={[Function]}
+      />
+    </CardSection>
+  </Card>
+</Container>
+`;
+
+exports[`Testing Login Form renders successfully with error 1`] = `
+<Container>
+  <Card>
+    <Header>
+      <BackButton
+        onPress={[Function]}
+      />
+    </Header>
+    <Space
+      height={30}
+    />
+    <CardSection>
+      <Logo
+        includeText={true}
+        size="small"
+      />
+    </CardSection>
+    <Space
+      height={30}
+    />
+    <CardSection>
+      <Input
+        label="Email"
+        onChangeText={[Function]}
+        placeholder="email@university.edu"
+        value=""
+      />
+    </CardSection>
+    <CardSection>
+      <Input
+        label="Password"
+        onChangeText={[Function]}
+        placeholder="password"
+        secureTextEntry={true}
+        value=""
+      >
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          ellipsizeMode="tail"
+          onPress={[Function]}
+          style={
+            Object {
+              "color": "#757575",
+              "fontFamily": "Helvetica Neue",
+              "fontSize": 14,
+              "letterSpacing": 0,
+              "paddingBottom": 5,
+            }
+          }
+        >
+          show
+        </Text>
+      </Input>
+    </CardSection>
+    <CardSection>
+      <ErrorText>
+        test error message
+      </ErrorText>
+    </CardSection>
+    <CardSection>
+      <Button
+        onPress={[Function]}
+      >
+        log in
+      </Button>
+    </CardSection>
+    <Space
+      height={30}
+    />
+    <CardSection>
+      <Link1
+        linkText="Forgot Password?"
+        onPress={[Function]}
+      />
+    </CardSection>
+  </Card>
+</Container>
+`;
+
+exports[`Testing Login Form renders successfully with initial state 1`] = `
+<Container>
+  <Card>
+    <Header>
+      <BackButton
+        onPress={[Function]}
+      />
+    </Header>
+    <Space
+      height={30}
+    />
+    <CardSection>
+      <Logo
+        includeText={true}
+        size="small"
+      />
+    </CardSection>
+    <Space
+      height={30}
+    />
+    <CardSection>
+      <Input
+        label="Email"
+        onChangeText={[Function]}
+        placeholder="email@university.edu"
+        value=""
+      />
+    </CardSection>
+    <CardSection>
+      <Input
+        label="Password"
+        onChangeText={[Function]}
+        placeholder="password"
+        secureTextEntry={true}
+        value=""
+      >
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          ellipsizeMode="tail"
+          onPress={[Function]}
+          style={
+            Object {
+              "color": "#757575",
+              "fontFamily": "Helvetica Neue",
+              "fontSize": 14,
+              "letterSpacing": 0,
+              "paddingBottom": 5,
+            }
+          }
+        >
+          show
+        </Text>
+      </Input>
+    </CardSection>
+    <CardSection>
+      <Button
+        onPress={[Function]}
+      >
+        log in
+      </Button>
+    </CardSection>
+    <Space
+      height={30}
+    />
+    <CardSection>
+      <Link1
+        linkText="Forgot Password?"
+        onPress={[Function]}
+      />
+    </CardSection>
+  </Card>
+</Container>
+`;

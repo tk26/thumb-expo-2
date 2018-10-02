@@ -4,12 +4,13 @@ import { connect } from 'react-redux';
 import { emailChanged, passwordChanged, loginUser, logoutUser } from '../../actions';
 import { Header, BackButton, Container, Card, CardSection, Input, Link1,
   ErrorText, Logo, Button, Space, Spinner } from '../common';
+import NavigationService from '../../services/NavigationService';
 
 const initialState = {
   securePassword: true
 }
 
-class LoginForm extends Component {
+export class LoginForm extends Component {
   constructor(props){
     super(props);
     this.state = initialState;
@@ -67,12 +68,11 @@ class LoginForm extends Component {
   }
 
   render() {
-    const { goBack } = this.props.navigation;
     return (
       <Container>
         <Card>
           <Header>
-            <BackButton onPress={() => {goBack()}} />
+            <BackButton onPress={NavigationService.goBack} />
           </Header>
           <Space height={30} />
           <CardSection>
