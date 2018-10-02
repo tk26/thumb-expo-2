@@ -1,10 +1,20 @@
 import React, { Component } from 'react';
-import { Text, Linking, Image } from 'react-native';
+import { Linking, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { emailChanged, passwordChanged, loginUser, logoutUser } from '../../actions';
-import { Card, CardSection, Input, Button, Spinner } from '../common';
+import { Header, BackButton, Container, Card, CardSection, Input, Link1,
+  ErrorText, Logo, Button, Space, Spinner, fontColors } from '../common';
+import NavigationService from '../../services/NavigationService';
 
-class LoginForm extends Component {
+const initialState = {
+  securePassword: true
+}
+
+export class LoginForm extends Component {
+  constructor(props){
+    super(props);
+    this.state = initialState;
+  }
   onEmailChange(text) {
     this.props.emailChanged(text);
   }
@@ -30,66 +40,95 @@ class LoginForm extends Component {
 
     return (
       <Button onPress={this.onButtonPress.bind(this)}>
-        Login
+        log in
       </Button>
     );
+  }
+  renderErrorText(){
+    if(this.props.error !== ''){
+      return (
+        <CardSection>
+          <ErrorText>{this.props.error}</ErrorText>
+        </CardSection>
+      )
+    }
+    return null;
+  }
+
+  getSecurePasswordText(){
+    if(this.state.securePassword){
+      return 'show';
+    }
+    return 'hide';
+  }
+
+  toggleShowPassword() {
+    const securePassword = this.state.securePassword ? false : true;
+    this.setState({securePassword});
   }
 
   render() {
     return (
-      <Card>
-        <Image
-          source={require('../../../assets/thumb-horizontal-logo.png')}
-        />
-        <CardSection>
-            <Text>
-                Log in to thumb
-            </Text>
-        </CardSection>        
-        <CardSection>
-          <Input
-            label="Email"
-            placeholder="email@university.edu"
-            onChangeText={this.onEmailChange.bind(this)}
-            value={this.props.email}
-          />
-        </CardSection>
-
-        <CardSection>
-          <Input
-            secureTextEntry
-            label="Password"
-            placeholder="password"
-            onChangeText={this.onPasswordChange.bind(this)}
-            value={this.props.password}
-          />
-        </CardSection>
-
-        <Text style={styles.errorTextStyle}>
-          {this.props.error}
-        </Text>
-
-        <CardSection>
-          {this.renderButton()}
-        </CardSection>
-        <CardSection>
-          <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://thumb-webapp.herokuapp.com/#/forgot')}>
-              Forgot your password?
-          </Text>
-        </CardSection>
-      </Card>
+      <Container>
+        <Card>
+          <Header>
+            <BackButton onPress={NavigationService.goBack} />
+          </Header>
+          <Space height={30} />
+          <CardSection>
+            <Logo size="small" includeText />
+          </CardSection>
+          <Space height={30} />
+          <CardSection>
+            <Input
+              label="Email"
+              placeholder="email@university.edu"
+              onChangeText={this.onEmailChange.bind(this)}
+              value={this.props.email}
+            />
+          </CardSection>
+          <CardSection>
+            <Input
+              secureTextEntry={this.state.securePassword}
+              label="Password"
+              placeholder="password"
+              onChangeText={this.onPasswordChange.bind(this)}
+              value={this.props.password}
+            >
+              <Text
+                onPress={this.toggleShowPassword.bind(this)}
+                style={styles.showStyle}
+              >
+                {this.getSecurePasswordText()}
+              </Text>
+            </Input>
+          </CardSection>
+          {this.renderErrorText()}
+          <CardSection>
+            {this.renderButton()}
+          </CardSection>
+          <Space height={30} />
+          <CardSection>
+            <Link1
+              onPress={() => Linking.openURL('https://thumb-webapp.herokuapp.com/#/forgot')}
+              linkText="Forgot Password?"
+            />
+          </CardSection>
+        </Card>
+      </Container>
     );
   }
 }
 
 const styles = {
-  errorTextStyle: {
-    fontSize: 20,
-    alignSelf: 'center',
-    color: 'red'
+  showStyle: {
+    fontFamily: 'Helvetica Neue',
+    fontSize: 14,
+    color: fontColors.grey,
+    letterSpacing: 0,
+    paddingBottom: 5
   }
 };
-
 const mapStateToProps = ({ auth, profile }) => {
   const { email, password, error, loading, isLoggedIn } = auth;
   return { email, password, error, loading, isLoggedIn, profile };

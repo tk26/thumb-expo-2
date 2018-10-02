@@ -13,8 +13,7 @@ const styles = {
   containerStyle: {
     backgroundColor: '#FFFFFF',
     flex: 1,
-    padding: 10,
-    paddingTop: 25
+    padding: 10
   }
 };
 

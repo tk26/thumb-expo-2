@@ -1,8 +1,12 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { shallow } from 'enzyme';
 import LaunchScreen from '../../src/components/LaunchScreen';
 
-test('renders correctly', () => {
-  const tree = renderer.create(<LaunchScreen />).toJSON();
-  expect(tree).toMatchSnapshot();
+describe('Testing Login Form', () => {
+  it('renders successfully', () => {
+    const wrapper = shallow(
+      <LaunchScreen />
+    );
+    expect(wrapper.dive()).toMatchSnapshot();
+  });
 });

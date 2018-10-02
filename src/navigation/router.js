@@ -79,7 +79,7 @@ const SignedOutStack = createStackNavigator({
     LoginScreen: {
         screen: LoginScreen,
         navigationOptions: {
-            title: 'Log in'
+            header: null
         }
     }
 });

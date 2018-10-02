@@ -2,21 +2,21 @@ import React from 'react';
 import { Text } from 'react-native';
 import { fontColors } from './BaseStyles';
 
-const HeaderText1 = (props) => {
+const ErrorText = (props) => {
   const { textStyle } = styles;
 
   return (
-    <Text style={textStyle}>{props.headerText}</Text>
+    <Text style={textStyle}>{props.children}</Text>
   );
 };
 
 const styles = {
   textStyle: {
     fontFamily: 'HelveticaNeue-Bold',
-    fontSize: 44,
+    fontSize: 13,
     letterSpacing: 0,
-    lineHeight: 43,
-    color: fontColors.black
+    lineHeight: 18,
+    color: fontColors.red
   }
 };
-export { HeaderText1 };
+export { ErrorText };
