@@ -1,4 +1,9 @@
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+import React from 'react';
+import { Image } from 'react-native';
+
+import { NavigationIcon } from '../components/common';
+import images from '../../assets/images';
 
 import LaunchScreen from '../components/LaunchScreen';
 import LoginScreen from '../components/auth/LoginForm';
@@ -49,37 +54,37 @@ const SignedOutStack = createStackNavigator({
     SignupStep1: {
         screen: SignupStep1,
         navigationOptions: {
-            title: 'Sign up: Step 1 of 4'
+          header: null
         }
     },
     SignupStep2: {
         screen: SignupStep2,
         navigationOptions: {
-            title: 'Sign up: Step 2 of 4'
+          header: null
         }
     },
     SignupStep3: {
         screen: SignupStep3,
         navigationOptions: {
-            title: 'Sign up: Step 3 of 4'
+          header: null
         }
     },
     SignupStep4: {
         screen: SignupStep4,
         navigationOptions: {
-            title: 'Sign up: Step 4 of 4'
+          header: null
         }
     },
     SignupSuccess: {
         screen: SignupSuccess,
         navigationOptions: {
-            title: 'Sign up successful'
+          header: null
         }
     },
     LoginScreen: {
         screen: LoginScreen,
         navigationOptions: {
-            header: null
+          header: null
         }
     }
 });
@@ -210,39 +215,76 @@ const TravelStack = createStackNavigator({
     },
 });
 
+const bottomTabNavigatorConfig = {
+  tabBarOptions: {
+    showLabel: false,
+    style: {
+      backgroundColor: '#FFFFFF',
+      height: 50,
+      borderTopWidth: 0.5,
+      borderTopColor: '#E0E0E0'
+    }
+  }
+};
+
 // connect is used to connect react components to the redux store
 const LoggedInTabs = createBottomTabNavigator({
     Home: {
         screen: Home,
         navigationOptions: {
-            tabBarLabel: 'Home'
+          tabBarIcon: ({ focused }) =>  {
+            const imageSource = focused ? images.icons.home_icon_focused : images.icons.home_icon;
+            return (
+              <NavigationIcon label="home" icon={imageSource} />
+            )
+          }
         }
     },
     Thumb: {
         screen: Thumb,
         navigationOptions: {
-            tabBarLabel: 'Thumb'
+          tabBarIcon: ({ focused }) =>  {
+            const imageSource = focused ? images.icons.thumbs_icon_focused : images.icons.thumbs_icon;
+            return (
+              <NavigationIcon label="thumbs" icon={imageSource} />
+            )
+          }
         }
     },
     Travel: {
         screen: TravelStack,
         navigationOptions: {
-            tabBarLabel: 'Travel'
+          tabBarIcon: ({ focused }) =>  {
+            const imageSource = focused ? images.icons.travel_icon_focused : images.icons.travel_icon;
+            return (
+              <NavigationIcon label="travel" icon={imageSource} />
+            )
+          }
         }
     },
     Notification: {
         screen: Notifications,
         navigationOptions: {
-            tabBarLabel: 'Notifications'
+            tabBarIcon: ({ focused }) =>  {
+              const imageSource = focused ? images.icons.notifications_icon_focused : images.icons.notifications_icon;
+              return (
+                <NavigationIcon label="notifications" icon={imageSource} />
+              )
+            }
         }
     },
     Profile: {
         screen: ProfileStack,
         navigationOptions: {
-            tabBarLabel: 'Profile'
+          tabBarIcon: ({ focused }) =>  {
+            const imageSource = focused ? images.icons.profile_icon_focused : images.icons.profile_icon;
+            return (
+              <NavigationIcon label="profile" icon={imageSource} />
+            )
+          }
         }
     }
-});
+}, bottomTabNavigatorConfig);
 
 export default createRootNavigator = (loggedIn = false) => {
     const navigator = createStackNavigator({

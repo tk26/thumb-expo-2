@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Linking, Text } from 'react-native';
+import { Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { emailChanged, passwordChanged, loginUser, logoutUser } from '../../actions';
 import { Header, BackButton, Container, Card, CardSection, Input, Link1,
   ErrorText, Logo, Button, Space, Spinner, fontColors } from '../common';
+import PasswordInput from './PasswordInput';
 import NavigationService from '../../services/NavigationService';
 
 const initialState = {
@@ -55,25 +56,13 @@ export class LoginForm extends Component {
     return null;
   }
 
-  getSecurePasswordText(){
-    if(this.state.securePassword){
-      return 'show';
-    }
-    return 'hide';
-  }
-
-  toggleShowPassword() {
-    const securePassword = this.state.securePassword ? false : true;
-    this.setState({securePassword});
-  }
-
   render() {
     return (
       <Container>
+        <Header>
+          <BackButton onPress={NavigationService.goBack} />
+        </Header>
         <Card>
-          <Header>
-            <BackButton onPress={NavigationService.goBack} />
-          </Header>
           <Space height={30} />
           <CardSection>
             <Logo size="small" includeText />
@@ -87,22 +76,11 @@ export class LoginForm extends Component {
               value={this.props.email}
             />
           </CardSection>
-          <CardSection>
-            <Input
-              secureTextEntry={this.state.securePassword}
-              label="Password"
+          <PasswordInput
               placeholder="password"
               onChangeText={this.onPasswordChange.bind(this)}
               value={this.props.password}
-            >
-              <Text
-                onPress={this.toggleShowPassword.bind(this)}
-                style={styles.showStyle}
-              >
-                {this.getSecurePasswordText()}
-              </Text>
-            </Input>
-          </CardSection>
+          />
           {this.renderErrorText()}
           <CardSection>
             {this.renderButton()}
@@ -120,15 +98,6 @@ export class LoginForm extends Component {
   }
 }
 
-const styles = {
-  showStyle: {
-    fontFamily: 'Helvetica Neue',
-    fontSize: 14,
-    color: fontColors.grey,
-    letterSpacing: 0,
-    paddingBottom: 5
-  }
-};
 const mapStateToProps = ({ auth, profile }) => {
   const { email, password, error, loading, isLoggedIn } = auth;
   return { email, password, error, loading, isLoggedIn, profile };

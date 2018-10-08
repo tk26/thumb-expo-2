@@ -2,7 +2,7 @@ import React from 'react';
 import { TextInput, View } from 'react-native';
 import { fontColors } from './BaseStyles';
 
-const Input = ({ children, value, onChangeText, placeholder, secureTextEntry, autoCorrect, autoCapitalize }) => {
+const Input = ({ children, value, onChangeText, placeholder, secureTextEntry, autoCorrect, autoCapitalize, maxLength }) => {
   const { inputStyle, containerStyle } = styles;
 
   return (
@@ -17,6 +17,7 @@ const Input = ({ children, value, onChangeText, placeholder, secureTextEntry, au
         onChangeText={onChangeText}
         underlineColorAndroid='transparent'
         placeholderTextColor={fontColors.grey}
+        maxLength={maxLength}
       />
       {children}
     </View>

@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, Button, Image, Linking } from 'react-native';
+import { View, Text, Image, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { NavigationActions, StackActions } from 'react-navigation';
-import { createUser, dispatchUncaughtError } from '../../actions'; 
-import { Spinner } from '../common';
+import { createUser, dispatchUncaughtError } from '../../actions';
+import { Card, CardSection, Container, BackButton, Button, Header,
+  StandardText, Spinner, Link1, HeaderText3, ErrorText } from '../common';
+import NavigationService from '../../services/NavigationService';
 
 class SignupStep4 extends Component {
     submitUser() {
@@ -28,46 +30,54 @@ class SignupStep4 extends Component {
             return <Spinner />
         }
         return (
-            <Button title="CONTINUE" onPress={() => this.submitUser()} />
+          <Button onPress={() => this.submitUser()}>
+            continue
+          </Button>
         )
+    }
+    renderError(){
+      if(this.props.error !== ''){
+          return (
+              <CardSection>
+                <ErrorText>
+                    {this.props.error}
+                </ErrorText>
+              </CardSection>
+          );
+      }
+      return null;
     }
     render() {
         return (
-            <View>
-                <Image
-                    source={require('../../../assets/thumb-horizontal-logo.png')}
-                />
-                <View>
-                    <Text>
-                        Before you join
-                    </Text>
-                </View>
-
-                <View>
-                    <Text>
-                        Please commit to respecting everyone in the thumb community
-                        <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://www.google.com')}>
-                            Learn More
-                        </Text>
-                    </Text>
-                </View>
-
-                <View>
-                    <Text>
-                        By clicking "Continue", I agree to treat everyone in the thumb community -
-                        regardless of their race, religion, national origin, ethnicity, disability, gender identity,
-                        sexual orientation or age - with respect, and without judgement or bias.
-                    </Text>
-                </View>
-
-                {this.renderSubmitButton()}
-
-                <View>
-                    <Text>
-                        {this.props.error}
-                    </Text>
-                </View>
-            </View>
+            <Container>
+              <Header>
+                <BackButton onPress={NavigationService.goBack} />
+              </Header>
+              <Card>
+                <CardSection>
+                  <HeaderText3 headerText="Before you join"/>
+                </CardSection>
+                <CardSection>
+                  <StandardText>
+                      Please commit to respecting everyone in the thumb community.  <Link1
+                        onPress={() => Linking.openURL('https://www.google.com')}
+                        linkText="Learn More"
+                      />
+                  </StandardText>
+                </CardSection>
+                <CardSection>
+                  <StandardText>
+                      By clicking "Continue", I agree to treat everyone in the thumb community -
+                      regardless of their race, religion, national origin, ethnicity, disability, gender identity,
+                      sexual orientation or age - with respect, and without judgement or bias.
+                  </StandardText>
+                </CardSection>
+                <CardSection>
+                  {this.renderSubmitButton()}
+                </CardSection>
+                {this.renderError()}
+              </Card>
+            </Container>
         );
     }
 }
@@ -76,7 +86,7 @@ const mapStateToProps = ({ signUp }) => {
     const { firstName, lastName, username, password, email, birthday, university, error, loading, step4IsValid } = signUp;
     return { firstName, lastName, username, password, email, birthday, university, error, loading, step4IsValid };
 };
-  
+
 export default connect(mapStateToProps, {
     createUser, dispatchUncaughtError
 })(SignupStep4);
