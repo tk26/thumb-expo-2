@@ -16,8 +16,8 @@ class Profile extends Component {
 
     componentDidMount() {
         this.setState({
-            firstName: global.firstName,
-            profilePicture: global.profilePicture
+            firstName: this.props.profile.firstName,
+            profilePicture: this.props.profile.profilePicture
         });
     }
 
@@ -37,9 +37,10 @@ class Profile extends Component {
     }
 
     render() {
+        const { profile } = this.props;
         return (
             <View>
-                <Text>First Name: {this.state.firstName}</Text>
+                <Text>First Name: {profile.firstName}</Text>
 
                 <TouchableOpacity onPress={() =>{
                     this.props.navigation.navigate('EditProfile', {
@@ -48,8 +49,8 @@ class Profile extends Component {
                 }}>
                     <Image
                         style={{width: 50, height: 50}}
-                        source={ this.state.profilePicture.length > 0 ? 
-                            { uri: 'data:image/jpeg;base64,' + this.state.profilePicture }
+                        source={ profile.profilePicture.length > 0 ?
+                            { uri: 'data:image/jpeg;base64,' + profile.profilePicture }
                             : require('../../../assets/thumb-horizontal-logo.png') }
                     />
                 </TouchableOpacity>
@@ -63,7 +64,7 @@ class Profile extends Component {
                         })
                     }}
                 />
-                
+
                 <Button title="Settings" style={{ alignSelf: 'center' }} onPress={() => {} }/>
 
                 <Button title="Give us some feedback" style={{ alignSelf: 'center' }}
@@ -82,5 +83,5 @@ const mapStateToProps = ({ auth, profile }) => {
     const { email, password, error, loading, isLoggedIn } = auth;
     return { email, password, error, loading, isLoggedIn, profile };
   };
-  
+
 export default connect(mapStateToProps, { logoutUser, clearProfile })(Profile);
