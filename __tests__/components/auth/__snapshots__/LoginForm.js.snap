@@ -2,12 +2,12 @@
 
 exports[`Testing Login Form renders successfully when loading 1`] = `
 <Container>
+  <Header>
+    <BackButton
+      onPress={[Function]}
+    />
+  </Header>
   <Card>
-    <Header>
-      <BackButton
-        onPress={[Function]}
-      />
-    </Header>
     <Space
       height={30}
     />
@@ -28,33 +28,11 @@ exports[`Testing Login Form renders successfully when loading 1`] = `
         value=""
       />
     </CardSection>
-    <CardSection>
-      <Input
-        label="Password"
-        onChangeText={[Function]}
-        placeholder="password"
-        secureTextEntry={true}
-        value=""
-      >
-        <Text
-          accessible={true}
-          allowFontScaling={true}
-          ellipsizeMode="tail"
-          onPress={[Function]}
-          style={
-            Object {
-              "color": "#757575",
-              "fontFamily": "Helvetica Neue",
-              "fontSize": 14,
-              "letterSpacing": 0,
-              "paddingBottom": 5,
-            }
-          }
-        >
-          show
-        </Text>
-      </Input>
-    </CardSection>
+    <PasswordInput
+      onChangeText={[Function]}
+      placeholder="password"
+      value=""
+    />
     <CardSection>
       <Spinner
         size="large"
@@ -75,12 +53,12 @@ exports[`Testing Login Form renders successfully when loading 1`] = `
 
 exports[`Testing Login Form renders successfully with error 1`] = `
 <Container>
+  <Header>
+    <BackButton
+      onPress={[Function]}
+    />
+  </Header>
   <Card>
-    <Header>
-      <BackButton
-        onPress={[Function]}
-      />
-    </Header>
     <Space
       height={30}
     />
@@ -101,33 +79,11 @@ exports[`Testing Login Form renders successfully with error 1`] = `
         value=""
       />
     </CardSection>
-    <CardSection>
-      <Input
-        label="Password"
-        onChangeText={[Function]}
-        placeholder="password"
-        secureTextEntry={true}
-        value=""
-      >
-        <Text
-          accessible={true}
-          allowFontScaling={true}
-          ellipsizeMode="tail"
-          onPress={[Function]}
-          style={
-            Object {
-              "color": "#757575",
-              "fontFamily": "Helvetica Neue",
-              "fontSize": 14,
-              "letterSpacing": 0,
-              "paddingBottom": 5,
-            }
-          }
-        >
-          show
-        </Text>
-      </Input>
-    </CardSection>
+    <PasswordInput
+      onChangeText={[Function]}
+      placeholder="password"
+      value=""
+    />
     <CardSection>
       <ErrorText>
         test error message
@@ -155,12 +111,12 @@ exports[`Testing Login Form renders successfully with error 1`] = `
 
 exports[`Testing Login Form renders successfully with initial state 1`] = `
 <Container>
+  <Header>
+    <BackButton
+      onPress={[Function]}
+    />
+  </Header>
   <Card>
-    <Header>
-      <BackButton
-        onPress={[Function]}
-      />
-    </Header>
     <Space
       height={30}
     />
@@ -181,33 +137,11 @@ exports[`Testing Login Form renders successfully with initial state 1`] = `
         value=""
       />
     </CardSection>
-    <CardSection>
-      <Input
-        label="Password"
-        onChangeText={[Function]}
-        placeholder="password"
-        secureTextEntry={true}
-        value=""
-      >
-        <Text
-          accessible={true}
-          allowFontScaling={true}
-          ellipsizeMode="tail"
-          onPress={[Function]}
-          style={
-            Object {
-              "color": "#757575",
-              "fontFamily": "Helvetica Neue",
-              "fontSize": 14,
-              "letterSpacing": 0,
-              "paddingBottom": 5,
-            }
-          }
-        >
-          show
-        </Text>
-      </Input>
-    </CardSection>
+    <PasswordInput
+      onChangeText={[Function]}
+      placeholder="password"
+      value=""
+    />
     <CardSection>
       <Button
         onPress={[Function]}

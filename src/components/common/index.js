@@ -4,6 +4,7 @@ export * from './Button';
 export * from './Card';
 export * from './CardSection';
 export * from './Container';
+export * from './DateSelector';
 export * from './ErrorText';
 export * from './Header';
 export * from './HeaderText1';

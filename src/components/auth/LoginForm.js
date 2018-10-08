@@ -59,10 +59,10 @@ export class LoginForm extends Component {
   render() {
     return (
       <Container>
+        <Header>
+          <BackButton onPress={NavigationService.goBack} />
+        </Header>
         <Card>
-          <Header>
-            <BackButton onPress={NavigationService.goBack} />
-          </Header>
           <Space height={30} />
           <CardSection>
             <Logo size="small" includeText />

@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Text } from 'react-native';
 import { connect } from 'react-redux';
 import { signupUpdate, submitStep1, dispatchUncaughtError } from '../../actions';
 import { Card, CardSection, Header, BackButton, HeaderText3, Spinner,
-  Button, Input, Space, Container } from '../common';
+  Button, Input, Space, Container, ErrorText } from '../common';
 import NavigationService from '../../services/NavigationService';
 
 
@@ -52,9 +51,9 @@ class SignupStep1 extends Component {
         if(this.props.error !== ''){
             return (
                 <CardSection>
-                    <Text>
+                    <ErrorText>
                         {this.props.error}
-                    </Text>
+                    </ErrorText>
                 </CardSection>
             );
         }
@@ -64,10 +63,10 @@ class SignupStep1 extends Component {
     render() {
         return (
           <Container>
+            <Header>
+              <BackButton onPress={NavigationService.goBack} />
+            </Header>
             <Card>
-              <Header>
-                <BackButton onPress={NavigationService.goBack} />
-              </Header>
               <CardSection>
                   <HeaderText3 headerText="What's your name?" />
               </CardSection>

@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput } from 'react-native';
 import { connect } from 'react-redux';
 import { signupUpdate, submitStep2 } from '../../actions';
 import { Card, CardSection, Header, BackButton, HeaderText3, Spinner,
-  Button, Input, Space, Container, StandardText } from '../common';
+  Button, Input, Space, Container, StandardText, ErrorText } from '../common';
 import PasswordInput from '../auth/PasswordInput';
 import NavigationService from '../../services/NavigationService';
 
@@ -32,9 +31,9 @@ class SignupStep2 extends Component {
       if(this.props.error !== ''){
           return (
               <CardSection>
-                  <Text>
+                  <ErrorText>
                       {this.props.error}
-                  </Text>
+                  </ErrorText>
               </CardSection>
           );
       }
@@ -44,10 +43,10 @@ class SignupStep2 extends Component {
     render() {
         return (
             <Container>
+              <Header>
+                <BackButton onPress={NavigationService.goBack} />
+              </Header>
               <Card>
-                <Header>
-                  <BackButton onPress={NavigationService.goBack} />
-                </Header>
                 <CardSection>
                   <HeaderText3 headerText="Create a password." />
                 </CardSection>
