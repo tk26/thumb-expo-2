@@ -2,38 +2,17 @@ import React, { Component } from 'react';
 import { View, Text, Button, Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { logoutUser, clearProfile } from '../../actions';
-import { NavigationActions, StackActions } from 'react-navigation';
-
-const initialState = {
-    firstName: '', profilePicture: '', error: ''
-};
+import { NavigationService } from '../../services';
 
 class Profile extends Component {
     constructor(props) {
-        super(props);
-        this.state = initialState;
-    }
-
-    componentDidMount() {
-        this.setState({
-            firstName: this.props.profile.firstName,
-            profilePicture: this.props.profile.profilePicture
-        });
-    }
-
-    refreshUserProfile(profilePicture){
-        this.setState({ profilePicture });
+      super(props);
     }
 
     logout() {
-        this.props.logoutUser();
-        this.props.clearProfile();
-        const resetAction = StackActions.reset({
-            index: 0,
-            key: null,
-            actions: [NavigationActions.navigate({ routeName: 'SignedOutStack' })],
-        });
-        this.props.navigation.dispatch(resetAction);
+      this.props.logoutUser();
+      this.props.clearProfile();
+      NavigationService.reset();
     }
 
     render() {
@@ -43,9 +22,7 @@ class Profile extends Component {
                 <Text>First Name: {profile.firstName}</Text>
 
                 <TouchableOpacity onPress={() =>{
-                    this.props.navigation.navigate('EditProfile', {
-                        refresh: this.refreshUserProfile
-                    })
+                  NavigationService.navigate('EditProfile')
                 }}>
                     <Image
                         style={{width: 50, height: 50}}
@@ -55,20 +32,16 @@ class Profile extends Component {
                     />
                 </TouchableOpacity>
 
-                <Text>{this.state.error}</Text>
-
                 <Button title="View and Edit Profile" style={{ alignSelf: 'center' }}
                     onPress={() => {
-                        this.props.navigation.navigate('EditProfile', {
-                            refresh: this.refreshUserProfile
-                        })
+                      NavigationService.navigate('EditProfile')
                     }}
                 />
 
                 <Button title="Settings" style={{ alignSelf: 'center' }} onPress={() => {} }/>
 
                 <Button title="Give us some feedback" style={{ alignSelf: 'center' }}
-                    onPress={() => this.props.navigation.navigate('Feedback') }
+                    onPress={() => NavigationService.navigate('Feedback') }
                 />
 
                 <Button title="Log out" style={{ alignSelf: 'center' }}

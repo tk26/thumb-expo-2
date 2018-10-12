@@ -1,4 +1,4 @@
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 
 let _navigator;
 
@@ -15,6 +15,15 @@ function navigate(routeName, params) {
   );
 }
 
+function reset(){
+  const resetAction = StackActions.reset({
+    index: 0,
+    key: null,
+    actions: [NavigationActions.navigate({ routeName: 'SignedOutStack' })],
+  });
+  _navigator.dispatch(resetAction);
+}
+
 function goBack(){
   _navigator.dispatch(
     NavigationActions.back()
@@ -24,5 +33,6 @@ function goBack(){
 export default {
   navigate,
   setTopLevelNavigator,
-  goBack
+  goBack,
+  reset
 };

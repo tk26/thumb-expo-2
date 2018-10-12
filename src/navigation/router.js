@@ -230,7 +230,7 @@ const bottomTabNavigatorConfig = {
 // connect is used to connect react components to the redux store
 const LoggedInTabs = createBottomTabNavigator({
     Home: {
-        screen: Home,
+        screen: EditProfile,//Home,
         navigationOptions: {
           tabBarIcon: ({ focused }) =>  {
             const imageSource = focused ? images.icons.home_icon_focused : images.icons.home_icon;

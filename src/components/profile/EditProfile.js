@@ -1,104 +1,41 @@
 import React, { Component } from 'react';
-import { View, Text, Button, TextInput, Image, AsyncStorage, TouchableOpacity } from 'react-native';
-import { NavigationActions } from 'react-navigation';
+import { Image, TouchableOpacity } from 'react-native';
+import { connect } from 'react-redux';
+import { profileUpdate, submitPofileUpdate } from '../../actions';
+
 import { getApiUrl } from '../../helper';
 import { ImagePicker, Permissions } from 'expo';
+
+import { Container, Header, Card, CardSection, StandardText, Input,
+  HeaderText3, Button, ErrorText, Spinner } from '../common';
 
 const headerPhotoMap = {
     // TODO point to header photo sources
     "indiana-university": ""
 }
 
-export default class EditProfile extends Component {
+class EditProfile extends Component {
     constructor(props) {
         super(props);
     }
 
-    componentWillMount() {
-        this.setState({
-            firstName: global.firstName,
-            username: global.username,
-            profilePicture: global.profilePicture,
-            error: ''
+    onBioChangeText(text){
+      this.props.profileUpdate({prop: 'bio', value: text});
+    }
+
+    submit(){
+      this.props.submitPofileUpdate(this.props.profilePicture,
+        this.props.bio)
+        .then(() => {
+        })
+        .catch(() => {
         });
-    }
-
-    componentDidMount() {
-        AsyncStorage.getItem("user")
-            .then(user => {
-                user = JSON.parse(user);
-                this.setState({
-                    headerPhoto: headerPhotoMap[user.school] || "",
-                    school: user.school,
-                    bio: user.bio
-                });
-            });
-        this._checkPermissions();
-    }
-
-    validateAndUpdate() {
-        // server side validation
-        let responseStatus = 0;
-        fetch(getApiUrl() + '/user/edit/', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer' + ' ' + global.auth_token
-            },
-            body: JSON.stringify({
-                "profilePicture" : this.state.profilePicture,
-                "bio": this.state.bio
-            })
-        })
-        .then( response => {
-            responseStatus = response.status
-            return response.json()
-        })
-        .then( response => {
-            if(responseStatus == 400) {
-                this.setState({
-                    error: "Invalid user details"
-                })
-            }
-            else if(responseStatus == 200) {
-                // profile updated successfully
-                this.setState({
-                    error: response.message
-                })
-                // update global
-                global.profilePicture = this.state.profilePicture;
-                AsyncStorage.getItem("user")
-                    .then(user => {
-                        user = JSON.parse(user);
-                        user.bio = this.state.bio;
-                        user.profilePicture = this.state.profilePicture;
-                        // update local store
-                        AsyncStorage.setItem("user", JSON.stringify(user));
-                    })
-                    .then(() => {
-                        this.props.navigation.state.params.refresh(this.state.profilePicture);
-                    });
-            }
-            else {
-                this.setState({
-                    error: "Some error occured. Please try again. If problem persists, " + 
-                        "please let us know at support@thumbtravel.com"
-                })
-            }
-        })
-        .catch( error => {
-            // TOOD log error
-            this.setState({
-                error: "Some error occured. Please try again. If problem persists, " + 
-                    "please let us know at support@thumbtravel.com"
-            })
-        })
     }
 
     async _checkPermissions(){
         const { status } = await Permissions.getAsync(Permissions.CAMERA_ROLL);
         this.setState({ status });
-    
+
         const cameraRollPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
         this.setState({ cameraRollPermission: cameraRollPermission.status });
     };
@@ -110,48 +47,89 @@ export default class EditProfile extends Component {
             base64: true,
             quality: 0
         });
-      
+
         if (!result.cancelled) {
-            this.setState({ profilePicture: result.base64 });
+          this.props.profileUpdate({prop: 'profilePicture', value: result.base64});
         }
     };
 
-    render() {
+    renderError(){
+      if(this.props.error !== ''){
         return (
-            <View>
-                {/* <Image
-                    source={ this.state.headerPhoto || require('./../../assets/thumb-horizontal-logo.png') }
-                /> */}
-                
-                <Text>First Name: {this.state.firstName}</Text>
-                
-                <TouchableOpacity onPress={this._pickImage }>
-                    <Image
-                        style={{width: 50, height: 50}}
-                        source={ this.state.profilePicture.length > 0 ? 
-                            { uri: 'data:image/jpeg;base64,' + this.state.profilePicture }
-                            : require('../../../assets/thumb-horizontal-logo.png') }
-                    />
-                </TouchableOpacity>
+            <CardSection>
+                <ErrorText>
+                    {this.props.error}
+                </ErrorText>
+            </CardSection>
+        );
+      }
+      return null;
+   }
 
-                <Text>Username: @{this.state.username}</Text>
-                
-                <Text>School: {this.state.school}</Text>
-                
-                <Text>Bio:</Text>
-                
-                <TextInput
-                    maxLength={100}
-                    autoCorrect={true}
-                    onChangeText={(bio) => this.setState({bio, error:''})}
-                    placeholder="Yo, add a bio"
-                    value={this.state.bio}
-                />
+   renderButton(){
+    if (this.props.loading) {
+      return <Spinner size="large" />;
+    }
+    return (
+      <Button onPress={() => this.submit()}>
+          update
+      </Button>
+    );
+}
 
-                <Button title="UPDATE" onPress={() => this.validateAndUpdate()} />
-                
-                <Text>{ this.state.error }</Text>
-            </View>
+    render() {
+        const profilePicture = this.props.profilePicture ? this.props.profilePicture : '';
+        return (
+            <Container>
+              <Header />
+              <Card>
+                <CardSection>
+                  <StandardText>First Name: {this.props.firstName}</StandardText>
+                </CardSection>
+                <CardSection>
+                  <TouchableOpacity onPress={this._pickImage }>
+                      <Image
+                          style={{width: 50, height: 50}}
+                          source={ profilePicture.length > 0 ?
+                              { uri: 'data:image/jpeg;base64,' + profilePicture }
+                              : require('../../../assets/thumb-horizontal-logo.png') }
+                      />
+                  </TouchableOpacity>
+                </CardSection>
+                <CardSection>
+                  <StandardText>Username: @{this.props.username}</StandardText>
+                </CardSection>
+                <CardSection>
+                  <StandardText>School: {this.props.school}</StandardText>
+                </CardSection>
+                <CardSection>
+                  <StandardText>Bio:</StandardText>
+                </CardSection>
+                <CardSection>
+                  <Input
+                      maxLength={100}
+                      autoCorrect={true}
+                      onChangeText={this.onBioChangeText.bind(this)}
+                      placeholder="Yo, add a bio"
+                      value={this.props.bio}
+                  />
+                </CardSection>
+                {this.renderError()}
+                <CardSection>
+                  {this.renderButton()}
+                </CardSection>
+                <ErrorText>{ this.props.error }</ErrorText>
+              </Card>
+            </Container>
         );
     }
 }
+
+const mapStateToProps = ({ profile }) => {
+  console.log(profile.editProfile);
+  const { firstName, username, school } = profile;
+  const { profilePicture, bio, error, loading } = profile.editProfile;
+  return { firstName, username, bio, school, profilePicture, error };
+};
+
+export default connect(mapStateToProps, { profileUpdate, submitPofileUpdate })(EditProfile);

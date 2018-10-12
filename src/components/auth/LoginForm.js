@@ -5,7 +5,7 @@ import { emailChanged, passwordChanged, loginUser, logoutUser } from '../../acti
 import { Header, BackButton, Container, Card, CardSection, Input, Link1,
   ErrorText, Logo, Button, Space, Spinner, fontColors } from '../common';
 import PasswordInput from './PasswordInput';
-import NavigationService from '../../services/NavigationService';
+import { NavigationService } from '../../services';
 
 const initialState = {
   securePassword: true
