@@ -70,7 +70,6 @@ export function updateProfilePicture(){
             base64: true,
             quality: 0
         });
-        console.log(result);
         if (!result.cancelled) {
           dispatch({
             type: PROFILE_UPDATE,
@@ -79,7 +78,6 @@ export function updateProfilePicture(){
         }
       }
     } catch(error){
-      console.log(error);
       dispatch({
         type: PROFILE_UPDATE_ERROR,
         error: INTERNAL_EXCEPTION

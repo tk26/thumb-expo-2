@@ -2,11 +2,9 @@
 
 exports[`Testing Login Form renders successfully when loading 1`] = `
 <Container>
-  <Header>
-    <BackButton
-      onPress={[Function]}
-    />
-  </Header>
+  <Header
+    includeBackButton={true}
+  />
   <Card>
     <Space
       height={30}
@@ -53,11 +51,9 @@ exports[`Testing Login Form renders successfully when loading 1`] = `
 
 exports[`Testing Login Form renders successfully with error 1`] = `
 <Container>
-  <Header>
-    <BackButton
-      onPress={[Function]}
-    />
-  </Header>
+  <Header
+    includeBackButton={true}
+  />
   <Card>
     <Space
       height={30}
@@ -111,11 +107,9 @@ exports[`Testing Login Form renders successfully with error 1`] = `
 
 exports[`Testing Login Form renders successfully with initial state 1`] = `
 <Container>
-  <Header>
-    <BackButton
-      onPress={[Function]}
-    />
-  </Header>
+  <Header
+    includeBackButton={true}
+  />
   <Card>
     <Space
       height={30}
