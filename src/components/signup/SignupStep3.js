@@ -3,7 +3,7 @@ import { Picker } from 'react-native';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { signupUpdate, submitStep3, dispatchUncaughtError } from '../../actions';
-import { Container, BackButton, Card, CardSection, ErrorText, HeaderText3,
+import { Container, Card, CardSection, ErrorText, HeaderText3,
   StandardText, Spinner, Button, Input, Header, DateSelector, Space } from '../common';
 import NavigationService from '../../services/NavigationService';
 
@@ -54,9 +54,7 @@ class SignupStep3 extends Component {
     render() {
         return (
             <Container>
-              <Header>
-                <BackButton onPress={NavigationService.goBack} />
-              </Header>
+              <Header includeBackButton />
               <Card>
                 <CardSection>
                   <HeaderText3 headerText="What is your email?" />

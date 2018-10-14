@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { signupUpdate, submitStep2 } from '../../actions';
-import { Card, CardSection, Header, BackButton, HeaderText3, Spinner,
+import { Card, CardSection, Header, HeaderText3, Spinner,
   Button, Input, Space, Container, StandardText, ErrorText } from '../common';
 import PasswordInput from '../auth/PasswordInput';
 import NavigationService from '../../services/NavigationService';
@@ -43,9 +43,7 @@ class SignupStep2 extends Component {
     render() {
         return (
             <Container>
-              <Header>
-                <BackButton onPress={NavigationService.goBack} />
-              </Header>
+              <Header includeBackButton />
               <Card>
                 <CardSection>
                   <HeaderText3 headerText="Create a password." />

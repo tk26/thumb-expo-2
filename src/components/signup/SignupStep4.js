@@ -3,7 +3,7 @@ import { View, Text, Image, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { NavigationActions, StackActions } from 'react-navigation';
 import { createUser, dispatchUncaughtError } from '../../actions';
-import { Card, CardSection, Container, BackButton, Button, Header,
+import { Card, CardSection, Container, Button, Header,
   StandardText, Spinner, Link1, HeaderText3, ErrorText } from '../common';
 import NavigationService from '../../services/NavigationService';
 
@@ -50,9 +50,7 @@ class SignupStep4 extends Component {
     render() {
         return (
             <Container>
-              <Header>
-                <BackButton onPress={NavigationService.goBack} />
-              </Header>
+              <Header includeBackButton />
               <Card>
                 <CardSection>
                   <HeaderText3 headerText="Before you join"/>

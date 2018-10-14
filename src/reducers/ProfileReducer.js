@@ -36,8 +36,6 @@ const INITIAL_STATE = {
 
 const ProfileReducer = (state = INITIAL_STATE, action) => {
   let editProfile;
-  console.log(action);
-  console.log(state);
   switch (action.type){
       case PROFILE_RESET:
           return {
@@ -68,12 +66,15 @@ const ProfileReducer = (state = INITIAL_STATE, action) => {
         editProfile.error = '';
         return {...state, editProfile};
       case PROFILE_UPDATE_SUCCESS:
+        debugger;
         editProfile = state.editProfile;
         editProfile.loading = false;
         editProfile.error = '';
-        return {...state, editProfile,
+        return {...state,
           bio: editProfile.bio,
-          profilePicture: editProfile.profilePicture};
+          profilePicture: editProfile.profilePicture,
+          editProfile: editProfile
+        };
       case PROFILE_UPDATE_ERROR:
         editProfile = state.editProfile;
         editProfile.loading = false;

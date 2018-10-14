@@ -1,72 +1,48 @@
 import React, { Component } from 'react';
 import { Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import { profileUpdate, submitPofileUpdate } from '../../actions';
-
-import { getApiUrl } from '../../helper';
-import { ImagePicker, Permissions } from 'expo';
-
+import { profileUpdate, submitPofileUpdate, updateProfilePicture,
+  dispatchProfileError } from '../../actions';
 import { Container, Header, Card, CardSection, StandardText, Input,
   HeaderText3, Button, ErrorText, Spinner } from '../common';
 
-const headerPhotoMap = {
-    // TODO point to header photo sources
-    "indiana-university": ""
-}
-
 class EditProfile extends Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
+  }
+
+  onBioChangeText(text){
+    this.props.profileUpdate({prop: 'bio', value: text});
+  }
+
+  submit(){
+    this.props.submitPofileUpdate(this.props.profilePicture,
+      this.props.bio)
+      .then(() => {
+      })
+      .catch((error) => {
+        this.props.dispatchProfileError(error);
+      });
+  }
+
+  pickImage(){
+    this.props.updateProfilePicture();
+  };
+
+  renderError(){
+    if(this.props.error !== ''){
+      return (
+          <CardSection>
+              <ErrorText>
+                  {this.props.error}
+              </ErrorText>
+          </CardSection>
+      );
     }
+    return null;
+  }
 
-    onBioChangeText(text){
-      this.props.profileUpdate({prop: 'bio', value: text});
-    }
-
-    submit(){
-      this.props.submitPofileUpdate(this.props.profilePicture,
-        this.props.bio)
-        .then(() => {
-        })
-        .catch(() => {
-        });
-    }
-
-    async _checkPermissions(){
-        const { status } = await Permissions.getAsync(Permissions.CAMERA_ROLL);
-        this.setState({ status });
-
-        const cameraRollPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-        this.setState({ cameraRollPermission: cameraRollPermission.status });
-    };
-
-    async _pickImage(){
-        let result = await ImagePicker.launchImageLibraryAsync({
-            allowsEditing: true,
-            aspect: [4, 3],
-            base64: true,
-            quality: 0
-        });
-
-        if (!result.cancelled) {
-          this.props.profileUpdate({prop: 'profilePicture', value: result.base64});
-        }
-    };
-
-    renderError(){
-      if(this.props.error !== ''){
-        return (
-            <CardSection>
-                <ErrorText>
-                    {this.props.error}
-                </ErrorText>
-            </CardSection>
-        );
-      }
-      return null;
-   }
-
-   renderButton(){
+  renderButton(){
     if (this.props.loading) {
       return <Spinner size="large" />;
     }
@@ -75,21 +51,21 @@ class EditProfile extends Component {
           update
       </Button>
     );
-}
+  }
 
     render() {
         const profilePicture = this.props.profilePicture ? this.props.profilePicture : '';
         return (
             <Container>
-              <Header />
+              <Header includeBackButton />
               <Card>
                 <CardSection>
                   <StandardText>First Name: {this.props.firstName}</StandardText>
                 </CardSection>
                 <CardSection>
-                  <TouchableOpacity onPress={this._pickImage }>
+                  <TouchableOpacity onPress={this.pickImage.bind(this) }>
                       <Image
-                          style={{width: 50, height: 50}}
+                          style={{width: 50, height: 50, resizeMode:"contain"}}
                           source={ profilePicture.length > 0 ?
                               { uri: 'data:image/jpeg;base64,' + profilePicture }
                               : require('../../../assets/thumb-horizontal-logo.png') }
@@ -118,7 +94,6 @@ class EditProfile extends Component {
                 <CardSection>
                   {this.renderButton()}
                 </CardSection>
-                <ErrorText>{ this.props.error }</ErrorText>
               </Card>
             </Container>
         );
@@ -126,10 +101,11 @@ class EditProfile extends Component {
 }
 
 const mapStateToProps = ({ profile }) => {
-  console.log(profile.editProfile);
   const { firstName, username, school } = profile;
   const { profilePicture, bio, error, loading } = profile.editProfile;
-  return { firstName, username, bio, school, profilePicture, error };
+  return { firstName, username, bio, school, profilePicture, error, loading };
 };
 
-export default connect(mapStateToProps, { profileUpdate, submitPofileUpdate })(EditProfile);
+export default connect(mapStateToProps,
+  { profileUpdate, submitPofileUpdate, updateProfilePicture, dispatchProfileError }
+)(EditProfile);
