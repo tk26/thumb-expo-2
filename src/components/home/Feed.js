@@ -36,7 +36,7 @@ export default class Feed extends Component{
                 y:  "1y",
                 yy: "%dy"
             }
-        });        
+        });
     }
     async componentWillMount() {
         await Expo.Font.loadAsync({
@@ -89,6 +89,7 @@ export default class Feed extends Component{
     }
 
     render(){
+      console.log(this.props);
         if (this.state.loading) {
             return <Expo.AppLoading />;
         }
@@ -113,8 +114,8 @@ export default class Feed extends Component{
                     onPress={() => this._refreshData()}
                 >
                     <Text>Bummer, no posts found.  Tap to refresh.</Text>
-                </Button>  
-                <Text>{this.state.error}</Text>  
+                </Button>
+                <Text>{this.state.error}</Text>
             </Body>);
         }
     }

@@ -24,7 +24,7 @@ const INITIAL_STATE = {
 const persistConfig = {
   key: 'auth',
   storage: storage,
-  whitelist: ['token', 'isLoggedIn']
+  whitelist: ['email', 'token', 'isLoggedIn']
 };
 
 const AuthReducer = (state = INITIAL_STATE, action) => {

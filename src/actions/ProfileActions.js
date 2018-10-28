@@ -3,6 +3,7 @@ import {
   PROFILE_UPDATE,
   PROFILE_UPDATE_SUBMIT,
   PROFILE_UPDATE_SUCCESS,
+  PROFILE_PICTURE_UPDATE_SUCCESS,
   PROFILE_UPDATE_ERROR
  } from './types';
 import { INTERNAL_EXCEPTION} from '../constants';
@@ -27,14 +28,55 @@ export function dispatchProfileError(error){
   };
 }
 
-export function submitPofileUpdate(profilePicture, bio){
+export function submitPofileUpdate(bio){
   return async(dispatch) => {
     dispatch({ type: PROFILE_UPDATE_SUBMIT });
     try {
-      let response = await UserService.updateUserProfile({profilePicture, bio});
+      let response = await UserService.updateUserProfile(bio);
       switch(response.status){
         case 200:
-          return dispatch({type: PROFILE_UPDATE_SUCCESS});
+          response.json()
+            .then((result) => {
+              return dispatch({
+                type: PROFILE_UPDATE_SUCCESS
+              });
+            });
+        case 400:
+          return dispatch({
+            type: PROFILE_UPDATE_ERROR,
+            error: "Invalid user details"
+          });
+        default:
+          return dispatch({
+            type: PROFILE_UPDATE_ERROR,
+            error: INTERNAL_EXCEPTION
+          });
+      }
+    } catch(error){
+      return dispatch({
+        type: PROFILE_UPDATE_ERROR,
+        error: INTERNAL_EXCEPTION
+      });
+    }
+  }
+}
+
+export function submitPofilePictureUpdate(profilePicture){
+  return async(dispatch) => {
+    dispatch({ type: PROFILE_UPDATE_SUBMIT });
+    try {
+      let response = await UserService.updateProfilePicture(profilePicture);
+      switch(response.status){
+        case 200:
+          response.json()
+            .then((result) => {
+              return dispatch({
+                type: PROFILE_PICTURE_UPDATE_SUCCESS,
+                payload: {
+                  profilePicture: result.location
+                }
+              });
+            });
         case 400:
           return dispatch({
             type: PROFILE_UPDATE_ERROR,
@@ -62,18 +104,16 @@ export function updateProfilePicture(){
       if(!hasPermissions){
         hasPermissions = await PermissionService.requestCameraPermissions();
       }
-
       if (hasPermissions)
       {
         let result = await ImagePicker.launchImageLibraryAsync({
             aspect: [4, 3],
-            base64: true,
-            quality: 0
+            quality: 1
         });
         if (!result.cancelled) {
           dispatch({
             type: PROFILE_UPDATE,
-            payload: {prop: 'profilePicture', value: result.base64}
+            payload: {prop: 'profilePicture', value: result.uri}
           });
         }
       }

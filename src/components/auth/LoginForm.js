@@ -6,15 +6,7 @@ import { Header, Container, Card, CardSection, Input, Link1,
   ErrorText, Logo, Button, Space, Spinner, fontColors } from '../common';
 import PasswordInput from './PasswordInput';
 
-const initialState = {
-  securePassword: true
-}
-
 export class LoginForm extends Component {
-  constructor(props){
-    super(props);
-    this.state = initialState;
-  }
   onEmailChange(text) {
     this.props.emailChanged(text);
   }

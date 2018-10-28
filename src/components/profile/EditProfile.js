@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import { profileUpdate, submitPofileUpdate, updateProfilePicture,
+import { profileUpdate, submitPofileUpdate, submitPofilePictureUpdate, updateProfilePicture,
   dispatchProfileError } from '../../actions';
 import { Container, Header, Card, CardSection, StandardText, Input,
   HeaderText3, Button, ErrorText, Spinner } from '../common';
@@ -15,18 +15,26 @@ class EditProfile extends Component {
     this.props.profileUpdate({prop: 'bio', value: text});
   }
 
-  submit(){
-    this.props.submitPofileUpdate(this.props.profilePicture,
-      this.props.bio)
-      .then(() => {
-      })
-      .catch((error) => {
-        this.props.dispatchProfileError(error);
-      });
+  async submit(){
+    try {
+      let profilePicture;
+      if (profilePicture !== this.props.currentProfilePicture){
+        profilePicture = this.props.profilePicture;
+        await this.props.submitPofilePictureUpdate(profilePicture);
+      }
+      await this.props.submitPofileUpdate(this.props.bio);
+    } catch(error){
+      console.log(error);
+      this.props.dispatchProfileError(error);
+    }
   }
 
   pickImage(){
-    this.props.updateProfilePicture();
+    this.props.updateProfilePicture()
+      .then(() => {})
+      .catch((error) => {
+        this.props.dispatchProfileError(error);
+      });
   };
 
   renderError(){
@@ -54,6 +62,7 @@ class EditProfile extends Component {
   }
 
     render() {
+
         const profilePicture = this.props.profilePicture ? this.props.profilePicture : '';
         return (
             <Container>
@@ -66,8 +75,8 @@ class EditProfile extends Component {
                   <TouchableOpacity onPress={this.pickImage.bind(this) }>
                       <Image
                           style={{width: 50, height: 50, resizeMode:"contain"}}
-                          source={ profilePicture.length > 0 ?
-                              { uri: 'data:image/jpeg;base64,' + profilePicture }
+                          source={ profilePicture ?
+                              { uri: profilePicture }
                               : require('../../../assets/thumb-horizontal-logo.png') }
                       />
                   </TouchableOpacity>
@@ -101,11 +110,14 @@ class EditProfile extends Component {
 }
 
 const mapStateToProps = ({ profile }) => {
+  console.log(profile);
   const { firstName, username, school } = profile;
+  const currentProfilePicture = profile.profilePicture;
   const { profilePicture, bio, error, loading } = profile.editProfile;
-  return { firstName, username, bio, school, profilePicture, error, loading };
+  return { firstName, username, bio, school,
+    profilePicture, error, loading, currentProfilePicture };
 };
 
 export default connect(mapStateToProps,
-  { profileUpdate, submitPofileUpdate, updateProfilePicture, dispatchProfileError }
+  { profileUpdate, submitPofileUpdate, submitPofilePictureUpdate, updateProfilePicture,  dispatchProfileError }
 )(EditProfile);

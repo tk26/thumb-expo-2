@@ -93,13 +93,13 @@ const ProfileStack = createStackNavigator({
     Profile: {
         screen: Profile,
         navigationOptions: {
-            title: 'Profile',
+          header: null
         }
     },
     EditProfile: {
         screen: EditProfile,
         navigationOptions: {
-            title: 'Edit Profile',
+          header: null
         }
     },
     Feedback: {
@@ -227,10 +227,9 @@ const bottomTabNavigatorConfig = {
   }
 };
 
-// connect is used to connect react components to the redux store
 const LoggedInTabs = createBottomTabNavigator({
     Home: {
-        screen: EditProfile,//Home,
+        screen: Home,
         navigationOptions: {
           tabBarIcon: ({ focused }) =>  {
             const imageSource = focused ? images.icons.home_icon_focused : images.icons.home_icon;

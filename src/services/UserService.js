@@ -36,17 +36,33 @@ export default class UserService {
     });
   }
 
-  static updateUserProfile({profilePicture, bio}){
+  static updateProfilePicture(profilePicture){
+    let formData = new FormData();
+    formData.append('profilePicture', {
+        uri: profilePicture,
+        name: 'profilePicture.jpg',
+        type: 'multipart/form-data'
+      });
+    return fetch(getApiUrl() + '/user/profilepicture/', {
+      method: 'PUT',
+      body: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': 'Bearer' + ' ' + AuthService.getAuthToken()
+      }
+    });
+  }
+
+  static updateUserProfile(bio){
     return fetch(getApiUrl() + '/user/edit/', {
       method: 'PUT',
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer' + ' ' + AuthService.getAuthToken()
-      },
       body: JSON.stringify({
-          "profilePicture" : profilePicture,
-          "bio": bio
-      })
+        "bio": bio
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer' + ' ' + AuthService.getAuthToken()
+      }
     });
   }
 }

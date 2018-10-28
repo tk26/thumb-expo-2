@@ -8,6 +8,7 @@ import {
   PROFILE_UPDATE,
   PROFILE_UPDATE_SUBMIT,
   PROFILE_UPDATE_SUCCESS,
+  PROFILE_PICTURE_UPDATE_SUCCESS,
   PROFILE_UPDATE_ERROR
 } from '../actions/types';
 
@@ -24,7 +25,7 @@ const INITIAL_STATE = {
   profilePicture: '',
   birthday: '',
   bio: '',
-  loading: '',
+  loading: false,
   error: '',
   editProfile: {
     profilePicture: '',
@@ -38,7 +39,7 @@ const ProfileReducer = (state = INITIAL_STATE, action) => {
   let editProfile;
   switch (action.type){
       case PROFILE_RESET:
-          return {
+          return {...INITIAL_STATE,
               firstName: action.profile.firstName,
               lastName: action.profile.lastName,
               school: action.profile.school,
@@ -66,12 +67,19 @@ const ProfileReducer = (state = INITIAL_STATE, action) => {
         editProfile.error = '';
         return {...state, editProfile};
       case PROFILE_UPDATE_SUCCESS:
-        debugger;
         editProfile = state.editProfile;
         editProfile.loading = false;
         editProfile.error = '';
         return {...state,
           bio: editProfile.bio,
+          editProfile: editProfile
+        };
+      case PROFILE_PICTURE_UPDATE_SUCCESS:
+        editProfile = state.editProfile;
+        editProfile.loading = false;
+        editProfile.error = '';
+        editProfile.profilePicture = action.payload.profilePicture;
+        return {...state,
           profilePicture: editProfile.profilePicture,
           editProfile: editProfile
         };

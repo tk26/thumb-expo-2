@@ -24,11 +24,8 @@ class App_Startup extends Component {
     this.setState({loading: false});
   }
   setGlobalVariables(){
-    const {  token } = this.props;
-    const { firstName, profilePicture } = this.props.profile;
+    const { token } = this.props;
     AuthService.setAuthToken(token);
-    global.firstName = firstName;
-    global.profilePicture = profilePicture;
   }
   async loadFonts(){
     if (Platform.OS === 'android'){
@@ -53,7 +50,6 @@ const mapStateToProps = (state) => {
   return {
     isLoggedIn: state.auth.isLoggedIn,
     token: state.auth.token,
-    profile: state.profile
   }
 }
 
