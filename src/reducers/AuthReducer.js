@@ -1,5 +1,6 @@
 import storage from 'redux-persist/lib/storage';
 import { persistReducer } from 'redux-persist';
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import {
     EMAIL_CHANGED,
     PASSWORD_CHANGED,
@@ -24,6 +25,7 @@ const INITIAL_STATE = {
 const persistConfig = {
   key: 'auth',
   storage: storage,
+  stateReconciler: autoMergeLevel2,
   whitelist: ['email', 'token', 'isLoggedIn']
 };
 

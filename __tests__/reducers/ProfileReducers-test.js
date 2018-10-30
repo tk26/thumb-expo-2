@@ -5,6 +5,7 @@ import {
   PROFILE_UPDATE,
   PROFILE_UPDATE_SUBMIT,
   PROFILE_UPDATE_SUCCESS,
+  PROFILE_PICTURE_UPDATE_SUCCESS,
   PROFILE_UPDATE_ERROR
 } from '../../src/actions/types';
 
@@ -114,11 +115,22 @@ describe('ProfileReducer', () => {
   describe(PROFILE_UPDATE_SUCCESS, () => {
     test('should return correct state with error message', () => {
       const beforeState = {...initialState, editProfile: {
-        ...initialState.editProfile, loading: true, bio: 'This is my new bio!!!', profilePicture: 'asdfasdf'
+        ...initialState.editProfile, loading: true, bio: 'This is my new bio!!!'
       }};
       const editProfile = {...beforeState.editProfile, loading: false};
-      const expectedState = {...initialState, bio: editProfile.bio, profilePicture: editProfile.profilePicture, editProfile};
-      const action = {type: PROFILE_UPDATE_SUCCESS };
+      const expectedState = {...initialState, bio: editProfile.bio, editProfile};
+      const action = {type: PROFILE_UPDATE_SUCCESS, payload: { bio: beforeState.editProfile.bio}};
+      expect(profileReducer({profile: beforeState}, action).profile).toEqual(expectedState);
+    });
+  });
+  describe(PROFILE_PICTURE_UPDATE_SUCCESS, () => {
+    test('should return correct state with error message', () => {
+      const beforeState = {...initialState, editProfile: {
+        ...initialState.editProfile, loading: true, profilePicture: 'asdfasdf'
+      }};
+      const editProfile = {...beforeState.editProfile, loading: false};
+      const expectedState = {...initialState, profilePicture: editProfile.profilePicture, editProfile};
+      const action = {type: PROFILE_PICTURE_UPDATE_SUCCESS, payload: { profilePicture: beforeState.editProfile.profilePicture}};
       expect(profileReducer({profile: beforeState}, action).profile).toEqual(expectedState);
     });
   });

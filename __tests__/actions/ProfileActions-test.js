@@ -49,7 +49,6 @@ describe('ProfileActions', () => {
     test('Dispatches the correct action and payload when API returns 400', async() => {
       fetch.mockResponse(JSON.stringify({}),{ status: 400 });
       const bio = 'test bio';
-      const profilePicture = 'asdfasdf';
       const expectedActions = [
         {
           type: types.PROFILE_UPDATE_SUBMIT
@@ -59,22 +58,22 @@ describe('ProfileActions', () => {
           error: "Invalid user details"
         }
       ];
-      await store.dispatch(profileActions.submitPofileUpdate(profilePicture, bio));
+      await store.dispatch(profileActions.submitPofileUpdate(bio));
       expect(store.getActions()).toEqual(expectedActions);
     });
     test('Dispatches the correct action and payload when API returns 200', async() => {
       fetch.mockResponse(JSON.stringify({}),{ status: 200 });
       const bio = 'test bio';
-      const profilePicture = 'asdfasdf';
       const expectedActions = [
         {
           type: types.PROFILE_UPDATE_SUBMIT
         },
         {
-          type: types.PROFILE_UPDATE_SUCCESS
+          type: types.PROFILE_UPDATE_SUCCESS,
+          payload: {bio}
         }
       ];
-      await store.dispatch(profileActions.submitPofileUpdate(profilePicture, bio));
+      await store.dispatch(profileActions.submitPofileUpdate(bio));
       expect(store.getActions()).toEqual(expectedActions);
     });
     test('Dispatches the correct action and payload when API returns 500', async() => {
@@ -90,7 +89,7 @@ describe('ProfileActions', () => {
           error: constants.INTERNAL_EXCEPTION
         }
       ];
-      await store.dispatch(profileActions.submitPofileUpdate(profilePicture, bio));
+      await store.dispatch(profileActions.submitPofileUpdate(bio));
       expect(store.getActions()).toEqual(expectedActions);
     });
     test('Dispatches the correct action and payload when API request fails', async() => {
@@ -106,10 +105,76 @@ describe('ProfileActions', () => {
           error: constants.INTERNAL_EXCEPTION
         }
       ];
-      await store.dispatch(profileActions.submitPofileUpdate(profilePicture, bio));
+      await store.dispatch(profileActions.submitPofileUpdate(bio));
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+
+  describe('submit profile picture update', () => {
+    test('Dispatches the correct action and payload when API returns 400', async() => {
+      fetch.mockResponse(JSON.stringify({}),{ status: 400 });
+      const profilePicture = 'asdfasdf';
+      const expectedActions = [
+        {
+          type: types.PROFILE_UPDATE_SUBMIT
+        },
+        {
+          type: types.PROFILE_UPDATE_ERROR,
+          error: constants.MISSING_PROFILE_PICTURE
+        }
+      ];
+      await store.dispatch(profileActions.submitPofilePictureUpdate(profilePicture));
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+    test('Dispatches the correct action and payload when API returns 200', async() => {
+      const profilePicture = 'asdfasdf';
+      fetch.mockResponse(JSON.stringify({ location: profilePicture }),{ status: 200 });
+      const expectedActions = [
+        {
+          type: types.PROFILE_UPDATE_SUBMIT
+        },
+        {
+          type: types.PROFILE_PICTURE_UPDATE_SUCCESS,
+          payload: {
+            profilePicture
+          }
+        }
+      ];
+      await store.dispatch(profileActions.submitPofilePictureUpdate(profilePicture));
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+    test('Dispatches the correct action and payload when API returns 500', async() => {
+      fetch.mockResponse(JSON.stringify({}),{ status: 500 });
+      const profilePicture = 'asdfasdf';
+      const expectedActions = [
+        {
+          type: types.PROFILE_UPDATE_SUBMIT
+        },
+        {
+          type: types.PROFILE_UPDATE_ERROR,
+          error: constants.INTERNAL_EXCEPTION
+        }
+      ];
+      await store.dispatch(profileActions.submitPofilePictureUpdate(profilePicture));
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+    test('Dispatches the correct action and payload when API request fails', async() => {
+      fetch.mockReject(new Error('fake error message'));
+      const profilePicture = 'asdfasdf';
+      const expectedActions = [
+        {
+          type: types.PROFILE_UPDATE_SUBMIT
+        },
+        {
+          type: types.PROFILE_UPDATE_ERROR,
+          error: constants.INTERNAL_EXCEPTION
+        }
+      ];
+      await store.dispatch(profileActions.submitPofilePictureUpdate(profilePicture));
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+
   describe('update profile picture', () => {
     test('Submits no actions when permissions are not granted', async() => {
       jest.spyOn(PermissionService, "hasCameraPermissions")
@@ -127,7 +192,7 @@ describe('ProfileActions', () => {
       jest.spyOn(PermissionService, "requestCameraPermissions")
         .mockImplementation(() => {return true;});
       jest.spyOn(ImagePicker, "launchImageLibraryAsync")
-        .mockImplementation(() => {return {cancelled: false, base64: 'test'};});
+        .mockImplementation(() => {return {cancelled: false, uri: 'test'};});
 
       const expectedActions = [
         {
@@ -152,7 +217,7 @@ describe('ProfileActions', () => {
       jest.spyOn(PermissionService, "hasCameraPermissions")
         .mockImplementation(() => {return true;});
       jest.spyOn(ImagePicker, "launchImageLibraryAsync")
-        .mockImplementation(() => {return {cancelled: false, base64: "test"};});
+        .mockImplementation(() => {return {cancelled: false, uri: "test"};});
 
       const expectedActions = [
         {

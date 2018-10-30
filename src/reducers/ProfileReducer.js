@@ -14,7 +14,8 @@ import {
 
 const persistConfig = {
   key: 'profile',
-  storage: storage
+  storage: storage,
+  stateReconciler: autoMergeLevel2
 };
 
 const INITIAL_STATE = {
@@ -57,28 +58,20 @@ const ProfileReducer = (state = INITIAL_STATE, action) => {
       case PROFILE_LOGOUT:
         return INITIAL_STATE;
       case PROFILE_UPDATE:
-        editProfile = state.editProfile;
-        editProfile.error = '',
+        editProfile = {...state.editProfile, error: ''};
         editProfile[action.payload.prop] = action.payload.value;
         return {...state, editProfile}
       case PROFILE_UPDATE_SUBMIT:
-        editProfile = state.editProfile;
-        editProfile.loading = true;
-        editProfile.error = '';
+        editProfile = {...state.editProfile, loading: true, error: ''};
         return {...state, editProfile};
       case PROFILE_UPDATE_SUCCESS:
-        editProfile = state.editProfile;
-        editProfile.loading = false;
-        editProfile.error = '';
+        editProfile = {...state.editProfile, loading: false, error: '', bio: action.payload.bio};
         return {...state,
           bio: editProfile.bio,
           editProfile: editProfile
         };
       case PROFILE_PICTURE_UPDATE_SUCCESS:
-        editProfile = state.editProfile;
-        editProfile.loading = false;
-        editProfile.error = '';
-        editProfile.profilePicture = action.payload.profilePicture;
+        editProfile = {...state.editProfile, loading: false, error: '', profilePicture: action.payload.profilePicture};
         return {...state,
           profilePicture: editProfile.profilePicture,
           editProfile: editProfile

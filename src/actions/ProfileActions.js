@@ -6,7 +6,7 @@ import {
   PROFILE_PICTURE_UPDATE_SUCCESS,
   PROFILE_UPDATE_ERROR
  } from './types';
-import { INTERNAL_EXCEPTION} from '../constants';
+import { INTERNAL_EXCEPTION, MISSING_PROFILE_PICTURE } from '../constants';
 import { ImagePicker } from 'expo';
 import { PermissionService, UserService } from '../services';
 
@@ -35,12 +35,12 @@ export function submitPofileUpdate(bio){
       let response = await UserService.updateUserProfile(bio);
       switch(response.status){
         case 200:
-          response.json()
-            .then((result) => {
-              return dispatch({
-                type: PROFILE_UPDATE_SUCCESS
-              });
-            });
+          return dispatch({
+            type: PROFILE_UPDATE_SUCCESS,
+            payload: {
+              bio
+            }
+          });
         case 400:
           return dispatch({
             type: PROFILE_UPDATE_ERROR,
@@ -68,9 +68,9 @@ export function submitPofilePictureUpdate(profilePicture){
       let response = await UserService.updateProfilePicture(profilePicture);
       switch(response.status){
         case 200:
-          response.json()
+          return response.json()
             .then((result) => {
-              return dispatch({
+              dispatch({
                 type: PROFILE_PICTURE_UPDATE_SUCCESS,
                 payload: {
                   profilePicture: result.location
@@ -80,7 +80,7 @@ export function submitPofilePictureUpdate(profilePicture){
         case 400:
           return dispatch({
             type: PROFILE_UPDATE_ERROR,
-            error: "Invalid user details"
+            error: MISSING_PROFILE_PICTURE
           });
         default:
           return dispatch({
