@@ -22,9 +22,11 @@ class EditProfile extends Component {
         profilePicture = this.props.profilePicture;
         await this.props.submitPofilePictureUpdate(profilePicture);
       }
-      await this.props.submitPofileUpdate(this.props.bio);
+
+      if(this.props.bio !== this.props.currentBio){
+        await this.props.submitPofileUpdate(this.props.bio);
+      }
     } catch(error){
-      console.log(error);
       this.props.dispatchProfileError(error);
     }
   }
@@ -113,9 +115,10 @@ const mapStateToProps = ({ profile }) => {
   console.log(profile);
   const { firstName, username, school } = profile;
   const currentProfilePicture = profile.profilePicture;
+  const currentBio = profile.bio;
   const { profilePicture, bio, error, loading } = profile.editProfile;
   return { firstName, username, bio, school,
-    profilePicture, error, loading, currentProfilePicture };
+    profilePicture, error, loading, currentProfilePicture, currentBio };
 };
 
 export default connect(mapStateToProps,
