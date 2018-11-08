@@ -19,13 +19,15 @@ class App_Startup extends Component {
     this.state = initialState;
   }
   async componentDidMount(){
-    this.setGlobalVariables();
+    await this.setGlobalVariables();
     await this.loadFonts();
     this.setState({loading: false});
   }
-  setGlobalVariables(){
-    const { token } = this.props;
+  async setGlobalVariables(){
+    const token = await AuthService.getPersistedAuthToken();
+    const refreshToken = await AuthService.getPersistedRefreshToken();
     AuthService.setAuthToken(token);
+    AuthService.setRefreshToken(refreshToken);
   }
   async loadFonts(){
     if (Platform.OS === 'android'){
@@ -48,8 +50,7 @@ class App_Startup extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    isLoggedIn: state.auth.isLoggedIn,
-    token: state.auth.token,
+    isLoggedIn: state.auth.isLoggedIn
   }
 }
 

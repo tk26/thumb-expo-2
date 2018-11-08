@@ -17,6 +17,7 @@ describe('AuthReducer', () => {
     email: '',
     password: '',
     token: '',
+    refreshToken: '',
     isLoggedIn: false,
     error: '',
     loading: false
@@ -49,6 +50,7 @@ describe('AuthReducer', () => {
           email: 'test@test.edu',
           password: 'ValidPassword123',
           token: '',
+          refreshToken: '',
           isLoggedIn: false,
           error: 'some error',
           loading: false
@@ -57,6 +59,7 @@ describe('AuthReducer', () => {
         email: 'test@test.edu',
         password: 'ValidPassword123',
         token: '',
+        refreshToken: '',
         isLoggedIn: false,
         error: '',
         loading: true
@@ -72,6 +75,7 @@ describe('AuthReducer', () => {
           email: 'test@test.edu',
           password: '',
           token: 'asdfasdfafd',
+          refreshToken: 'asdfasdf',
           isLoggedIn: true,
           error: '',
           loading: false
@@ -85,20 +89,23 @@ describe('AuthReducer', () => {
           email: 'test@test.edu',
           password: 'ValidPassword123',
           token: '',
+          refreshToken: '',
           isLoggedIn: false,
           error: '',
           loading: true
       };
       const token = 'asdfasd';
+      const refreshToken = 'asdfasdf';
       const expectedState = {
         email: 'test@test.edu',
         password: '',
         token: token,
+        refreshToken: refreshToken,
         isLoggedIn: true,
         error: '',
         loading: false
       };
-      const action = { type: LOGIN_USER_SUCCESS, token};
+      const action = { type: LOGIN_USER_SUCCESS, token, refreshToken};
       expect(reducer(loginState, action)).toEqual(expectedState);
     });
   });
@@ -108,6 +115,7 @@ describe('AuthReducer', () => {
           email: 'test@test.edu',
           password: 'InvalidPassword',
           token: '',
+          refreshToken: '',
           isLoggedIn: false,
           error: '',
           loading: true
@@ -116,6 +124,7 @@ describe('AuthReducer', () => {
         email: 'test@test.edu',
         password: '',
         token: '',
+        refreshToken: '',
         isLoggedIn: false,
         error: constants.INVALID_LOGIN,
         loading: false
@@ -130,6 +139,7 @@ describe('AuthReducer', () => {
           email: 'test@test.edu',
           password: 'InvalidPassword',
           token: '',
+          refreshToken: '',
           isLoggedIn: false,
           error: '',
           loading: true
@@ -138,6 +148,7 @@ describe('AuthReducer', () => {
         email: 'test@test.edu',
         password: '',
         token: '',
+        refreshToken: '',
         isLoggedIn: false,
         error: constants.INTERNAL_EXCEPTION,
         loading: false
@@ -150,6 +161,7 @@ describe('AuthReducer', () => {
           email: 'test@test.edu',
           password: 'InvalidPassword',
           token: '',
+          refreshToken: '',
           isLoggedIn: false,
           error: '',
           loading: true
@@ -159,6 +171,7 @@ describe('AuthReducer', () => {
         email: 'test@test.edu',
         password: '',
         token: '',
+        refreshToken: '',
         isLoggedIn: false,
         error: expectedError,
         loading: false
@@ -173,6 +186,7 @@ describe('AuthReducer', () => {
           email: 'test@test.edu',
           password: 'ValidPassword123!',
           token: '',
+          refreshToken: '',
           isLoggedIn: false,
           error: '',
           loading: true
@@ -181,6 +195,7 @@ describe('AuthReducer', () => {
         email: 'test@test.edu',
         password: '',
         token: '',
+        refreshToken: '',
         isLoggedIn: false,
         error: constants.UNVERIFIED_USER_LOGIN,
         loading: false

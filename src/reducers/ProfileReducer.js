@@ -58,7 +58,7 @@ const ProfileReducer = (state = INITIAL_STATE, action) => {
       case PROFILE_LOGOUT:
         return INITIAL_STATE;
       case PROFILE_UPDATE:
-        editProfile = {...state.editProfile, error: ''};
+        editProfile = {...state.editProfile, error: '', loading: false};
         editProfile[action.payload.prop] = action.payload.value;
         return {...state, editProfile}
       case PROFILE_UPDATE_SUBMIT:
@@ -77,9 +77,7 @@ const ProfileReducer = (state = INITIAL_STATE, action) => {
           editProfile: editProfile
         };
       case PROFILE_UPDATE_ERROR:
-        editProfile = state.editProfile;
-        editProfile.loading = false;
-        editProfile.error = action.error;
+        editProfile = {...state.editProfile, loading: false, error: action.error};
         return {...state, editProfile};
       default:
         return state;

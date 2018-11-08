@@ -53,7 +53,7 @@ export function logoutUser(){
 }
 
 export function loginFailed(){
-    return { type: LOGIN_USER_FAILED };
+  return { type: LOGIN_USER_FAILED };
 }
 
 const loginUserFailWithError = (dispatch, error) => {
@@ -76,7 +76,8 @@ const loginSuccess = (dispatch, rawResponse) => {
   rawResponse.json()
       .then((response) => {
           const auth_token = response.token;
-          AuthService.setAuthToken(auth_token);
+          const refresh_token = response.refreshToken;
+          AuthService.setTokens(auth_token, refresh_token);
           // Save user details
           let profile = {
               firstName: response.firstName,
@@ -87,7 +88,7 @@ const loginSuccess = (dispatch, rawResponse) => {
               birthday: response.birthday,
               bio: response.bio
           };
-          dispatch({type: LOGIN_USER_SUCCESS, token: auth_token});
+          dispatch({type: LOGIN_USER_SUCCESS, token: auth_token, refreshToken: refresh_token});
           return dispatch({type: PROFILE_RESET, profile: profile});
       })
       .catch((dispatch) => loginUserFail(dispatch));

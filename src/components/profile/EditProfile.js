@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { profileUpdate, submitPofileUpdate, submitPofilePictureUpdate, updateProfilePicture,
   dispatchProfileError } from '../../actions';
 import { Container, Header, Card, CardSection, StandardText, Input,
-  HeaderText3, Button, ErrorText, Spinner } from '../common';
+  HeaderText3, Button, ErrorText, Spinner, ProfilePicture } from '../common';
 
 class EditProfile extends Component {
   constructor(props) {
@@ -17,14 +17,14 @@ class EditProfile extends Component {
 
   async submit(){
     try {
-      let profilePicture;
+      if(this.props.bio !== this.props.currentBio){
+        await this.props.submitPofileUpdate(this.props.bio);
+      }
+
+      let profilePicture = this.props.profilePicture;
       if (profilePicture !== this.props.currentProfilePicture){
         profilePicture = this.props.profilePicture;
         await this.props.submitPofilePictureUpdate(profilePicture);
-      }
-
-      if(this.props.bio !== this.props.currentBio){
-        await this.props.submitPofileUpdate(this.props.bio);
       }
     } catch(error){
       this.props.dispatchProfileError(error);
@@ -75,11 +75,9 @@ class EditProfile extends Component {
                 </CardSection>
                 <CardSection>
                   <TouchableOpacity onPress={this.pickImage.bind(this) }>
-                      <Image
-                          style={{width: 50, height: 50, resizeMode:"contain"}}
-                          source={ profilePicture ?
-                              { uri: profilePicture }
-                              : require('../../../assets/thumb-horizontal-logo.png') }
+                      <ProfilePicture
+                          size='small'
+                          source={profilePicture}
                       />
                   </TouchableOpacity>
                 </CardSection>
@@ -112,7 +110,6 @@ class EditProfile extends Component {
 }
 
 const mapStateToProps = ({ profile }) => {
-  console.log(profile);
   const { firstName, username, school } = profile;
   const currentProfilePicture = profile.profilePicture;
   const currentBio = profile.bio;

@@ -17,6 +17,7 @@ const INITIAL_STATE = {
   email: '',
   password: '',
   token: '',
+  refreshToken: '',
   isLoggedIn: false,
   error: '',
   loading: false
@@ -26,7 +27,7 @@ const persistConfig = {
   key: 'auth',
   storage: storage,
   stateReconciler: autoMergeLevel2,
-  whitelist: ['email', 'token', 'isLoggedIn']
+  whitelist: ['email', 'token', 'refreshToken', 'isLoggedIn']
 };
 
 const AuthReducer = (state = INITIAL_STATE, action) => {
@@ -38,14 +39,22 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
         case LOGIN_USER:
             return {...state, error: '', loading: true};
         case LOGIN_USER_SUCCESS:
-            return {...state, error: '', loading: false, token: action.token, isLoggedIn: true, password: ''};
+            return {...state,
+              error: '',
+              loading: false,
+              token: action.token,
+              refreshToken: action.refreshToken,
+              isLoggedIn: true,
+              password: ''
+            };
         case LOGIN_UNVERIFIED_USER_FAILED:
             return {...state,
                 error: constants.UNVERIFIED_USER_LOGIN,
                 loading: false,
                 isLoggedIn: false,
                 password: '',
-                token: ''
+                token: '',
+                refreshToken: ''
             };
         case LOGIN_USER_AUTH_FAILED:
             return {...state, error: constants.INVALID_LOGIN, loading: false, isLoggedIn: false, password: ''};
@@ -53,7 +62,15 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
             const errorMessage = action.error || constants.INTERNAL_EXCEPTION;
             return {...state, error: errorMessage, loading: false, isLoggedIn: false, password: ''};
         case LOGOUT_USER:
-            return {...state, error: '', loading: false, isLoggedIn: false, email: '', password: '', token: ''};
+            return {...state,
+              error: '',
+              loading: false,
+              isLoggedIn: false,
+              email: '',
+              password: '',
+              token: '',
+              refreshToken: ''
+            };
         default:
             return state;
   }

@@ -1,5 +1,5 @@
 import { getApiUrl } from '../helper';
-import AuthService from './AuthService';
+import { fetchWithTokenHandler } from '../services/fetchPlus';
 
 export default class UserService {
   static validateUsername(username){
@@ -43,25 +43,24 @@ export default class UserService {
         name: 'profilePicture.jpg',
         type: 'multipart/form-data'
       });
-    return fetch(getApiUrl() + '/user/profilepicture/', {
+    return fetchWithTokenHandler(getApiUrl() + '/user/profilepicture/', {
       method: 'PUT',
       body: formData,
       headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': 'Bearer' + ' ' + AuthService.getAuthToken()
+        'Content-Type': 'multipart/form-data'
       }
     });
   }
 
   static updateUserProfile(bio){
-    return fetch(getApiUrl() + '/user/edit/', {
+    console.log(bio);
+    return fetchWithTokenHandler(getApiUrl() + '/user/edit/', {
       method: 'PUT',
       body: JSON.stringify({
         "bio": bio
       }),
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer' + ' ' + AuthService.getAuthToken()
+        'Content-Type': 'application/json'
       }
     });
   }
