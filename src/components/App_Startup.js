@@ -19,16 +19,15 @@ class App_Startup extends Component {
     this.state = initialState;
   }
   async componentDidMount(){
-    this.setGlobalVariables();
+    await this.setGlobalVariables();
     await this.loadFonts();
     this.setState({loading: false});
   }
-  setGlobalVariables(){
-    const {  token } = this.props;
-    const { firstName, profilePicture } = this.props.profile;
+  async setGlobalVariables(){
+    const token = await AuthService.getPersistedAuthToken();
+    const refreshToken = await AuthService.getPersistedRefreshToken();
     AuthService.setAuthToken(token);
-    global.firstName = firstName;
-    global.profilePicture = profilePicture;
+    AuthService.setRefreshToken(refreshToken);
   }
   async loadFonts(){
     if (Platform.OS === 'android'){
@@ -51,9 +50,7 @@ class App_Startup extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    isLoggedIn: state.auth.isLoggedIn,
-    token: state.auth.token,
-    profile: state.profile
+    isLoggedIn: state.auth.isLoggedIn
   }
 }
 

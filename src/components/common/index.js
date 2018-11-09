@@ -13,6 +13,7 @@ export * from './Input';
 export * from './Link1';
 export * from './Logo';
 export * from './NavigationIcon';
+export * from './ProfilePicture';
 export * from './Space';
 export * from './Spinner';
 export * from './StandardText';

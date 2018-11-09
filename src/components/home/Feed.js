@@ -4,6 +4,7 @@ import { Body, Text, Button } from 'native-base';
 import PostItem from './PostItem';
 import moment from 'moment';
 import { getApiUrl } from '../../helper';
+import { fetchWithTokenHandler } from '../../services/fetchPlus';
 
 const initialState = {
     error: '',
@@ -36,7 +37,7 @@ export default class Feed extends Component{
                 y:  "1y",
                 yy: "%dy"
             }
-        });        
+        });
     }
     async componentWillMount() {
         await Expo.Font.loadAsync({
@@ -52,13 +53,11 @@ export default class Feed extends Component{
     _refreshData(){
         this.setState({refreshing: true});
         let responseStatus;
+        const dispatch = (action) => {};
 
-        fetch(getApiUrl() + '/home/feed?fromTimestamp='+ this.state.lastTimestamp,{
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer' + ' ' + global.auth_token
-            }
-        })
+        fetchWithTokenHandler(getApiUrl() + '/home/feed?fromTimestamp='+ this.state.lastTimestamp,{
+            method: 'GET'
+        }, dispatch)
         .then( response => {
             responseStatus = response.status
             return response.json();
@@ -89,6 +88,7 @@ export default class Feed extends Component{
     }
 
     render(){
+      console.log(this.props);
         if (this.state.loading) {
             return <Expo.AppLoading />;
         }
@@ -113,8 +113,8 @@ export default class Feed extends Component{
                     onPress={() => this._refreshData()}
                 >
                     <Text>Bummer, no posts found.  Tap to refresh.</Text>
-                </Button>  
-                <Text>{this.state.error}</Text>  
+                </Button>
+                <Text>{this.state.error}</Text>
             </Body>);
         }
     }

@@ -1,4 +1,5 @@
-import { SignupService } from '../services';
+import { UserService } from '../services';
+import { getApiUrl } from '../helper';
 import { SIGNUP_UPDATE,
   SIGNUP_SUBMIT_STEP,
   SIGNUP_STEP1_SUCCESS,
@@ -37,7 +38,7 @@ export const submitStep1 = ({firstName, lastName, username}) => {
       return stepFailed(dispatch, step, constants.INVALID_USERNAME_FORMAT);
     }
     try {
-      let response = await SignupService.validateUsername(username);
+      let response = await UserService.validateUsername(username);
       switch (response.status){
         case 422:
             return stepFailed(dispatch, step, constants.INVALID_USERNAME_GENERIC);
@@ -91,7 +92,7 @@ export const submitStep3 = ({email, birthday, university}) => {
       return stepFailed(dispatch, step, constants.EMAIL_MISSING_EDU);
     }
     try {
-      let response = await SignupService.validateEmail(email);
+      let response = await UserService.validateEmail(email);
       switch (response.status){
         case 422:
           return stepFailed(dispatch, step, constants.INVALID_EMAIL_ADDRESS);
@@ -113,7 +114,22 @@ export const createUser = ({firstName, lastName, username, password, email, birt
   return async(dispatch) => {
     dispatch({ type: SIGNUP_SUBMIT_STEP });
     try {
-      let response = await SignupService.createUser({firstName, lastName, username, password, email, birthday, university});
+      let response = await fetch(getApiUrl() + '/user/create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "firstName": firstName,
+            "lastName": lastName,
+            "email": email,
+            "school": university,
+            "password": password,
+            "username": username,
+            "birthday": birthday
+        })
+      });
+
       switch(response.status){
         case 200:
           return stepSucceeded(dispatch, step);

@@ -1,5 +1,6 @@
 import storage from 'redux-persist/lib/storage';
 import { persistReducer } from 'redux-persist';
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import {
     EMAIL_CHANGED,
     PASSWORD_CHANGED,
@@ -8,52 +9,82 @@ import {
     LOGIN_UNVERIFIED_USER_FAILED,
     LOGIN_USER_AUTH_FAILED,
     LOGIN_USER_FAILED,
-    LOGOUT_USER
+    LOGOUT_USER,
+    EXPIRED_SESSION
   } from '../actions/types';
 import * as constants from '../constants';
 
-  const INITIAL_STATE = {
-    email: '',
-    password: '',
-    token: '',
-    isLoggedIn: false,
-    error: '',
-    loading: false
-  };
+const INITIAL_STATE = {
+  email: '',
+  password: '',
+  token: '',
+  refreshToken: '',
+  isLoggedIn: false,
+  error: '',
+  loading: false
+};
 
-  const persistConfig = {
-    key: 'auth',
-    storage: storage,
-    whitelist: ['token', 'isLoggedIn']
-  };
+const persistConfig = {
+  key: 'auth',
+  storage: storage,
+  stateReconciler: autoMergeLevel2,
+  whitelist: ['email', 'token', 'refreshToken', 'isLoggedIn']
+};
 
-  const AuthReducer = (state = INITIAL_STATE, action) => {
-      switch(action.type){
-            case EMAIL_CHANGED:
-                return {...state, loading: false, error: '', email: action.email};
-            case PASSWORD_CHANGED:
-                return {...state, loading: false, error: '', password: action.password};
-            case LOGIN_USER:
-                return {...state, error: '', loading: true};
-            case LOGIN_USER_SUCCESS:
-                return {...state, error: '', loading: false, token: action.token, isLoggedIn: true, password: ''};
-            case LOGIN_UNVERIFIED_USER_FAILED:
-                return {...state,
-                    error: constants.UNVERIFIED_USER_LOGIN,
-                    loading: false,
-                    isLoggedIn: false,
-                    password: ''
-                };
-            case LOGIN_USER_AUTH_FAILED:
-                return {...state, error: constants.INVALID_LOGIN, loading: false, isLoggedIn: false, password: ''};
-            case LOGIN_USER_FAILED:
-                const errorMessage = action.error || constants.INTERNAL_EXCEPTION;
-                return {...state, error: errorMessage, loading: false, isLoggedIn: false, password: ''};
-            case LOGOUT_USER:
-                return {...state, error: '', loading: false, isLoggedIn: false, email: '', password: '', token: ''};
-            default:
-                return state;
-      }
+const AuthReducer = (state = INITIAL_STATE, action) => {
+  switch(action.type){
+        case EMAIL_CHANGED:
+            return {...state, email: action.email};
+        case PASSWORD_CHANGED:
+            return {...state, password: action.password};
+        case LOGIN_USER:
+            return {...state, error: '', loading: true};
+        case LOGIN_USER_SUCCESS:
+            return {...state,
+              error: '',
+              loading: false,
+              token: action.token,
+              refreshToken: action.refreshToken,
+              isLoggedIn: true,
+              password: ''
+            };
+        case LOGIN_UNVERIFIED_USER_FAILED:
+            return {...state,
+                error: constants.UNVERIFIED_USER_LOGIN,
+                loading: false,
+                isLoggedIn: false,
+                password: '',
+                token: '',
+                refreshToken: ''
+            };
+        case LOGIN_USER_AUTH_FAILED:
+            return {...state, error: constants.INVALID_LOGIN, loading: false, isLoggedIn: false, password: ''};
+        case LOGIN_USER_FAILED:
+            const errorMessage = action.error || constants.INTERNAL_EXCEPTION;
+            return {...state, error: errorMessage, loading: false, isLoggedIn: false, password: ''};
+        case LOGOUT_USER:
+            return {...state,
+              error: '',
+              loading: false,
+              isLoggedIn: false,
+              email: '',
+              password: '',
+              token: '',
+              refreshToken: ''
+            };
+        case EXPIRED_SESSION:
+            return {...state,
+              error: 'Session expired.  Please log in.',
+              loading: false,
+              isLoggedIn: false,
+              email: '',
+              password: '',
+              token: '',
+              refreshToken: ''
+            }
+        default:
+            return state;
   }
+}
 
-  export default persistReducer(persistConfig, AuthReducer);
+export default persistReducer(persistConfig, AuthReducer);

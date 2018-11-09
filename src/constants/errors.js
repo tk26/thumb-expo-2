@@ -26,3 +26,6 @@ export const INVALID_EMAIL_ADDRESS = 'Invalid email';
 export const EMAIL_MISSING_EDU = 'Email address must end in .edu';
 export const DUPLICATE_EMAIL = 'Duplicate email';
 export const MISSING_USER_DATA = 'Missing one or more user details';
+
+// Profile Exceptions
+export const MISSING_PROFILE_PICTURE = 'No profile picture was provided.';

@@ -1,9 +1,11 @@
 import AuthService from './AuthService';
-import SignupService from './SignupService';
-import FeedbackService from './FeedbackService';
+import NavigationService from './NavigationService';
+import PermissionService from './PermissionService';
+import UserService from './UserService';
 
 module.exports = {
-    AuthService: AuthService,
-    SignupService: SignupService,
-    FeedbackService: FeedbackService
+  AuthService,
+  NavigationService,
+  PermissionService,
+  UserService
 };

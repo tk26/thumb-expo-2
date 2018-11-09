@@ -2,20 +2,11 @@ import React, { Component } from 'react';
 import { Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { emailChanged, passwordChanged, loginUser, logoutUser } from '../../actions';
-import { Header, BackButton, Container, Card, CardSection, Input, Link1,
+import { Header, Container, Card, CardSection, Input, Link1,
   ErrorText, Logo, Button, Space, Spinner, fontColors } from '../common';
 import PasswordInput from './PasswordInput';
-import NavigationService from '../../services/NavigationService';
-
-const initialState = {
-  securePassword: true
-}
 
 export class LoginForm extends Component {
-  constructor(props){
-    super(props);
-    this.state = initialState;
-  }
   onEmailChange(text) {
     this.props.emailChanged(text);
   }
@@ -59,9 +50,7 @@ export class LoginForm extends Component {
   render() {
     return (
       <Container>
-        <Header>
-          <BackButton onPress={NavigationService.goBack} />
-        </Header>
+        <Header includeBackButton />
         <Card>
           <Space height={30} />
           <CardSection>

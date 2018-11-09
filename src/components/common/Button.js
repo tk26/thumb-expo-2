@@ -39,8 +39,7 @@ const styles = {
   },
   buttonStyle: {
     alignSelf: 'center',
-    backgroundColor: primaryColors.white,
-    maxWidth: 150
+    backgroundColor: primaryColors.white
   }
 };
 
