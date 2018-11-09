@@ -8,7 +8,9 @@ import {
  } from './types';
 import { INTERNAL_EXCEPTION, MISSING_PROFILE_PICTURE } from '../constants';
 import { ImagePicker } from 'expo';
-import { PermissionService, UserService } from '../services';
+import { PermissionService } from '../services';
+import { fetchWithTokenHandler } from '../services/fetchPlus';
+import { getApiUrl } from '../helper';
 
 export function clearProfile(){
     return { type: PROFILE_LOGOUT };
@@ -32,7 +34,15 @@ export function submitPofileUpdate(bio){
   return async(dispatch) => {
     dispatch({ type: PROFILE_UPDATE_SUBMIT });
     try {
-      let response = await UserService.updateUserProfile(bio);
+      let response = await fetchWithTokenHandler(getApiUrl() + '/user/edit/', {
+        method: 'PUT',
+        body: JSON.stringify({
+          "bio": bio
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }, dispatch);
       switch(response.status){
         case 200:
           return dispatch({
@@ -65,7 +75,21 @@ export function submitPofilePictureUpdate(profilePicture){
   return async(dispatch) => {
     dispatch({ type: PROFILE_UPDATE_SUBMIT });
     try {
-      let response = await UserService.updateProfilePicture(profilePicture);
+      let formData = new FormData();
+      formData.append('profilePicture', {
+          uri: profilePicture,
+          name: 'profilePicture.jpg',
+          type: 'multipart/form-data'
+        });
+
+      let response = await fetchWithTokenHandler(getApiUrl() + '/user/profilepicture/', {
+        method: 'PUT',
+        body: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }, dispatch);
+
       switch(response.status){
         case 200:
           return response.json()

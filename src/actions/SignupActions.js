@@ -1,4 +1,5 @@
 import { UserService } from '../services';
+import { getApiUrl } from '../helper';
 import { SIGNUP_UPDATE,
   SIGNUP_SUBMIT_STEP,
   SIGNUP_STEP1_SUCCESS,
@@ -113,7 +114,22 @@ export const createUser = ({firstName, lastName, username, password, email, birt
   return async(dispatch) => {
     dispatch({ type: SIGNUP_SUBMIT_STEP });
     try {
-      let response = await UserService.createUser({firstName, lastName, username, password, email, birthday, university});
+      let response = await fetch(getApiUrl() + '/user/create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "firstName": firstName,
+            "lastName": lastName,
+            "email": email,
+            "school": university,
+            "password": password,
+            "username": username,
+            "birthday": birthday
+        })
+      });
+
       switch(response.status){
         case 200:
           return stepSucceeded(dispatch, step);

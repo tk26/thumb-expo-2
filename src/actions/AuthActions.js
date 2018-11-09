@@ -1,4 +1,5 @@
 import { AuthService } from '../services' ;
+import { getApiUrl } from '../helper';
 import { EMAIL_CHANGED,
         PASSWORD_CHANGED,
         LOGIN_USER,
@@ -29,17 +30,27 @@ export function loginUser({ email, password }){
             return;
         }
         try {
-            let response = await AuthService.login(email, password);
-            switch (response.status){
-                case 403:
-                    return loginUnverifiedUserFail(dispatch);
-                case 400:
-                    return loginUserAuthFail(dispatch);
-                case 200:
-                    return loginSuccess(dispatch, response);
-                default:
-                    return loginUserFail(dispatch);
-            }
+          let response = await fetch(getApiUrl() + '/user/login', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                  "email": email,
+                  "password": password
+              })
+          });
+
+          switch (response.status){
+              case 403:
+                  return loginUnverifiedUserFail(dispatch);
+              case 400:
+                  return loginUserAuthFail(dispatch);
+              case 200:
+                  return loginSuccess(dispatch, response);
+              default:
+                  return loginUserFail(dispatch);
+          }
         }
         catch(error){
             loginUserFail(dispatch);
@@ -75,9 +86,8 @@ const loginUnverifiedUserFail = (dispatch) => {
 const loginSuccess = (dispatch, rawResponse) => {
   rawResponse.json()
       .then((response) => {
-          const auth_token = response.token;
-          const refresh_token = response.refreshToken;
-          AuthService.setTokens(auth_token, refresh_token);
+          const { token, refreshToken } = response;
+          AuthService.setTokens(token, refreshToken);
           // Save user details
           let profile = {
               firstName: response.firstName,
@@ -88,7 +98,7 @@ const loginSuccess = (dispatch, rawResponse) => {
               birthday: response.birthday,
               bio: response.bio
           };
-          dispatch({type: LOGIN_USER_SUCCESS, token: auth_token, refreshToken: refresh_token});
+          dispatch({type: LOGIN_USER_SUCCESS, token, refreshToken});
           return dispatch({type: PROFILE_RESET, profile: profile});
       })
       .catch((dispatch) => loginUserFail(dispatch));

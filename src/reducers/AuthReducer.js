@@ -9,7 +9,8 @@ import {
     LOGIN_UNVERIFIED_USER_FAILED,
     LOGIN_USER_AUTH_FAILED,
     LOGIN_USER_FAILED,
-    LOGOUT_USER
+    LOGOUT_USER,
+    EXPIRED_SESSION
   } from '../actions/types';
 import * as constants from '../constants';
 
@@ -71,6 +72,16 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
               token: '',
               refreshToken: ''
             };
+        case EXPIRED_SESSION:
+            return {...state,
+              error: 'Session expired.  Please log in.',
+              loading: false,
+              isLoggedIn: false,
+              email: '',
+              password: '',
+              token: '',
+              refreshToken: ''
+            }
         default:
             return state;
   }

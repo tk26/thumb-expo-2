@@ -18,18 +18,6 @@ export default class AuthService {
     }
     return '';
   }
-  static login(email, password) {
-    return  fetch(getApiUrl() + '/user/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            "email": email,
-            "password": password
-        })
-    });
-  }
   static refreshToken(){
     return  fetch(getApiUrl() + '/auth/token', {
       method: 'POST',
