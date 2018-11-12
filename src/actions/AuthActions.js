@@ -98,7 +98,7 @@ const loginSuccess = (dispatch, rawResponse) => {
               birthday: response.birthday,
               bio: response.bio
           };
-          dispatch({type: LOGIN_USER_SUCCESS, token, refreshToken});
+          dispatch({type: LOGIN_USER_SUCCESS});
           return dispatch({type: PROFILE_RESET, profile: profile});
       })
       .catch((dispatch) => loginUserFail(dispatch));

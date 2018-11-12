@@ -17,8 +17,6 @@ import * as constants from '../constants';
 const INITIAL_STATE = {
   email: '',
   password: '',
-  token: '',
-  refreshToken: '',
   isLoggedIn: false,
   error: '',
   loading: false
@@ -28,7 +26,7 @@ const persistConfig = {
   key: 'auth',
   storage: storage,
   stateReconciler: autoMergeLevel2,
-  whitelist: ['email', 'token', 'refreshToken', 'isLoggedIn']
+  whitelist: ['email', 'isLoggedIn']
 };
 
 const AuthReducer = (state = INITIAL_STATE, action) => {
@@ -43,8 +41,6 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
             return {...state,
               error: '',
               loading: false,
-              token: action.token,
-              refreshToken: action.refreshToken,
               isLoggedIn: true,
               password: ''
             };
@@ -53,9 +49,7 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
                 error: constants.UNVERIFIED_USER_LOGIN,
                 loading: false,
                 isLoggedIn: false,
-                password: '',
-                token: '',
-                refreshToken: ''
+                password: ''
             };
         case LOGIN_USER_AUTH_FAILED:
             return {...state, error: constants.INVALID_LOGIN, loading: false, isLoggedIn: false, password: ''};
@@ -68,9 +62,7 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
               loading: false,
               isLoggedIn: false,
               email: '',
-              password: '',
-              token: '',
-              refreshToken: ''
+              password: ''
             };
         case EXPIRED_SESSION:
             return {...state,
@@ -78,9 +70,7 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
               loading: false,
               isLoggedIn: false,
               email: '',
-              password: '',
-              token: '',
-              refreshToken: ''
+              password: ''
             }
         default:
             return state;

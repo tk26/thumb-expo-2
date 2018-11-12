@@ -10,7 +10,6 @@ const initialState = {
   auth: {
     email: '',
     password: '',
-    token: '',
     isLoggedIn: false,
     error: '',
     loading: false
