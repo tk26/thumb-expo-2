@@ -18,14 +18,7 @@ class SignupStep2 extends Component {
         this.props.submitStep2({ password, confirmPassword });
 
         // validation success
-        this.props.navigation.navigate('SignupStep3', {
-            user: {
-                firstName: this.props.navigation.state.params.user.firstName,
-                lastName: this.props.navigation.state.params.user.lastName,
-                username: this.props.navigation.state.params.user.username,
-                password: this.props.password
-            }
-        })
+        NavigationService.navigate('SignupStep3');
     }
     renderError(){
       if(this.props.error !== ''){

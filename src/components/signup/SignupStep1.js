@@ -23,13 +23,7 @@ class SignupStep1 extends Component {
         this.props.submitStep1({ firstName, lastName, username })
           .then(() => {
               if(this.props.step1IsValid){
-                this.props.navigation.navigate('SignupStep2', {
-                    user: {
-                        firstName: this.props.firstName,
-                        lastName: this.props.lastName,
-                        username: this.props.username
-                    }
-                });
+                NavigationService.navigate('SignupStep2');
               }
           })
           .catch(() => {

@@ -1,3 +1,4 @@
+export * from './AutoCompleteInput';
 export * from './BackButton';
 export * from './BaseStyles';
 export * from './Button';
