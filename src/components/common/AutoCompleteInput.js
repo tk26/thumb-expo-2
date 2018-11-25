@@ -76,7 +76,8 @@ export class AutoCompleteInput extends Component {
 
 const styles = {
   container: {
-    flex: 1
+    flex: 1,
+    zIndex: 1
   },
   autocompleteContainer: {
     flex: 1,
@@ -84,7 +85,6 @@ const styles = {
     left: 0,
     right: 0,
     top: 0,
-    zIndex: 1,
     borderWidth: 0
   },
   searchInput: {
