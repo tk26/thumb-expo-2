@@ -18,7 +18,9 @@ class SignupStep2 extends Component {
         this.props.submitStep2({ password, confirmPassword });
 
         // validation success
-        NavigationService.navigate('SignupStep3');
+        if(this.props.step2IsValid){
+          NavigationService.navigate('SignupStep3');
+        }
     }
     renderError(){
       if(this.props.error !== ''){

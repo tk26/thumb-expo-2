@@ -44,18 +44,6 @@ export class AutoCompleteInput extends Component {
             inputContainerStyle={styles.inputContainer}
             listStyle={styles.list}
             data={items.length === 1 && comp(query, items[0][filterProperty]) ? [] : items}
-            renderTextInput={() => {
-              return (
-                <TextInput
-                  placeholder={placeholder}
-                  onChangeText={text => this.setState({ query: text })}
-                  value={this.state.query}
-                  underlineColorAndroid='transparent'
-                  placeholderTextColor={fontColors.grey}
-                  style={styles.searchInput}
-                />
-              )}
-            }
             renderItem={(item) => (
               <CardSection>
                 <TouchableOpacity onPress={() => {
@@ -86,14 +74,6 @@ const styles = {
     right: 0,
     top: 0,
     borderWidth: 0
-  },
-  searchInput: {
-    color: fontColors.lightGrey,
-    fontSize: 14,
-    fontFamily: 'Helvetica Neue',
-    letterSpacing: 0,
-    lineHeight: 23,
-    flex: 1
   },
   inputContainer: {
     paddingLeft: 5,
